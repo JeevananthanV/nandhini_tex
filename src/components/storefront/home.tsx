@@ -67,13 +67,14 @@ export function HomePage({ categories }: { categories: Category[] }) {
   return (
     <div className="flex flex-col">
       {/* ===== HERO ===== */}
-      <section className="relative h-[88vh] min-h-[560px] w-full overflow-hidden">
+      <section className="relative h-[88vh] min-h-[560px] w-full overflow-hidden" aria-label="Hero — Handwoven silk sarees from Tamil Nadu">
         <div className="absolute inset-0">
           <Image
             src="https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/504fe6faa6dc.jpg"
-            alt="Bride in a handwoven silk saree"
+            alt="Bride wearing a handwoven red Kanchipuram silk saree with gold zari border from Nandhini Tex"
             fill
             priority
+            loading="eager"
             sizes="100vw"
             className="object-cover object-center"
           />
@@ -357,6 +358,80 @@ export function HomePage({ categories }: { categories: Category[] }) {
           <ContactCard icon={Phone} title="Call Us" lines={["+91 76048 11838", "Mon–Sat, 10am–7pm IST"]} />
           <ContactCard icon={MessageCircle} title="WhatsApp" lines={["Quick replies & order updates", "Chat with our team"]} />
           <ContactCard icon={MapPin} title="Visit Us" lines={["Elampillai, Salem", "Tamil Nadu 637502, India"]} />
+        </div>
+      </section>
+
+      {/* ===== SEO / GEO CONTENT — keyword-rich, location-targeted ===== */}
+      <section className="border-t border-border bg-ivory" aria-label="About our handwoven sarees">
+        <div className="mx-auto max-w-4xl px-6 py-16 md:px-8 md:py-20">
+          <SectionHeading eyebrow="Our Heritage" title="Handwoven Sarees from the Heart of Tamil Nadu" center />
+          <div className="mt-8 space-y-5 text-[15px] leading-relaxed text-muted-foreground">
+            <p>
+              <strong className="text-foreground">Nandhini Tex</strong> brings you authentic{" "}
+              <strong className="text-foreground">handwoven silk and cotton sarees</strong> direct from the
+              weaving looms of <strong className="text-foreground">Elampillai, Kanchipuram, and Arani</strong> —
+              the historic handloom centres of Tamil Nadu, India. For generations, master weavers in these
+              towns have created sarees that tell stories of temple festivals, weddings, and devotion.
+            </p>
+            <p>
+              Our collection spans pure{" "}
+              <strong className="text-foreground">Kanchipuram mulberry silk sarees</strong> with real gold zari
+              borders, lightweight <strong className="text-foreground">soft silk sarees</strong> for everyday
+              elegance, breathable <strong className="text-foreground">handloom cotton sarees</strong> for daily
+              wear, and grand <strong className="text-foreground">bridal silk sarees</strong> woven over seven
+              days for your wedding day. Every saree is 100% handwoven — no power looms, no shortcuts — and
+              ships with a matching running blouse piece included at no extra cost.
+            </p>
+            <p>
+              Whether you&apos;re searching for a{" "}
+              <strong className="text-foreground">Kanchipuram bridal saree</strong>, a{" "}
+              <strong className="text-foreground">soft silk saree for a festival</strong>, a{" "}
+              <strong className="text-foreground">cotton saree for daily wear</strong>, or a{" "}
+              <strong className="text-foreground">silk dhoti and kurta set</strong> for the groom, we have a
+              handwoven piece for every occasion. We also offer{" "}
+              <strong className="text-foreground">couple combo sets</strong> (coordinated saree + dhoti) for
+              engagements and receptions.
+            </p>
+          </div>
+
+          <div className="mt-10 grid gap-6 sm:grid-cols-2">
+            <div className="rounded-lg border border-border bg-card p-6">
+              <h3 className="font-serif text-lg font-semibold text-navy">Shop by Saree Type</h3>
+              <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+                <li>Kanchipuram Silk Sarees — pure mulberry silk with gold zari</li>
+                <li>Soft Silk Sarees — lightweight and elegant</li>
+                <li>Cotton Sarees — breathable handloom cotton</li>
+                <li>Bridal Silk Sarees — grand weaves for weddings</li>
+                <li>Designer Sarees — contemporary motifs and styles</li>
+                <li>Offer Sarees — best-value handloom sarees</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-border bg-card p-6">
+              <h3 className="font-serif text-lg font-semibold text-navy">Why Choose Nandhini Tex?</h3>
+              <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+                <li>100% handwoven on traditional looms</li>
+                <li>Silk Mark assurance on pure silk sarees</li>
+                <li>Real gold zari borders and pallus</li>
+                <li>COD available across India</li>
+                <li>Free shipping above ₹999</li>
+                <li>7-day easy returns</li>
+                <li>4.8-star rating from 2,450+ reviews</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="mt-10 rounded-lg bg-navy-gradient p-6 text-center text-ivory md:p-8">
+            <h3 className="font-serif text-xl font-semibold md:text-2xl">
+              Saree Shop in Elampillai, Salem, Tamil Nadu
+            </h3>
+            <p className="mt-3 text-sm text-ivory/80">
+              Visit our store in Elampillai, Salem, Tamil Nadu 637502, India, or shop online with COD,
+              UPI, card, or net banking. We ship sarees across India — Chennai, Bengaluru, Coimbatore,
+              Madurai, Trichy, Salem, Erode, Vellore, Pondicherry, Tirunelveli, Mumbai, Delhi, Hyderabad,
+              and all serviceable pincodes. Call <a href="tel:+917604811838" className="font-semibold text-gold underline">+91 76048 11838</a>{" "}
+              for saree enquiries, bulk orders, or bridal consultations.
+            </p>
+          </div>
         </div>
       </section>
     </div>

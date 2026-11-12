@@ -1,0 +1,64 @@
+{
+  "name": "Nandhini Tex — Handwoven Sarees",
+  "short_name": "Nandhini Tex",
+  "description": "Handwoven silk & cotton sarees from Elampillai, Tamil Nadu. Kanchipuram silk, bridal, cotton & designer sarees. COD, pan-India shipping, 7-day returns.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#FBF7F1",
+  "theme_color": "#0A1F44",
+  "categories": ["shopping", "lifestyle", "business"],
+  "lang": "en-IN",
+  "dir": "ltr",
+  "id": "/",
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Shop Sarees",
+      "short_name": "Sarees",
+      "url": "/?category=soft-silk",
+      "description": "Browse handwoven sarees"
+    },
+    {
+      "name": "Bridal Collection",
+      "short_name": "Bridal",
+      "url": "/?category=bridal",
+      "description": "Grand bridal silk sarees"
+    },
+    {
+      "name": "Offers",
+      "short_name": "Offers",
+      "url": "/?category=offer-sarees",
+      "description": "Best-value sarees"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/og-image.jpg",
+      "sizes": "1200x630",
+      "type": "image/jpeg",
+      "form_factor": "wide",
+      "label": "Nandhini Tex homepage"
+    }
+  ]
+}

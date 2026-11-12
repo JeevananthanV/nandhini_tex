@@ -77,7 +77,7 @@ export function Header({ categories }: { categories: { id: string; name: string;
           </div>
 
           {/* Center: nav */}
-          <nav className="hidden items-center gap-6 lg:flex">
+          <nav className="hidden items-center gap-6 lg:flex" aria-label="Primary navigation">
             <button onClick={goHome} className={cn("text-sm font-medium transition-colors hover:text-gold", onHome && !scrolled ? "text-ivory/90" : "text-foreground")}>
               Home
             </button>
@@ -96,8 +96,8 @@ export function Header({ categories }: { categories: { id: string; name: string;
           <div className="flex items-center gap-1 md:gap-2">
             <button
               onClick={() => setSearchOpen((v) => !v)}
-              className={cn("flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-muted", onHome && !scrolled ? "text-ivory" : "text-foreground")}
-              aria-label="Search"
+              className={cn("flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-muted", onHome && !scrolled ? "text-ivory" : "text-foreground")}
+              aria-label="Search sarees and collections"
             >
               <Search className="h-[18px] w-[18px]" />
             </button>
@@ -109,7 +109,7 @@ export function Header({ categories }: { categories: { id: string; name: string;
               <Shield className="h-4 w-4" /> Admin
             </button>
             <button
-              className={cn("relative flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-muted", onHome && !scrolled ? "text-ivory" : "text-foreground")}
+              className={cn("relative flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-muted", onHome && !scrolled ? "text-ivory" : "text-foreground")}
               aria-label={`Wishlist, ${wishlistCount} items`}
             >
               <Heart className="h-[18px] w-[18px]" />
@@ -121,8 +121,8 @@ export function Header({ categories }: { categories: { id: string; name: string;
             </button>
             <button
               onClick={openCart}
-              className={cn("relative flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-muted", onHome && !scrolled ? "text-ivory" : "text-foreground")}
-              aria-label={`Cart, ${cartCount} items`}
+              className={cn("relative flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-muted", onHome && !scrolled ? "text-ivory" : "text-foreground")}
+              aria-label={`Shopping cart, ${cartCount} items`}
             >
               <ShoppingBag className="h-[18px] w-[18px]" />
               {cartCount > 0 && (

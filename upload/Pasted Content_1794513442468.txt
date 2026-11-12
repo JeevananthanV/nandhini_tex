@@ -1,0 +1,941 @@
+# Luxury Fashion E-Commerce – Complete UI/UX & Development Specification
+
+
+
+Project specification
+
+Customer + Admin
+
+React + Node.js + MySQL
+
+
+
+The goal is to build a premium fashion shopping platform with the visual quality of a luxury fashion brand, the shopping convenience of a modern marketplace, and a complete inventory and order-management system.
+
+Design concept: Quiet Luxury — elegant typography, editorial photography, generous whitespace, refined colors, subtle animations and a frictionless shopping experience.
+
+## 1. Brand identity and design system
+
+### Visual identity
+
+# MAISON ÉLÉGANCE
+
+THE ART OF TIMELESS STYLE
+
+COLLECTION 2026 — 2027
+
+Color palette
+
+Obsidian
+
+\#171613
+
+Ivory
+
+\#F5F0E8
+
+Champagne
+
+\#D8C9B5
+
+Taupe
+
+\#87715A
+
+Pure white
+
+\#FFFFFF
+
+Burgundy
+
+\#773E35
+
+### Typography
+
+| Purpose            | Typeface           |
+| ------------------ | ------------------ |
+| Brand and headings | Playfair Display   |
+| Body content       | Inter              |
+| Product names      | Inter Medium       |
+| Editorial campaign | Cormorant Garamond |
+| Prices and labels  | Inter              |
+
+### Design rules
+
+- 12-column desktop grid.
+- Maximum content width: 1440px.
+- Desktop spacing: 24–40px.
+- Mobile spacing: 16px.
+- Border radius: 2–8px, not excessively rounded.
+- Product photography: 4:5 portrait.
+- Campaign photography: 16:9 or full-width editorial.
+- Minimal shadows and thin borders.
+- Transitions: 180–300ms.
+
+## 2. Complete customer website sitemap
+
+## Customer website
+
+HOME PAGE
+
+Shop / Collections
+
+Product listing
+
+Product details
+
+Size & variants
+
+Search
+
+Search results
+
+Wishlist
+
+Saved products
+
+Shopping cart
+
+Checkout
+
+Account
+
+Orders & profile
+
+Order tracking
+
+Returns & refunds
+
+Editorial
+
+About & contact
+
+### Page 01 – Homepage
+
+[Premium clothing website - Website Templates Templates - v0 by Vercel](https://images.openai.com/static-rsc-4/DDqNsGc7A9UDMwwNiIZVq8c3yUDcrH4-sFsCgAR1LpTpXobL5Ir7QLWsUS1bRk6kYekxSCHWNNoLVF_kksGCCfnUbsVHN-TuVE-XLz9IrKRq9BzS7uYK1UU1_hXnyQoCb2OcbKHcfVlkkbIoJGgNB85v_YzpH_VXh6gdYVfqGy0?purpose=inline)
+
+[v0.app](https://v0.app/templates/premium-clothing-website-qyTogz8e9Wo?utm_source=chatgpt.com)
+
+Layout
+
+1. Announcement bar – Free shipping / new collection.
+2. Header – Logo, navigation, search, account, wishlist, cart.
+3. Hero campaign – Large lifestyle photograph and CTA.
+4. Featured categories – Men, Women, Accessories.
+5. New arrivals – Product cards.
+6. Brand story – Editorial content.
+7. Trending collection – Featured products.
+8. Lookbook – Fashion campaign gallery.
+9. Newsletter subscription.
+10. Footer – Customer support, policies, social links.
+
+Main CTA: Explore Collection.
+
+### Page 02 – Shop / Product listing
+
+[Everything you need to know about product listing pages with 6+ excellent examples | Webflow Blog](https://images.openai.com/static-rsc-4/JJptGT-xHSpq3dncNjeVdyrHPoNASyMu-c2rdRJlp0o1NzCobB5xCCWb1xzWQ2pbO_rcaO6-sQRSvR8QxNxqI0Dy25hBLxHUSTOrEtinTkNhJNnUI_mBH63yBH04yrs6UbiTdRdGe8abaAWNi6z_ZAKK8v1JBJEmCkGRAS3_4pI?purpose=inline)
+
+[webflow.com](https://webflow.com/blog/product-listing-pages?utm_source=chatgpt.com)
+
+Desktop wireframe
+
+Header / Navigation
+
+WOMEN'S COLLECTION
+
+Filters and categories
+
+Sort: Featured
+
+Filters
+
+Category +
+
+Price +
+
+Size +
+
+Color +
+
+Brand +
+
+Availability +
+
+Signature Shirt
+
+₹3,999
+
+Classic Trousers
+
+₹3,999
+
+Silk Dress
+
+₹3,999
+
+Leather Bag
+
+₹3,999
+
+Features
+
+- Sidebar filters on desktop.
+- Filter drawer on mobile.
+- Sorting by featured, newest, price and popularity.
+- Product count and pagination.
+- Quick add and wishlist.
+- Active filter chips.
+- Product color swatches.
+
+### Page 03 – Product details
+
+[Heba Shaikh —       Chloe Livock Studio](https://images.openai.com/static-rsc-4/fb-SIq0pfTs582yj75NVZ2mxLsWGpfSLUIqDUHvldrMxcG9UnB6ycrQXTvP68CKdLiq6skzCF1h-Byn9hlXiLgQ4Cegm4S6g7wpqIuRccJjj9GOkTgzj1BrDnoilduFAqCSla5HTxiX0yI22Exat7lNDEloNTviUfxUi9gdO5GQ?purpose=inline)
+
+[clivock.com](https://www.clivock.com/heba-shaikh-chloe-livock-studio-1?utm_source=chatgpt.com)
+
+Layout
+
+- Left: Product image gallery.
+- Right: Product information and purchase panel.
+- Product name, price, discount.
+- Color selection.
+- Size selector with size guide.
+- Stock availability.
+- Quantity and add-to-bag.
+- Buy now.
+- Delivery PIN code checker.
+- Description and fabric information.
+- Size and fit details.
+- Shipping and return policy.
+- Reviews and recommendations.
+
+Important UX: selecting a size must happen before adding an item to the cart when size is required.
+
+### Page 04 – Search and discovery
+
+- Search autocomplete.
+- Recent searches.
+- Trending searches.
+- Popular categories.
+- Search result count.
+- No-results suggestions.
+- Search filters.
+
+### Page 05 – Wishlist
+
+- Saved product cards.
+- Remove from wishlist.
+- Move to cart.
+- Variant availability.
+- Empty wishlist state.
+
+### Page 06 – Shopping cart
+
+[Fashion ecommerce Website Design ux ui by Sahin Mia for Pixelean on Dribbble](https://images.openai.com/static-rsc-4/6wHh8xrSJw121iOvyL6WdNta8RbN9G3AXriHVBapio6r_hjQTSUlQQ2Kyg0bLpuOZRh-4B9yxKWIgvYAwfMJAFR4h2SlZSQVSahFJ2bt_GqPH3ZxLwoBDK0N7kdTH5zs_GoK2kCmHWvJgw7PYueLx_bR25DhjZL8h-0nrn3mMqc?purpose=inline)
+
+[dribbble.com](https://dribbble.com/shots/26811526-Fashion-ecommerce-Website-Design-ux-ui?utm_source=chatgpt.com)
+
+- Product image and details.
+- Selected size and color.
+- Quantity adjustment.
+- Remove item.
+- Coupon field.
+- Subtotal and shipping.
+- Estimated total.
+- Continue shopping.
+- Proceed to checkout.
+
+### Page 07 – Checkout
+
+Three-step checkout:
+
+1. Shipping address.
+2. Delivery method.
+3. Payment and order confirmation.
+
+India payment options:
+
+- UPI.
+- Credit/debit cards.
+- Net banking.
+- Wallets where supported.
+- Cash on delivery, if enabled.
+
+Use Razorpay for online payment processing.
+
+### Page 08 – Login and registration
+
+- Email/mobile login.
+- OTP verification.
+- Password login.
+- Register account.
+- Forgot password.
+- Guest checkout.
+
+### Page 09 – Customer account
+
+- Overview.
+- My profile.
+- Address book.
+- My orders.
+- Wishlist.
+- Returns.
+- Refund status.
+- Notifications.
+- Logout.
+
+### Page 10 – Order tracking
+
+Order timeline:
+
+1. Order placed
+2. Payment confirmed
+3. Processing
+4. Packed
+5. Shipped
+6. Out for delivery
+7. Delivered
+
+Also provide courier tracking details, delivery estimate, invoice download and return request.
+
+### Additional customer pages
+
+| Page            | UI/UX requirements                             |
+| --------------- | ---------------------------------------------- |
+| 11. About brand | Brand story, mission and craftsmanship         |
+| 12. Lookbook    | Editorial campaign photographs and collections |
+| 13. Contact     | Contact form, support details and FAQs         |
+| 14. Size guide  | Measurement charts for clothing                |
+| 15. FAQ         | Shipping, payment, returns and sizing          |
+| 16. Policies    | Privacy, terms, shipping and refund policy     |
+| 17. 404 page    | Elegant error page with return-to-shop CTA     |
+
+## 3. Responsive design specification
+
+The website must work consistently across desktop, tablet and mobile.
+
+[Brunello Cucinelli by Marsel Galiullin on Dribbble](https://images.openai.com/static-rsc-4/6nVtgH_UwQkgcvGImCeX5zefHEQ60jSQPFAnnmPrxwj3ZU18vIEZvEuFJJ46zP7PELKLPH8yEzBh_orTQlm9WblaxLnBgp4THXDOHfLZil6bVaI8gM4rswYmRzDz6ogS_b1-ybz4R0AkMK_xrrU1AUUQpEWO3PCNJGdGuVpgFgM?purpose=inline)
+
+Desktop
+
+1440px and above
+
+[TOTEME — Online Store Concept by Stanislav Kryshtal for Kilogram on Dribbble](https://images.openai.com/static-rsc-4/AEC75OZXRYwk43GlgKWA5_Y9HJlR4D7BF6tSdA-NN5r4_SJu30nCl9TGwjcrfjeNvGtxKnoVQiPSk_u2ZbwtmB_FIwMIxzVUN-7y4nwMseD-HjUcdJ_PrZtVxOEFNbbdUIWNqfTusqe2AG1w9L7GMESLDvZgAOk2eCM06eIbNto?purpose=inline)
+
+Tablet
+
+768–1024px
+
+[Mytheresa - Shopping App for Luxury Fashion | Mytheresa](https://images.openai.com/static-rsc-4/5P0S1GorcxTQRckemwufyFb8yo37VM_4RfAF1Vk8XMNR8aHHjwcljdvw6AAP8GFT2zDNWVBPvJdu5oZf-vD_nJMeNxn_GJM26xT_qe5GZOILJD590jsK79XLyD86rKx3ltzvX_BLR6LGN-nBhL_x5sOadZ5BXcYnLXuRpUyzvPw?purpose=inline)
+
+Mobile
+
+320–767px
+
+| Element         | Desktop     | Tablet       | Mobile             |
+| --------------- | ----------- | ------------ | ------------------ |
+| Navigation      | Full menu   | Compact menu | Hamburger          |
+| Product grid    | 4 columns   | 3 columns    | 2 columns          |
+| Filters         | Sidebar     | Drawer       | Bottom drawer      |
+| Product gallery | 2 columns   | 1–2 columns  | Swipe gallery      |
+| Checkout        | 2 columns   | 2 columns    | Single column      |
+| Footer          | 4 columns   | 2 columns    | Accordion          |
+| Cart            | Header icon | Header icon  | Bottom/header icon |
+
+Mobile-specific UX
+
+- Sticky bottom navigation: Home, Shop, Wishlist, Account.
+- Sticky add-to-bag on product details.
+- Large touch targets.
+- Swipeable image gallery.
+- Bottom-sheet size selection.
+- Collapsible checkout sections.
+- Optimized images and lazy loading.
+
+## 4. Admin dashboard – complete specification
+
+The admin panel should have a separate login and role-based access system.
+
+[Perfume And Cosmetics E-Commerce Web UX & UI Case Study :: Behance](https://images.openai.com/static-rsc-4/_F0eDrDrvRPs3IAud-6y66liqG36q3tefIDy7pzeFQNRX9-yQaLbareppIbsH1sIz4VTsl5AsLo5SLD5o0eXnjWUHPOG7ToGVn0KpmHkxTzsy6JgIXDZDsUW3WcxUo6SxPJNVmBNF8u4E1uIVQIvmI6m2rt-Ya8qY8HLRV1ofHM?purpose=inline)
+
+[behance.net](https://www.behance.net/gallery/144001443/Perfume-And-Cosmetics-E-Commerce-Web-UX-UI-Case-Study?utm_source=chatgpt.com)
+
+### Admin dashboard layout
+
+MAISON ADMIN
+
+Dashboard
+
+Total Revenue
+
+# ₹8,45,000
+
++12.5%
+
+Total Orders
+
+# 1,284
+
++8.2%
+
+Customers
+
+# 3,540
+
++15.3%
+
+Products
+
+# 486
+
+Active
+
+Revenue overview
+
+JanJunDec
+
+Recent orders
+
+| Order | Customer   | Status     |
+| ----- | ---------- | ---------- |
+| #1001 | Customer A | Processing |
+| #1002 | Customer B | Shipped    |
+| #1003 | Customer C | Delivered  |
+
+Illustrative dashboard data, not actual sales figures.
+
+### Admin modules and features
+
+| Module      | Functionality                     |
+| ----------- | --------------------------------- |
+| Dashboard   | Revenue, sales and KPIs           |
+| Products    | CRUD, images, variants, pricing   |
+| Categories  | Categories and subcategories      |
+| Collections | Seasonal and curated collections  |
+| Inventory   | SKU, stock, low-stock alerts      |
+| Orders      | View, process and update orders   |
+| Customers   | Profiles, addresses and history   |
+| Payments    | Transaction and refund management |
+| Coupons     | Discount codes and validity       |
+| Reviews     | Moderate product reviews          |
+| Returns     | Return and exchange requests      |
+| Shipping    | Shipping charges and tracking     |
+| Content     | Banners, homepage and lookbook    |
+| Analytics   | Revenue, sales and conversion     |
+| Staff       | Admin and employee management     |
+| Settings    | Tax, payment and store settings   |
+
+### Admin roles and permissions
+
+| Role              | Permissions                        |
+| ----------------- | ---------------------------------- |
+| Super Admin       | Full access                        |
+| Store Admin       | Products, orders, customers        |
+| Product Manager   | Products, collections, inventory   |
+| Order Manager     | Orders, shipping, returns          |
+| Marketing Manager | Banners, coupons, campaigns        |
+| Support Staff     | Customer support and order viewing |
+
+Use backend permission checks, not just frontend route restrictions.
+
+### Important admin workflows
+
+Product management
+
+1. Create product.
+2. Add product description.
+3. Select category and collection.
+4. Upload multiple product images.
+5. Add colors and sizes.
+6. Set SKU and stock quantity for each variant.
+7. Configure price and sale price.
+8. Preview product.
+9. Publish or save as draft.
+
+Order management
+
+1. Receive new order.
+2. Verify payment.
+3. Confirm inventory.
+4. Process order.
+5. Generate invoice.
+6. Mark packed and shipped.
+7. Add courier tracking.
+8. Update delivery status.
+9. Handle returns and refunds.
+
+## 5. Reusable React component architecture
+
+Build the project using reusable components rather than creating every page independently.
+
+```
+src/
+├── app/
+│   ├── App.jsx
+│   ├── router.jsx
+│   └── providers.jsx
+│
+├── assets/
+├── components/
+│   ├── common/
+│   │   ├── Button.jsx
+│   │   ├── Modal.jsx
+│   │   ├── Drawer.jsx
+│   │   ├── Breadcrumb.jsx
+│   │   ├── Pagination.jsx
+│   │   └── Loader.jsx
+│   │
+│   ├── layout/
+│   │   ├── Header.jsx
+│   │   ├── Footer.jsx
+│   │   ├── Navigation.jsx
+│   │   └── MobileNavigation.jsx
+│   │
+│   ├── product/
+│   │   ├── ProductCard.jsx
+│   │   ├── ProductGrid.jsx
+│   │   ├── ProductGallery.jsx
+│   │   ├── SizeSelector.jsx
+│   │   ├── ColorSelector.jsx
+│   │   └── ProductFilters.jsx
+│   │
+│   ├── cart/
+│   ├── checkout/
+│   ├── account/
+│   └── admin/
+│
+├── pages/
+│   ├── storefront/
+│   ├── auth/
+│   └── admin/
+│
+├── services/
+│   ├── api.js
+│   ├── productService.js
+│   ├── cartService.js
+│   └── orderService.js
+│
+├── hooks/
+├── context/
+├── utils/
+└── styles/
+```
+
+### Key component responsibilities
+
+| Component      | Responsibility                       |
+| -------------- | ------------------------------------ |
+| Header         | Search, navigation, account and cart |
+| ProductCard    | Image, price, discount, wishlist     |
+| ProductGrid    | Responsive product layout            |
+| ProductGallery | Product image viewing                |
+| SizeSelector   | Clothing size selection              |
+| FilterDrawer   | Mobile filters                       |
+| CartDrawer     | Quick cart preview                   |
+| CheckoutForm   | Address and payment                  |
+| OrderTimeline  | Delivery progress                    |
+| AdminSidebar   | Admin navigation                     |
+| DataTable      | Admin listings and actions           |
+| StatsCard      | Analytics metrics                    |
+
+## 6. MySQL database architecture
+
+Use a relational database with proper foreign keys, indexes and transaction handling.
+
+### Main database tables
+
+Identity and customers
+
+- users
+- roles
+- permissions
+- user_roles
+- addresses
+- customer_sessions
+
+Product catalogue
+
+- categories
+- collections
+- products
+- product_images
+- product_variants
+- product_attributes
+- product_reviews
+
+Shopping
+
+- carts
+- cart_items
+- wishlists
+- wishlist_items
+- coupons
+- coupon_usage
+
+Orders and payments
+
+- orders
+- order_items
+- payments
+- refunds
+- shipments
+- order_status_history
+
+Inventory
+
+- inventory
+- inventory_movements
+- stock_reservations
+
+Website management
+
+- banners
+- lookbooks
+- newsletter_subscribers
+- notifications
+- audit_logs
+- store_settings
+
+### Important product variant structure
+
+Fashion products must support multiple sizes and colors. Stock should be maintained per variant, not just per product.
+
+Example:
+
+| Product       | Color | Size | SKU     | Stock |
+| ------------- | ----- | ---- | ------- | ----- |
+| Classic Shirt | Black | S    | SH-BK-S | 10    |
+| Classic Shirt | Black | M    | SH-BK-M | 15    |
+| Classic Shirt | White | S    | SH-WH-S | 8     |
+| Classic Shirt | White | M    | SH-WH-M | 12    |
+
+### Core database relationships
+
+\#chatgpt-mermaid-\_r_1a9\_{font-family:-apple-system-body,ui-sans-serif,-apple-system,system-ui,"Segoe UI",Helvetica,"Apple Color Emoji",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol";font-size:16px;fill:rgb(237, 237, 237);}@keyframes edge-animation-frame{from{stroke-dashoffset:0;}}@keyframes dash{to{stroke-dashoffset:0;}}#chatgpt-mermaid-\_r_1a9\_ .edge-animation-slow{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 50s linear infinite;stroke-linecap:round;}#chatgpt-mermaid-\_r_1a9\_ .edge-animation-fast{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 20s linear infinite;stroke-linecap:round;}#chatgpt-mermaid-\_r_1a9\_ .error-icon{fill:rgb(48, 48, 48);}#chatgpt-mermaid-\_r_1a9\_ .error-text{fill:rgb(237, 237, 237);stroke:rgb(237, 237, 237);}#chatgpt-mermaid-\_r_1a9\_ .edge-thickness-normal{stroke-width:1px;}#chatgpt-mermaid-\_r_1a9\_ .edge-thickness-thick{stroke-width:3.5px;}#chatgpt-mermaid-\_r_1a9\_ .edge-pattern-solid{stroke-dasharray:0;}#chatgpt-mermaid-\_r_1a9\_ .edge-thickness-invisible{stroke-width:0;fill:none;}#chatgpt-mermaid-\_r_1a9\_ .edge-pattern-dashed{stroke-dasharray:3;}#chatgpt-mermaid-\_r_1a9\_ .edge-pattern-dotted{stroke-dasharray:2;}#chatgpt-mermaid-\_r_1a9\_ .marker{fill:rgb(175, 175, 175);stroke:rgb(175, 175, 175);}#chatgpt-mermaid-\_r_1a9\_ .marker.cross{stroke:rgb(175, 175, 175);}#chatgpt-mermaid-\_r_1a9\_ svg{font-family:-apple-system-body,ui-sans-serif,-apple-system,system-ui,"Segoe UI",Helvetica,"Apple Color Emoji",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol";font-size:16px;}#chatgpt-mermaid-\_r_1a9\_ p{margin:0;}#chatgpt-mermaid-\_r_1a9\_ .entityBox{fill:rgb(9, 23, 44);stroke:rgb(31, 78, 148);}#chatgpt-mermaid-\_r_1a9\_ .relationshipLabelBox{fill:rgb(48, 48, 48);opacity:0.7;background-color:rgb(48, 48, 48);}#chatgpt-mermaid-\_r_1a9\_ .relationshipLabelBox rect{opacity:0.5;}#chatgpt-mermaid-\_r_1a9\_ .labelBkg{background-color:rgba(48, 48, 48, 0.5);}#chatgpt-mermaid-\_r_1a9\_ .edgeLabel{background-color:rgb(0, 0, 0);}#chatgpt-mermaid-\_r_1a9\_ .edgeLabel .label rect{fill:rgb(0, 0, 0);}#chatgpt-mermaid-\_r_1a9\_ .edgeLabel .label text{fill:rgb(237, 237, 237);}#chatgpt-mermaid-\_r_1a9\_ .edgeLabel .label{fill:rgb(31, 78, 148);font-size:14px;}#chatgpt-mermaid-\_r_1a9\_ .label{font-family:-apple-system-body,ui-sans-serif,-apple-system,system-ui,"Segoe UI",Helvetica,"Apple Color Emoji",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol";color:rgb(237, 237, 237);}#chatgpt-mermaid-\_r_1a9\_ .edge-pattern-dashed{stroke-dasharray:8,8;}#chatgpt-mermaid-\_r_1a9\_ .node rect,#chatgpt-mermaid-\_r_1a9\_ .node circle,#chatgpt-mermaid-\_r_1a9\_ .node ellipse,#chatgpt-mermaid-\_r_1a9\_ .node polygon{fill:rgb(9, 23, 44);stroke:rgb(31, 78, 148);stroke-width:1px;}#chatgpt-mermaid-\_r_1a9\_ .relationshipLine{stroke:rgb(175, 175, 175);stroke-width:1px;fill:none;}#chatgpt-mermaid-\_r_1a9\_ .marker{fill:none!important;stroke:rgb(175, 175, 175)!important;stroke-width:1;}#chatgpt-mermaid-\_r_1a9\_ [data-look=neo].labelBkg{background-color:rgba(48, 48, 48, 0.5);}#chatgpt-mermaid-\_r_1a9\_ .node .neo-node{stroke:rgb(31, 78, 148);}#chatgpt-mermaid-\_r_1a9\_ [data-look="neo"].node rect,#chatgpt-mermaid-\_r_1a9\_ [data-look="neo"].cluster rect,#chatgpt-mermaid-\_r_1a9\_ [data-look="neo"].node polygon{stroke:url(#chatgpt-mermaid-\_r_1a9\_-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#chatgpt-mermaid-\_r_1a9\_ [data-look="neo"].swimlane.cluster rect{filter:none;}#chatgpt-mermaid-\_r_1a9\_ [data-look="neo"].node path{stroke:url(#chatgpt-mermaid-\_r_1a9\_-gradient);stroke-width:1px;}#chatgpt-mermaid-\_r_1a9\_ [data-look="neo"].node .outer-path{filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#chatgpt-mermaid-\_r_1a9\_ [data-look="neo"].node .neo-line path{stroke:rgb(31, 78, 148);filter:none;}#chatgpt-mermaid-\_r_1a9\_ [data-look="neo"].node circle{stroke:url(#chatgpt-mermaid-\_r_1a9\_-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#chatgpt-mermaid-\_r_1a9\_ [data-look="neo"].node circle .state-start{fill:#000000;}#chatgpt-mermaid-\_r_1a9\_ [data-look="neo"].icon-shape .icon{fill:url(#chatgpt-mermaid-\_r_1a9\_-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#chatgpt-mermaid-\_r_1a9\_ [data-look="neo"].icon-shape .icon-neo path{stroke:url(#chatgpt-mermaid-\_r_1a9\_-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#chatgpt-mermaid-\_r_1a9\_ :root{--mermaid-font-family:-apple-system-body,ui-sans-serif,-apple-system,system-ui,"Segoe UI",Helvetica,"Apple Color Emoji",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol";}USERSADDRESSESORDERSCATEGORIESPRODUCTSCOLLECTIONSPRODUCT_VARIANTSPRODUCT_IMAGESINVENTORYCARTSCART_ITEMSORDER_ITEMSPAYMENTSSHIPMENTSWISHLISTSownsplacescontainsfeatureshasdisplaystracksownscontainsselectedcontainspurchasedreceivesshipsowns
+
+### Essential database rules
+
+- Store money as `DECIMAL`, never floating-point.
+- Keep order item prices as historical snapshots.
+- Store passwords using bcrypt or Argon2 hashes.
+- Use unique SKUs for variants.
+- Use transactions for order creation and stock updates.
+- Maintain inventory movement history.
+- Prevent overselling through stock reservations and concurrency-safe updates.
+- Store timestamps consistently in UTC.
+
+## 7. Node.js backend API architecture
+
+Base URL: `/api/v1`
+
+| API group       | Endpoints                                       |
+| --------------- | ----------------------------------------------- |
+| Authentication  | `/auth/register`, `/auth/login`, `/auth/logout` |
+| Products        | `/products`, `/products/:slug`                  |
+| Categories      | `/categories`                                   |
+| Collections     | `/collections`                                  |
+| Search          | `/search`                                       |
+| Cart            | `/cart`, `/cart/items`                          |
+| Wishlist        | `/wishlist`                                     |
+| Checkout        | `/checkout`                                     |
+| Orders          | `/orders`, `/orders/:id`                        |
+| Payments        | `/payments/create`, `/payments/verify`          |
+| Reviews         | `/products/:id/reviews`                         |
+| Customer        | `/customers/me`, `/addresses`                   |
+| Returns         | `/returns`                                      |
+| Admin           | `/admin/dashboard`                              |
+| Admin products  | `/admin/products`                               |
+| Admin orders    | `/admin/orders`                                 |
+| Admin inventory | `/admin/inventory`                              |
+| Admin customers | `/admin/customers`                              |
+| Admin reports   | `/admin/reports`                                |
+
+### Recommended backend structure
+
+```
+backend/
+├── src/
+│   ├── config/
+│   │   ├── database.js
+│   │   └── payment.js
+│   ├── controllers/
+│   ├── services/
+│   ├── models/
+│   ├── routes/
+│   ├── middleware/
+│   │   ├── authenticate.js
+│   │   ├── authorize.js
+│   │   ├── validate.js
+│   │   └── errorHandler.js
+│   ├── validators/
+│   ├── utils/
+│   └── server.js
+├── migrations/
+├── seeds/
+├── tests/
+└── package.json
+```
+
+### Payment integration
+
+Razorpay payment flow:
+
+\#chatgpt-mermaid-\_r_1ak\_{font-family:-apple-system-body,ui-sans-serif,-apple-system,system-ui,"Segoe UI",Helvetica,"Apple Color Emoji",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol";font-size:16px;fill:rgb(237, 237, 237);}@keyframes edge-animation-frame{from{stroke-dashoffset:0;}}@keyframes dash{to{stroke-dashoffset:0;}}#chatgpt-mermaid-\_r_1ak\_ .edge-animation-slow{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 50s linear infinite;stroke-linecap:round;}#chatgpt-mermaid-\_r_1ak\_ .edge-animation-fast{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 20s linear infinite;stroke-linecap:round;}#chatgpt-mermaid-\_r_1ak\_ .error-icon{fill:rgb(48, 48, 48);}#chatgpt-mermaid-\_r_1ak\_ .error-text{fill:rgb(237, 237, 237);stroke:rgb(237, 237, 237);}#chatgpt-mermaid-\_r_1ak\_ .edge-thickness-normal{stroke-width:1px;}#chatgpt-mermaid-\_r_1ak\_ .edge-thickness-thick{stroke-width:3.5px;}#chatgpt-mermaid-\_r_1ak\_ .edge-pattern-solid{stroke-dasharray:0;}#chatgpt-mermaid-\_r_1ak\_ .edge-thickness-invisible{stroke-width:0;fill:none;}#chatgpt-mermaid-\_r_1ak\_ .edge-pattern-dashed{stroke-dasharray:3;}#chatgpt-mermaid-\_r_1ak\_ .edge-pattern-dotted{stroke-dasharray:2;}#chatgpt-mermaid-\_r_1ak\_ .marker{fill:rgb(175, 175, 175);stroke:rgb(175, 175, 175);}#chatgpt-mermaid-\_r_1ak\_ .marker.cross{stroke:rgb(175, 175, 175);}#chatgpt-mermaid-\_r_1ak\_ svg{font-family:-apple-system-body,ui-sans-serif,-apple-system,system-ui,"Segoe UI",Helvetica,"Apple Color Emoji",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol";font-size:16px;}#chatgpt-mermaid-\_r_1ak\_ p{margin:0;}#chatgpt-mermaid-\_r_1ak\_ .label{font-family:-apple-system-body,ui-sans-serif,-apple-system,system-ui,"Segoe UI",Helvetica,"Apple Color Emoji",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol";color:rgb(237, 237, 237);}#chatgpt-mermaid-\_r_1ak\_ .cluster-label text{fill:rgb(237, 237, 237);}#chatgpt-mermaid-\_r_1ak\_ .cluster-label span{color:rgb(237, 237, 237);}#chatgpt-mermaid-\_r_1ak\_ .cluster-label span p{background-color:transparent;}#chatgpt-mermaid-\_r_1ak\_ .label text,#chatgpt-mermaid-\_r_1ak\_ span{fill:rgb(237, 237, 237);color:rgb(237, 237, 237);}#chatgpt-mermaid-\_r_1ak\_ .node rect,#chatgpt-mermaid-\_r_1ak\_ .node circle,#chatgpt-mermaid-\_r_1ak\_ .node ellipse,#chatgpt-mermaid-\_r_1ak\_ .node polygon,#chatgpt-mermaid-\_r_1ak\_ .node path{fill:rgb(9, 23, 44);stroke:rgb(31, 78, 148);stroke-width:1px;}#chatgpt-mermaid-\_r_1ak\_ .rough-node .label text,#chatgpt-mermaid-\_r_1ak\_ .node .label text,#chatgpt-mermaid-\_r_1ak\_ .image-shape .label,#chatgpt-mermaid-\_r_1ak\_ .icon-shape .label{text-anchor:middle;}#chatgpt-mermaid-\_r_1ak\_ .node .katex path{fill:#000;stroke:#000;stroke-width:1px;}#chatgpt-mermaid-\_r_1ak\_ .rough-node .label,#chatgpt-mermaid-\_r_1ak\_ .node .label,#chatgpt-mermaid-\_r_1ak\_ .image-shape .label,#chatgpt-mermaid-\_r_1ak\_ .icon-shape .label{text-align:center;}#chatgpt-mermaid-\_r_1ak\_ .node.clickable{cursor:pointer;}#chatgpt-mermaid-\_r_1ak\_ .root .anchor path{fill:rgb(175, 175, 175)!important;stroke-width:0;stroke:rgb(175, 175, 175);}#chatgpt-mermaid-\_r_1ak\_ .arrowheadPath{fill:rgb(175, 175, 175);}#chatgpt-mermaid-\_r_1ak\_ .edgePath .path{stroke:rgb(175, 175, 175);stroke-width:1px;}#chatgpt-mermaid-\_r_1ak\_ .flowchart-link{stroke:rgb(175, 175, 175);fill:none;}#chatgpt-mermaid-\_r_1ak\_ .edgeLabel{background-color:rgb(0, 0, 0);text-align:center;}#chatgpt-mermaid-\_r_1ak\_ .edgeLabel p{background-color:rgb(0, 0, 0);}#chatgpt-mermaid-\_r_1ak\_ .edgeLabel rect{opacity:0.5;background-color:rgb(0, 0, 0);fill:rgb(0, 0, 0);}#chatgpt-mermaid-\_r_1ak\_ .labelBkg{background-color:rgba(0, 0, 0, 0.5);}#chatgpt-mermaid-\_r_1ak\_ .cluster rect{fill:rgb(48, 48, 48);stroke:rgba(255, 255, 255, 0.15);stroke-width:1px;}#chatgpt-mermaid-\_r_1ak\_ .cluster text{fill:rgb(237, 237, 237);}#chatgpt-mermaid-\_r_1ak\_ .cluster span{color:rgb(237, 237, 237);}#chatgpt-mermaid-\_r_1ak\_ div.mermaidTooltip{position:absolute;text-align:center;max-width:200px;padding:2px;font-family:-apple-system-body,ui-sans-serif,-apple-system,system-ui,"Segoe UI",Helvetica,"Apple Color Emoji",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol";font-size:12px;background:rgb(48, 48, 48);border:1px solid rgba(255, 255, 255, 0.15);border-radius:2px;pointer-events:none;z-index:100;}#chatgpt-mermaid-\_r_1ak\_ .flowchartTitleText{text-anchor:middle;font-size:18px;fill:rgb(237, 237, 237);}#chatgpt-mermaid-\_r_1ak\_ rect.text{fill:none;stroke-width:0;}#chatgpt-mermaid-\_r_1ak\_ .icon-shape,#chatgpt-mermaid-\_r_1ak\_ .image-shape{background-color:rgb(0, 0, 0);text-align:center;}#chatgpt-mermaid-\_r_1ak\_ .icon-shape p,#chatgpt-mermaid-\_r_1ak\_ .image-shape p{background-color:rgb(0, 0, 0);padding:2px;}#chatgpt-mermaid-\_r_1ak\_ .icon-shape .label rect,#chatgpt-mermaid-\_r_1ak\_ .image-shape .label rect{opacity:0.5;background-color:rgb(0, 0, 0);fill:rgb(0, 0, 0);}#chatgpt-mermaid-\_r_1ak\_ .label-icon{display:inline-block;height:1em;overflow:visible;vertical-align:-0.125em;}#chatgpt-mermaid-\_r_1ak\_ .node .label-icon path{fill:currentColor;stroke:revert;stroke-width:revert;}#chatgpt-mermaid-\_r_1ak\_ .node .neo-node{stroke:rgb(31, 78, 148);}#chatgpt-mermaid-\_r_1ak\_ [data-look="neo"].node rect,#chatgpt-mermaid-\_r_1ak\_ [data-look="neo"].cluster rect,#chatgpt-mermaid-\_r_1ak\_ [data-look="neo"].node polygon{stroke:url(#chatgpt-mermaid-\_r_1ak\_-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#chatgpt-mermaid-\_r_1ak\_ [data-look="neo"].swimlane.cluster rect{filter:none;}#chatgpt-mermaid-\_r_1ak\_ [data-look="neo"].node path{stroke:url(#chatgpt-mermaid-\_r_1ak\_-gradient);stroke-width:1px;}#chatgpt-mermaid-\_r_1ak\_ [data-look="neo"].node .outer-path{filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#chatgpt-mermaid-\_r_1ak\_ [data-look="neo"].node .neo-line path{stroke:rgb(31, 78, 148);filter:none;}#chatgpt-mermaid-\_r_1ak\_ [data-look="neo"].node circle{stroke:url(#chatgpt-mermaid-\_r_1ak\_-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#chatgpt-mermaid-\_r_1ak\_ [data-look="neo"].node circle .state-start{fill:#000000;}#chatgpt-mermaid-\_r_1ak\_ [data-look="neo"].icon-shape .icon{fill:url(#chatgpt-mermaid-\_r_1ak\_-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#chatgpt-mermaid-\_r_1ak\_ [data-look="neo"].icon-shape .icon-neo path{stroke:url(#chatgpt-mermaid-\_r_1ak\_-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#chatgpt-mermaid-\_r_1ak\_ .node text{font-size:14px;font-weight:600;letter-spacing:normal;fill:rgb(153, 206, 255);}#chatgpt-mermaid-\_r_1ak\_ .edgeLabels text{font-size:13px;font-weight:600;letter-spacing:-0.08px;fill:rgb(153, 206, 255);}#chatgpt-mermaid-\_r_1ak\_ .node tspan[font-weight="normal"],#chatgpt-mermaid-\_r_1ak\_ .edgeLabels tspan[font-weight="normal"]{font-weight:600;}#chatgpt-mermaid-\_r_1ak\_ .edgeLabel .label rect{opacity:1;rx:13px;ry:13px;fill:rgb(0, 14, 26);stroke:rgb(26, 62, 95);stroke-width:1px;}#chatgpt-mermaid-\_r_1ak\_ .node rect,#chatgpt-mermaid-\_r_1ak\_ .node circle,#chatgpt-mermaid-\_r_1ak\_ .node ellipse,#chatgpt-mermaid-\_r_1ak\_ .node polygon,#chatgpt-mermaid-\_r_1ak\_ .node path{fill:rgb(0, 40, 77);stroke:rgba(255, 255, 255, 0.1);stroke-width:1px;}#chatgpt-mermaid-\_r_1ak\_ .node rect{rx:16px;ry:16px;}#chatgpt-mermaid-\_r_1ak\_ .mermaid-decision .label-container{fill:rgb(0, 14, 26);stroke:rgb(26, 62, 95);stroke-dasharray:2,2;}#chatgpt-mermaid-\_r_1ak\_ .edgePaths .flowchart-link{stroke:rgb(175, 175, 175);stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;}#chatgpt-mermaid-\_r_1ak\_ .marker{fill:rgb(175, 175, 175);stroke:rgb(175, 175, 175);}#chatgpt-mermaid-\_r_1ak\_ :root{--mermaid-font-family:-apple-system-body,ui-sans-serif,-apple-system,system-ui,"Segoe UI",Helvetica,"Apple Color Emoji",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol";}Customer CheckoutBackend validates cartCreate Pending OrderCreate Razorpay OrderCustomer PaysRazorpay CallbackVerify SignaturePayment Valid?Confirm Payment and OrderMark Payment FailedReserve or Deduct StockSend Order ConfirmationYesNo
+
+Important: Payment verification must happen on the backend. Use verified Razorpay webhooks for payment events, implement idempotency, and never trust the frontend success callback alone.
+
+## 8. Complete customer user journeys
+
+### Journey A – First-time customer
+
+1. Discover the fashion brand through homepage.
+2. Explore women's or men's collection.
+3. Apply size, color and price filters.
+4. Open product details and check sizing.
+5. Add product to wishlist or shopping bag.
+6. Continue as guest or register.
+7. Enter delivery address.
+8. Pay securely.
+9. Receive order confirmation.
+
+### Journey B – Returning customer
+
+- Login using email/mobile.
+- Access saved addresses.
+- View previously purchased products.
+- Reorder or explore new arrivals.
+- Checkout with fewer steps.
+- Track existing orders.
+
+### Journey C – Product return
+
+- Open order history.
+- Select delivered product.
+- Choose return or exchange.
+- Select reason.
+- Upload images if required.
+- Submit request.
+- Admin reviews request.
+- Refund or exchange is processed.
+
+### Journey D – Admin workflow
+
+- Login to admin dashboard.
+- Check daily sales and new orders.
+- Manage inventory.
+- Process orders.
+- Update shipment status.
+- Review customer queries.
+- Check reports and business performance.
+
+## 9. UX states and interactions
+
+Every page should have more than just a successful display state.
+
+| State           | Required UI                     |
+| --------------- | ------------------------------- |
+| Loading         | Skeleton loaders                |
+| Empty           | Illustrations and helpful CTA   |
+| Error           | Clear explanation and retry     |
+| Success         | Confirmation message            |
+| Disabled        | Visually disabled controls      |
+| Out of stock    | Notify-me option                |
+| Invalid size    | Size selection guidance         |
+| Payment pending | Payment status screen           |
+| Payment failed  | Retry payment option            |
+| Network error   | Retry and preserve entered data |
+
+Luxury interaction details
+
+- Smooth image transitions.
+- Subtle hover zoom on product photography.
+- Elegant navigation dropdowns.
+- Animated wishlist icon.
+- Quick-view modal.
+- Cart drawer animation.
+- Clear toast notifications.
+- Consistent button states.
+
+Avoid excessive animation because shopping speed and accessibility matter more than visual effects.
+
+## 10. Security, performance and SEO
+
+### Security
+
+- JWT authentication with secure refresh-token handling.
+- Role-based access control.
+- Password hashing.
+- Rate limiting.
+- Request validation and sanitization.
+- Secure HTTP-only cookies.
+- CSRF protection where applicable.
+- Payment signature verification.
+- Admin audit logs.
+- Database backups.
+
+### Performance
+
+- Lazy-loaded product images.
+- WebP/AVIF image formats.
+- Responsive image sizes.
+- Pagination for product listings.
+- Database indexing.
+- API caching where appropriate.
+- Code splitting.
+- CDN for static assets.
+
+### SEO
+
+- Unique product titles and descriptions.
+- SEO-friendly URLs.
+- Product structured data.
+- Canonical URLs.
+- XML sitemap.
+- Robots.txt.
+- Open Graph images.
+- Product availability and price metadata.
+
+## 11. Recommended implementation roadmap
+
+A practical 8-week development plan:
+
+| Week | Deliverables                               |
+| ---- | ------------------------------------------ |
+| 1    | Brand identity, wireframes, design system  |
+| 2    | Homepage, navigation, collections          |
+| 3    | Product listing, details, search, wishlist |
+| 4    | Cart, checkout, authentication             |
+| 5    | Backend, MySQL schema, product APIs        |
+| 6    | Admin dashboard, inventory, orders         |
+| 7    | Razorpay, shipping, reports, notifications |
+| 8    | QA, responsive testing, SEO and deployment |
+
+### Testing checklist
+
+Production readiness
+
+0/14 completed
+
+All customer pages work on mobile and desktop
+
+Product sizes and colors update correctly
+
+Product stock updates correctly
+
+Cart survives page refresh and login
+
+Coupon calculations are correct
+
+Address validation works
+
+Payment signature is verified
+
+Duplicate payment webhooks are handled safely
+
+Orders and invoices display correctly
+
+Admin permissions are enforced
+
+Returns and refunds work correctly
+
+SEO metadata and sitemap are configured
+
+Database backup and recovery are tested
+
+Production HTTPS and error logging are enabled
+
+Reset checklist
+
+## 12. Final recommended technology stack
+
+Frontend
+
+React + Vite + Tailwind CSS + shadcn/ui + React Router + TanStack Query
+
+Backend
+
+Node.js + Express.js + REST API + JWT + Zod
+
+Database
+
+MySQL + Sequelize or Prisma ORM
+
+Payments
+
+Razorpay + verified webhooks
+
+Infrastructure
+
+Cloudinary + Hostinger/VPS + Nginx + SSL
+
+## 13. Final project structure
+
+```
+luxury-fashion-store/
+│
+├── frontend/
+│   ├── src/
+│   │   ├── app/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   │   ├── storefront/
+│   │   │   ├── account/
+│   │   │   └── admin/
+│   │   ├── services/
+│   │   ├── hooks/
+│   │   ├── context/
+│   │   └── styles/
+│   └── package.json
+│
+├── backend/
+│   ├── src/
+│   │   ├── config/
+│   │   ├── controllers/
+│   │   ├── services/
+│   │   ├── models/
+│   │   ├── routes/
+│   │   ├── middleware/
+│   │   └── server.js
+│   ├── migrations/
+│   ├── seeds/
+│   └── package.json
+│
+├── database/
+│   └── schema.sql
+│
+├── docs/
+│   ├── api-documentation.md
+│   ├── database-design.md
+│   └── ui-ux-guidelines.md
+│
+└── README.md
+```
+
+## 14. Recommended final design direction
+
+[Maison Website by Adeyi Olamide on Dribbble](https://images.openai.com/static-rsc-4/EFYJPaSYpS9OdXXm5gEcR4B9WmhZQYXX7foyK9DgoJgLQw98iweLKlio3FVfgpCvXU-27NlOwqNV9dCnY-CpluJd4dS6fSiw_sz7l9qVA3yCOwM6Vc7lGl4V0hBZoCtnCsIV1k2pL8wH76Oi870JZ80JrbO0xOuwUk3uXU5B4-g?purpose=inline)
+
+[Heba Shaikh —       Chloe Livock Studio](https://images.openai.com/static-rsc-4/fb-SIq0pfTs582yj75NVZ2mxLsWGpfSLUIqDUHvldrMxcG9UnB6ycrQXTvP68CKdLiq6skzCF1h-Byn9hlXiLgQ4Cegm4S6g7wpqIuRccJjj9GOkTgzj1BrDnoilduFAqCSla5HTxiX0yI22Exat7lNDEloNTviUfxUi9gdO5GQ?purpose=inline)
+
+[Super Admin Dashboard | Streamline Fashion Operations by Azizur Rahaman on Dribbble](https://images.openai.com/static-rsc-4/PBALjibvsuiAjDY4uVqgqnRPwgMWxRkwNAHeXU9XZhi-UdXa6dasS38yWkPMw9gL8WBBv1hbVkeBSevYrTxc6xGCApK-Fr1Guh_WYO06Z88zUEn1a5BSu3Cwl7UqHxuF1ziOy81zmTHLfuCFXeryHCJiLeOqJOy15v15whk-hec?purpose=inline)
+
+15
+
+My recommendation is to build this as a single-brand luxury fashion store, not a multi-vendor marketplace.
+
+Prioritize:
+
+1. Beautiful editorial homepage.
+2. High-quality product photography.
+3. Excellent clothing size and variant selection.
+4. Simple checkout.
+5. Accurate stock management.
+6. Powerful admin dashboard.
+
+This gives the store a premium brand identity without sacrificing shopping usability.
+
+Suggested next development step: Create the complete React frontend UI with all customer pages, reusable components, responsive layouts and the admin dashboard, using realistic sample products before connecting the backend.
+
+Would you like a weekday development check-in while building this project?
+
+👗Review fashion store development progressTap to set up

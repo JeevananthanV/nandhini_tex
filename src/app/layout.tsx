@@ -1,8 +1,11 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Fraunces } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as SonnerToaster } from "@/components/ui/sonner";
+import { SEO_KEYWORDS } from "@/lib/seo";
+
+const SITE_URL = "https://nandhinitex.com";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -17,34 +20,105 @@ const fraunces = Fraunces({
   axes: ["opsz", "SOFT"],
 });
 
-export const metadata: Metadata = {
-  title: "Nandhini Tex — Handwoven Silk & Cotton Sarees | Elegance Meets Tradition",
-  description:
-    "Curated handwoven silk & cotton sarees from Elampillai, Kanchipuram and Tamil Nadu weaving centers. Soft Silk, Kanchipuram, Bridal, Designer, Cotton sarees, dhotis & shirts. COD available, pan-India shipping.",
-  keywords: [
-    "Kanchipuram sarees",
-    "handwoven silk sarees",
-    "bridal sarees",
-    "cotton sarees",
-    "Nandhini Tex",
-    "Elampillai sarees",
-    "Tamil Nadu handloom",
-    "designer sarees",
-    "dhoti",
-    "saree online India",
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#FBF7F1" },
+    { media: "(prefers-color-scheme: dark)", color: "#061229" },
   ],
+  colorScheme: "light dark",
+};
+
+export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Nandhini Tex — Handwoven Silk & Cotton Sarees | Elegance Meets Tradition",
+    template: "%s | Nandhini Tex",
+  },
+  description:
+    "Buy authentic handwoven Kanchipuram silk, soft silk, cotton & bridal sarees direct from Elampillai, Tamil Nadu. Pure mulberry silk, real gold zari, COD available, pan-India shipping, 7-day returns. Shop 70+ handloom weaves.",
+  keywords: SEO_KEYWORDS,
   authors: [{ name: "Nandhini Tex" }],
+  creator: "Nandhini Tex",
+  publisher: "Nandhini Tex",
+  applicationName: "Nandhini Tex",
+  category: "Shopping > Clothing > Sarees",
+  classification: "Sarees, Handloom, Silk, Textiles, Indian Ethnic Wear",
+  robots: {
+    index: true,
+    follow: true,
+    nocache: false,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+  alternates: {
+    canonical: "/",
+    languages: {
+      "en-IN": "/",
+      "x-default": "/",
+    },
+  },
   openGraph: {
-    title: "Nandhini Tex — Handwoven Silk & Cotton Sarees",
-    description: "Elegance Meets Tradition. Curated handwoven sarees from Tamil Nadu.",
-    siteName: "Nandhini Tex",
     type: "website",
     locale: "en_IN",
+    url: SITE_URL,
+    siteName: "Nandhini Tex",
+    title: "Nandhini Tex — Handwoven Silk & Cotton Sarees | Elegance Meets Tradition",
+    description:
+      "Authentic handwoven Kanchipuram silk, soft silk, cotton & bridal sarees from Elampillai, Tamil Nadu. Pure mulberry silk, gold zari, COD, pan-India shipping, 7-day returns.",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Nandhini Tex — Handwoven Silk Sarees from Tamil Nadu",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Nandhini Tex — Handwoven Sarees",
-    description: "Elegance Meets Tradition. Curated handwoven sarees from Tamil Nadu.",
+    site: "@nandhinitex",
+    creator: "@nandhinitex",
+    title: "Nandhini Tex — Handwoven Silk & Cotton Sarees",
+    description:
+      "Authentic handwoven sarees from Elampillai, Tamil Nadu. Kanchipuram silk, bridal, cotton & designer sarees. COD, pan-India shipping.",
+    images: ["/og-image.jpg"],
+  },
+  manifest: "/manifest.json",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/logo.svg", type: "image/svg+xml" },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
+  appleWebApp: {
+    capable: true,
+    title: "Nandhini Tex",
+    statusBarStyle: "default",
+  },
+  formatDetection: {
+    telephone: true,
+    address: true,
+    email: true,
+  },
+  verification: {
+    google: "google-site-verification-token",
+  },
+  other: {
+    "geo.region": "IN-TN",
+    "geo.placename": "Elampillai, Salem, Tamil Nadu",
+    "geo.position": "11.6087;78.2578",
+    "ICBM": "11.6087, 78.2578",
+    "theme-color": "#0A1F44",
+    "msvalidate.01": "bing-site-verification-token",
   },
 };
 
@@ -54,7 +128,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en-IN" dir="ltr" suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://z-cdn.chatglm.cn" />
+        <link rel="dns-prefetch" href="https://z-cdn.chatglm.cn" />
+        <meta name="format-detection" content="telephone=yes, address=yes, email=yes" />
+      </head>
       <body
         className={`${inter.variable} ${fraunces.variable} font-sans antialiased bg-background text-foreground`}
       >
