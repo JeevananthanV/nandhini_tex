@@ -1,0 +1,520 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Heart, ShoppingBag, Truck, RefreshCw, ShieldCheck, Hand, ChevronRight,
+  Check, Minus, Plus, Star, MapPin, ZoomIn, X
+} from "lucide-react";
+import { useStore } from "@/lib/store";
+import { ProductCard } from "./product-card";
+import { StarRating, Price, DiscountBadge, NewBadge, BestsellerBadge } from "./primitives";
+import type { ProductDetail, ReviewOut } from "@/lib/format";
+
+export function ProductPage() {
+  const slug = useStore((s) => s.selectedProductSlug);
+  const goHome = useStore((s) => s.goHome);
+  const goCategory = useStore((s) => s.goCategory);
+  const goProduct = useStore((s) => s.goProduct);
+  const addToCart = useStore((s) => s.addToCart);
+  const toggleWishlist = useStore((s) => s.toggleWishlist);
+  const isWishlisted = useStore((s) => s.wishlist.some((w) => w.productId === (data?.product.id || "")));
+  const openCart = useStore((s) => s.openCart);
+
+  const [data, setData] = useState<{ product: ProductDetail; reviews: ReviewOut[]; related: ProductDetail[] } | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [activeImg, setActiveImg] = useState(0);
+  const [selectedVariant, setSelectedVariant] = useState<string>("");
+  const [selectedColor, setSelectedColor] = useState(0);
+  const [selectedSize, setSelectedSize] = useState<string>("");
+  const [qty, setQty] = useState(1);
+  const [pincode, setPincode] = useState("");
+  const [pincodeResult, setPincodeResult] = useState<{ ok: boolean; msg: string } | null>(null);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [showReviewForm, setShowReviewForm] = useState(false);
+
+  useEffect(() => {
+    if (!slug) return;
+    let cancelled = false;
+    fetch(`/api/products/${slug}`)
+      .then((r) => r.json())
+      .then((d) => {
+        if (cancelled) return;
+        setData(d);
+        setLoading(false);
+        if (d.product?.variants?.length) {
+          setSelectedVariant(d.product.variants[0].id);
+          const sizes = [...new Set(d.product.variants.map((v: { size: string | null }) => v.size).filter(Boolean))] as string[];
+          if (sizes.length > 0) setSelectedSize(sizes[0]);
+        }
+      });
+    return () => { cancelled = true; };
+  }, [slug]);
+
+  const checkPincode = () => {
+    if (pincode.length !== 6) {
+      setPincodeResult({ ok: false, msg: "Please enter a valid 6-digit pincode" });
+      return;
+    }
+    const serviceable = parseInt(pincode) % 3 !== 0; // mock logic
+    setPincodeResult({
+      ok: serviceable,
+      msg: serviceable ? "Delivers in 3–6 days · COD available" : "Sorry, not serviceable at this pincode",
+    });
+  };
+
+  const handleAddToCart = (buyNow = false) => {
+    if (!data) return;
+    const variant = data.product.variants.find((v) => v.id === selectedVariant) || data.product.variants[0];
+    if (!variant) return;
+    addToCart({
+      productId: data.product.id,
+      slug: data.product.slug,
+      variantId: variant.id,
+      title: data.product.title,
+      image: data.product.images[0] || "",
+      color: variant.color,
+      size: variant.size,
+      price: variant.priceOverride || data.product.basePrice,
+      mrp: data.product.mrp,
+      qty,
+    });
+    if (buyNow) {
+      openCart();
+    }
+  };
+
+  if (loading || !data) {
+    return (
+      <div className="min-h-screen pt-20">
+        <div className="mx-auto max-w-7xl px-6 py-12 md:px-8">
+          <div className="grid gap-10 md:grid-cols-2">
+            <div className="aspect-[3/4] animate-pulse rounded-lg bg-muted" />
+            <div className="flex flex-col gap-4">
+              <div className="h-4 w-24 animate-pulse rounded bg-muted" />
+              <div className="h-8 w-3/4 animate-pulse rounded bg-muted" />
+              <div className="h-6 w-32 animate-pulse rounded bg-muted" />
+              <div className="h-24 w-full animate-pulse rounded bg-muted" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const { product, reviews, related } = data;
+  const colors = [...new Map(product.variants.map((v) => [v.color, v])).values()];
+  const sizes = [...new Set(product.variants.map((v) => v.size).filter(Boolean))] as string[];
+  const currentVariant = product.variants.find((v) => v.id === selectedVariant) || product.variants[0];
+  const inStock = currentVariant?.stockQty > 0;
+  const ratingDist = [5, 4, 3, 2, 1].map((star) => ({
+    star,
+    count: reviews.filter((r) => r.rating === star).length,
+  }));
+
+  return (
+    <div className="min-h-screen pt-16">
+      <div className="mx-auto max-w-7xl px-4 py-6 md:px-8 md:py-10">
+        {/* breadcrumb */}
+        <nav className="mb-6 flex items-center gap-1.5 text-xs text-muted-foreground">
+          <button onClick={goHome} className="hover:text-navy">Home</button>
+          <ChevronRight className="h-3 w-3" />
+          <button onClick={() => goCategory(product.categorySlug)} className="hover:text-navy">{product.categoryName}</button>
+          <ChevronRight className="h-3 w-3" />
+          <span className="truncate text-foreground">{product.title}</span>
+        </nav>
+
+        <div className="grid gap-8 md:gap-12 lg:grid-cols-2">
+          {/* Gallery */}
+          <div className="flex flex-col gap-3 md:flex-row-reverse">
+            <div className="relative aspect-[3/4] flex-1 overflow-hidden rounded-lg bg-muted">
+              <Image
+                src={product.images[activeImg] || product.images[0]}
+                alt={product.title}
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="cursor-zoom-in object-cover"
+                onClick={() => setLightboxOpen(true)}
+              />
+              <button
+                onClick={() => setLightboxOpen(true)}
+                className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full bg-background/90 px-3 py-1.5 text-xs font-medium text-navy backdrop-blur hover:bg-background"
+              >
+                <ZoomIn className="h-3.5 w-3.5" /> Zoom
+              </button>
+            </div>
+            {product.images.length > 1 && (
+              <div className="flex gap-2 md:flex-col">
+                {product.images.map((img, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setActiveImg(i)}
+                    className={`relative h-20 w-16 shrink-0 overflow-hidden rounded-md border-2 transition-colors md:h-24 md:w-20 ${activeImg === i ? "border-gold" : "border-transparent opacity-60 hover:opacity-100"}`}
+                  >
+                    <Image src={img} alt={`${product.title} view ${i + 1}`} fill sizes="80px" className="object-cover" />
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Info */}
+          <div className="flex flex-col">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.1em] text-gold-dark">{product.categoryName}</span>
+              {product.isNew && <NewBadge />}
+              {product.isBestseller && <BestsellerBadge />}
+              {product.discountPct > 0 && <DiscountBadge pct={product.discountPct} />}
+            </div>
+            <h1 className="mt-2 font-serif text-2xl font-semibold leading-tight text-foreground md:text-3xl">{product.title}</h1>
+
+            <div className="mt-3 flex items-center gap-3">
+              <StarRating rating={product.rating} size={16} />
+              <span className="text-sm font-medium text-foreground">{product.rating.toFixed(1)}</span>
+              <button className="text-sm text-muted-foreground hover:text-navy">({product.reviewCount} reviews)</button>
+            </div>
+
+            <div className="mt-4 flex items-end gap-3">
+              <Price price={currentVariant?.priceOverride || product.basePrice} mrp={product.mrp} size="lg" />
+              {product.discountPct > 0 && (
+                <span className="mb-1 text-sm font-semibold text-green-700">You save {product.discountPct}%</span>
+              )}
+            </div>
+            <p className="mt-1 text-xs text-muted-foreground">Inclusive of all taxes</p>
+
+            {/* Color selection */}
+            {colors.length > 0 && (
+              <div className="mt-6">
+                <div className="mb-2 flex items-center justify-between">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-navy">Color: <span className="text-foreground normal-case">{colors[selectedColor]?.color}</span></span>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {colors.map((c, i) => (
+                    <button
+                      key={c.id}
+                      onClick={() => { setSelectedColor(i); setSelectedVariant(c.id); }}
+                      className={`relative h-9 w-9 rounded-full border-2 transition-all ${selectedColor === i ? "border-gold ring-2 ring-gold/30" : "border-border hover:border-navy"}`}
+                      title={c.color}
+                    >
+                      <span className="absolute inset-1 rounded-full" style={{ backgroundColor: c.colorHex || "#ccc" }} />
+                      {selectedColor === i && <Check className="absolute inset-0 m-auto h-4 w-4 text-ivory mix-blend-difference" />}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Size selection */}
+            {sizes.length > 0 && (
+              <div className="mt-5">
+                <div className="mb-2 flex items-center justify-between">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-navy">Size</span>
+                  <button className="text-xs text-muted-foreground underline hover:text-navy">Size Guide</button>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {sizes.map((s) => (
+                    <button
+                      key={s}
+                      onClick={() => setSelectedSize(s)}
+                      className={`min-w-[3rem] rounded-sm border px-3 py-2 text-sm font-medium transition-colors ${selectedSize === s ? "border-navy bg-navy text-ivory" : "border-border text-foreground hover:border-navy"}`}
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Stock status */}
+            <div className="mt-5 flex items-center gap-2 text-sm">
+              {inStock ? (
+                <>
+                  <span className="flex h-2 w-2 rounded-full bg-green-600" />
+                  <span className="font-medium text-green-700">In Stock</span>
+                  <span className="text-muted-foreground">· {currentVariant?.stockQty} left</span>
+                </>
+              ) : (
+                <>
+                  <span className="flex h-2 w-2 rounded-full bg-destructive" />
+                  <span className="font-medium text-destructive">Out of Stock</span>
+                </>
+              )}
+            </div>
+
+            {/* Blouse included */}
+            {product.blouseIncluded && (
+              <div className="mt-4 flex items-center gap-2 rounded-md bg-gold/10 px-3 py-2">
+                <Check className="h-4 w-4 text-gold-dark" />
+                <span className="text-xs text-navy">Includes {product.blouseLengthM}m matching running blouse piece</span>
+              </div>
+            )}
+
+            {/* Qty + actions */}
+            <div className="mt-6 flex items-center gap-3">
+              <div className="flex items-center rounded-full border border-border">
+                <button onClick={() => setQty(Math.max(1, qty - 1))} className="flex h-10 w-10 items-center justify-center text-muted-foreground hover:text-navy" aria-label="Decrease quantity">
+                  <Minus className="h-4 w-4" />
+                </button>
+                <span className="w-10 text-center text-sm font-semibold">{qty}</span>
+                <button onClick={() => setQty(qty + 1)} className="flex h-10 w-10 items-center justify-center text-muted-foreground hover:text-navy" aria-label="Increase quantity">
+                  <Plus className="h-4 w-4" />
+                </button>
+              </div>
+              <button
+                onClick={() => handleAddToCart(false)}
+                disabled={!inStock}
+                className="flex flex-1 items-center justify-center gap-2 rounded-sm bg-navy px-6 py-3 text-sm font-semibold text-ivory transition-transform hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <ShoppingBag className="h-4 w-4" /> Add to Bag
+              </button>
+              <button
+                onClick={() => handleAddToCart(true)}
+                disabled={!inStock}
+                className="rounded-sm bg-gold-gradient px-6 py-3 text-sm font-semibold text-navy transition-transform hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Buy Now
+              </button>
+              <button
+                onClick={() => toggleWishlist({ productId: product.id, slug: product.slug, title: product.title, image: product.images[0] || "", price: product.basePrice })}
+                className={`flex h-12 w-12 items-center justify-center rounded-sm border transition-colors ${isWishlisted ? "border-navy bg-navy/5 text-navy" : "border-border text-muted-foreground hover:border-navy"}`}
+                aria-label="Add to wishlist"
+              >
+                <Heart className={`h-5 w-5 ${isWishlisted ? "fill-navy" : ""}`} />
+              </button>
+            </div>
+
+            {/* Pincode check */}
+            <div className="mt-6 rounded-lg border border-border bg-ivory p-4">
+              <div className="flex items-center gap-2">
+                <MapPin className="h-4 w-4 text-navy" />
+                <span className="text-sm font-medium text-navy">Check Delivery</span>
+              </div>
+              <div className="mt-2 flex gap-2">
+                <input
+                  value={pincode}
+                  onChange={(e) => setPincode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                  placeholder="Enter 6-digit pincode"
+                  className="h-10 flex-1 rounded-sm border border-border bg-background px-3 text-sm outline-none focus:border-gold"
+                />
+                <button onClick={checkPincode} className="rounded-sm bg-navy px-4 text-sm font-semibold text-ivory hover:bg-navy-light">
+                  Check
+                </button>
+              </div>
+              {pincodeResult && (
+                <p className={`mt-2 flex items-center gap-1.5 text-xs ${pincodeResult.ok ? "text-green-700" : "text-destructive"}`}>
+                  {pincodeResult.ok ? <Check className="h-3.5 w-3.5" /> : <X className="h-3.5 w-3.5" />}
+                  {pincodeResult.msg}
+                </p>
+              )}
+            </div>
+
+            {/* Fabric / weave details */}
+            <div className="mt-6 grid grid-cols-2 gap-3 rounded-lg border border-border bg-card p-4 text-sm">
+              {product.fabricType && <Detail label="Fabric" value={product.fabricType} />}
+              {product.weaveOrigin && <Detail label="Weave Origin" value={product.weaveOrigin} />}
+              {product.weaveDays && <Detail label="Weave Time" value={`${product.weaveDays} days`} />}
+              {product.zariType && <Detail label="Zari Type" value={product.zariType} />}
+            </div>
+
+            {/* Trust strip */}
+            <div className="mt-5 grid grid-cols-2 gap-3 text-xs text-muted-foreground">
+              <div className="flex items-center gap-2"><Hand className="h-4 w-4 text-gold-dark" /> 100% Handwoven</div>
+              <div className="flex items-center gap-2"><Truck className="h-4 w-4 text-gold-dark" /> Pan-India Shipping</div>
+              <div className="flex items-center gap-2"><RefreshCw className="h-4 w-4 text-gold-dark" /> 7-Day Returns</div>
+              <div className="flex items-center gap-2"><ShieldCheck className="h-4 w-4 text-gold-dark" /> Secure Checkout</div>
+            </div>
+
+            {/* Description */}
+            <div className="mt-6 border-t border-border pt-6">
+              <h3 className="font-serif text-lg font-semibold text-navy">About this saree</h3>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{product.description}</p>
+              {product.careInstructions && (
+                <div className="mt-4 rounded-md bg-muted p-3">
+                  <h4 className="text-xs font-semibold uppercase tracking-wider text-navy">Care Instructions</h4>
+                  <p className="mt-1 text-xs text-muted-foreground">{product.careInstructions}</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Reviews */}
+        <section className="mt-16 border-t border-border pt-12">
+          <div className="flex flex-col gap-8 md:flex-row">
+            <div className="md:w-1/3">
+              <h2 className="font-serif text-2xl font-semibold text-navy">Customer Reviews</h2>
+              <div className="mt-4 flex items-center gap-3">
+                <span className="font-serif text-5xl font-bold text-navy">{product.rating.toFixed(1)}</span>
+                <div>
+                  <StarRating rating={product.rating} size={18} />
+                  <p className="mt-1 text-xs text-muted-foreground">Based on {product.reviewCount} reviews</p>
+                </div>
+              </div>
+              <div className="mt-5 space-y-1.5">
+                {ratingDist.map((r) => (
+                  <div key={r.star} className="flex items-center gap-2 text-xs">
+                    <span className="w-3 text-muted-foreground">{r.star}</span>
+                    <Star className="h-3 w-3 fill-gold text-gold" />
+                    <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted">
+                      <div className="h-full rounded-full bg-gold" style={{ width: `${reviews.length > 0 ? (r.count / reviews.length) * 100 : 0}%` }} />
+                    </div>
+                    <span className="w-6 text-right text-muted-foreground">{r.count}</span>
+                  </div>
+                ))}
+              </div>
+              <button
+                onClick={() => setShowReviewForm(!showReviewForm)}
+                className="mt-6 w-full rounded-sm border border-navy px-4 py-2.5 text-sm font-semibold text-navy hover:bg-navy hover:text-ivory"
+              >
+                Write a Review
+              </button>
+              <AnimatePresence>
+                {showReviewForm && (
+                  <ReviewForm productId={product.id} onClose={() => setShowReviewForm(false)} />
+                )}
+              </AnimatePresence>
+            </div>
+            <div className="flex-1 space-y-5">
+              {reviews.length === 0 ? (
+                <p className="text-sm text-muted-foreground">No reviews yet. Be the first to share your experience!</p>
+              ) : (
+                reviews.map((r) => (
+                  <div key={r.id} className="border-b border-border pb-5">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-navy-gradient font-serif text-xs font-semibold text-gold">
+                            {r.authorName.charAt(0)}
+                          </div>
+                          <div>
+                            <p className="text-sm font-semibold text-foreground">{r.authorName}</p>
+                            {r.authorCity && <p className="text-xs text-muted-foreground">{r.authorCity}</p>}
+                          </div>
+                        </div>
+                      </div>
+                      {r.verified && (
+                        <span className="flex items-center gap-1 rounded-full bg-green-50 px-2 py-0.5 text-[10px] font-medium text-green-700">
+                          <Check className="h-3 w-3" /> Verified
+                        </span>
+                      )}
+                    </div>
+                    <div className="mt-2 flex items-center gap-2">
+                      <StarRating rating={r.rating} size={12} />
+                      <span className="text-xs text-muted-foreground">{new Date(r.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</span>
+                    </div>
+                    <h4 className="mt-2 font-serif text-sm font-semibold text-foreground">{r.title}</h4>
+                    <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{r.body}</p>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </section>
+
+        {/* Related */}
+        {related.length > 0 && (
+          <section className="mt-16 border-t border-border pt-12">
+            <h2 className="font-serif text-2xl font-semibold text-navy">You May Also Like</h2>
+            <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
+              {related.map((p, i) => (
+                <ProductCard
+                  key={p.id}
+                  product={p as any}
+                  index={i}
+                />
+              ))}
+            </div>
+          </section>
+        )}
+      </div>
+
+      {/* Lightbox */}
+      <AnimatePresence>
+        {lightboxOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setLightboxOpen(false)}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-navy-dark/90 p-4 backdrop-blur"
+          >
+            <button className="absolute right-5 top-5 text-ivory" aria-label="Close">
+              <X className="h-7 w-7" />
+            </button>
+            <div className="relative aspect-[3/4] h-[85vh]">
+              <Image src={product.images[activeImg]} alt={product.title} fill sizes="80vw" className="object-contain" onClick={(e) => e.stopPropagation()} />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+function Detail({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <dt className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{label}</dt>
+      <dd className="mt-0.5 font-medium text-foreground">{value}</dd>
+    </div>
+  );
+}
+
+function ReviewForm({ productId, onClose }: { productId: string; onClose: () => void }) {
+  const [rating, setRating] = useState(5);
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
+  const [name, setName] = useState("");
+  const [city, setCity] = useState("");
+  const [done, setDone] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    await fetch("/api/reviews", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ productId, authorName: name, authorCity: city, rating, title, body: body }),
+    });
+    setLoading(false);
+    setDone(true);
+    setTimeout(onClose, 2500);
+  };
+
+  if (done) {
+    return (
+      <div className="mt-4 rounded-md border border-gold/40 bg-gold/10 p-4 text-sm text-navy">
+        Thank you! Your review has been submitted and will appear once approved.
+      </div>
+    );
+  }
+
+  return (
+    <motion.form
+      initial={{ opacity: 0, height: 0 }}
+      animate={{ opacity: 1, height: "auto" }}
+      onSubmit={submit}
+      className="mt-4 space-y-3 overflow-hidden rounded-md border border-border bg-card p-4"
+    >
+      <div>
+        <label className="text-xs font-semibold uppercase tracking-wider text-navy">Your Rating</label>
+        <div className="mt-1.5 flex gap-1">
+          {[1, 2, 3, 4, 5].map((i) => (
+            <button key={i} type="button" onClick={() => setRating(i)} aria-label={`${i} stars`}>
+              <Star className={`h-6 w-6 ${i <= rating ? "fill-gold text-gold" : "fill-transparent text-muted-foreground/40"}`} />
+            </button>
+          ))}
+        </div>
+      </div>
+      <input required value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" className="h-10 w-full rounded-sm border border-border px-3 text-sm outline-none focus:border-gold" />
+      <input value={city} onChange={(e) => setCity(e.target.value)} placeholder="City (optional)" className="h-10 w-full rounded-sm border border-border px-3 text-sm outline-none focus:border-gold" />
+      <input required value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Review title" className="h-10 w-full rounded-sm border border-border px-3 text-sm outline-none focus:border-gold" />
+      <textarea required value={body} onChange={(e) => setBody(e.target.value)} placeholder="Share your experience..." rows={3} className="w-full rounded-sm border border-border p-3 text-sm outline-none focus:border-gold" />
+      <button type="submit" disabled={loading} className="rounded-sm bg-navy px-4 py-2 text-sm font-semibold text-ivory hover:bg-navy-light disabled:opacity-50">
+        {loading ? "Submitting..." : "Submit Review"}
+      </button>
+    </motion.form>
+  );
+}

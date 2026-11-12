@@ -1,0 +1,65 @@
+{
+  "softSilk": [
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/f2d2d11dfedb.jpg",
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/0836cc870cda.jpg",
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/ac6d226da74c.jpg",
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/c5af66d51871.jpg",
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/dc4814dd8745.jpeg"
+  ],
+  "kanchipuram": [
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/e57893896ef2.webp",
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/82b479bc0c52.jpg",
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/61510f1a0693.png",
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/c6bab5b3302e.jpg",
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/7285fe618040.png"
+  ],
+  "cotton": [
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/8c5dcb89a6fe.jpg",
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/4738bab326dd.png",
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/a6f93b1d40d5.webp",
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/46dae72b4c98.jpg",
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/d40a3a35a309.jpg"
+  ],
+  "bridal": [
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/34b61bbedff3.jpg",
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/da6a6323db3d.jpg",
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/b0c231bcd321.jpg",
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/cb27427a0dbb.jpg",
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/c55ca8762506.jpg"
+  ],
+  "designer": [
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/fbb5a4b85795.jpg",
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/36f3fe06de0d.jpg",
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/dc523e11bf9f.jpg",
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/9c50032276af.webp",
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/18e65cd10a25.png"
+  ],
+  "dhoti": [
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/a4dc72a7acb0.jpg",
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/0bd42137d1b0.jpg",
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/f9ca39afbaa3.png",
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/03e26768ed26.jpg"
+  ],
+  "shirt": [
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/e040cb8a8e32.jpg",
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/ef9c15ddfbe5.jpg",
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/175318f37f99.jpg",
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/86961bccd732.png"
+  ],
+  "couple": [
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/1a49091f6e8d.png",
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/3b4563609566.png",
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/bb817970d692.jpg",
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/e6ff9ff80aed.webp"
+  ],
+  "hero": [
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/504fe6faa6dc.jpg",
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/57427ea841a4.png",
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/b769747c7eb7.jpg"
+  ],
+  "weaving": [
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/a7699e04fe3b.png",
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/aea3f7f399cb.jpg",
+    "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/c0b699902562.jpg"
+  ]
+}
