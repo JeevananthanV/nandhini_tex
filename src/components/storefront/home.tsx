@@ -13,6 +13,8 @@ import {
 import { useStore } from "@/lib/store";
 import { ProductCard } from "./product-card";
 import { StarRating } from "./primitives";
+import { AnimatedCounter, Marquee, TextReveal, MagneticButton, SectionReveal, StaggerGrid, StaggerItem } from "./premium";
+import { CountdownTimer } from "./premium-features";
 import type { ProductCard as ProductCardType } from "@/lib/format";
 
 type Category = { id: string; name: string; slug: string; description: string | null; bannerImage: string | null; productCount: number };
@@ -100,18 +102,19 @@ export function HomePage({ categories }: { categories: Category[] }) {
               Curated handwoven silk & cotton sarees from Elampillai, Kanchipuram & Arani — woven on traditional looms by master artisans.
             </p>
             <div className="mt-7 flex flex-wrap gap-3">
-              <button
+              <MagneticButton
                 onClick={() => goCategory("bridal")}
-                className="rounded-sm bg-gold-gradient px-7 py-3 text-sm font-semibold text-navy shadow-gold transition-transform hover:scale-[1.02]"
+                className="rounded-sm bg-gold-gradient px-7 py-3 text-sm font-semibold text-navy shadow-gold"
               >
                 Explore Bridal Collection
-              </button>
-              <button
+              </MagneticButton>
+              <MagneticButton
                 onClick={() => goCategory("soft-silk")}
-                className="rounded-sm border border-ivory/40 px-7 py-3 text-sm font-semibold text-ivory backdrop-blur transition-colors hover:bg-ivory/10"
+                className="rounded-sm border border-ivory/40 px-7 py-3 text-sm font-semibold text-ivory backdrop-blur"
+                strength={0.2}
               >
                 Shop All Sarees
-              </button>
+              </MagneticButton>
             </div>
             <div className="mt-9 flex items-center gap-6 text-ivory/70">
               <div className="flex items-center gap-1.5">
@@ -236,15 +239,15 @@ export function HomePage({ categories }: { categories: Category[] }) {
             </p>
             <div className="mt-6 flex gap-8">
               <div>
-                <div className="font-serif text-3xl font-bold text-gold">70+</div>
+                <div className="font-serif text-3xl font-bold text-gold"><AnimatedCounter value={70} suffix="+" /></div>
                 <div className="text-xs uppercase tracking-wider text-ivory/60">Unique Weaves</div>
               </div>
               <div>
-                <div className="font-serif text-3xl font-bold text-gold">2,400+</div>
+                <div className="font-serif text-3xl font-bold text-gold"><AnimatedCounter value={2400} suffix="+" /></div>
                 <div className="text-xs uppercase tracking-wider text-ivory/60">Happy Customers</div>
               </div>
               <div>
-                <div className="font-serif text-3xl font-bold text-gold">4.8★</div>
+                <div className="font-serif text-3xl font-bold text-gold"><AnimatedCounter value={4.8} decimals={1} suffix="★" /></div>
                 <div className="text-xs uppercase tracking-wider text-ivory/60">Avg. Rating</div>
               </div>
             </div>
@@ -263,7 +266,19 @@ export function HomePage({ categories }: { categories: Category[] }) {
 
       {/* ===== OFFERS ===== */}
       {offers.length > 0 && (
-        <ProductRail eyebrow="Limited Time" title="Offer Sarees" products={offers} />
+        <section className="bg-ivory">
+          <div className="mx-auto max-w-7xl px-6 py-16 md:px-8 md:py-24">
+            <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
+              <SectionHeading eyebrow="Limited Time" title="Offer Sarees" />
+              <CountdownTimer targetDate={new Date(Date.now() + 3 * 24 * 60 * 60 * 1000)} className="rounded-lg border border-gold/30 bg-gold/5 px-4 py-2" />
+            </div>
+            <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
+              {offers.map((p, i) => (
+                <ProductCard key={p.id} product={p} index={i} />
+              ))}
+            </div>
+          </div>
+        </section>
       )}
 
       {/* ===== MENSWEAR ===== */}

@@ -2,10 +2,12 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Heart, ShoppingBag, Eye } from "lucide-react";
+import { Heart, ShoppingBag, Eye, Maximize2 } from "lucide-react";
 import type { ProductCard } from "@/lib/format";
 import { useStore } from "@/lib/store";
 import { Price, DiscountBadge, NewBadge, BestsellerBadge, StarRating } from "./primitives";
+import { TiltCard } from "./premium";
+import { openQuickView } from "./premium-features";
 import { cn } from "@/lib/utils";
 
 export function ProductCard({ product, index = 0 }: { product: ProductCard; index?: number }) {
@@ -25,7 +27,7 @@ export function ProductCard({ product, index = 0 }: { product: ProductCard; inde
       transition={{ duration: 0.4, delay: (index % 4) * 0.06, ease: [0.22, 1, 0.36, 1] }}
       className="group relative flex flex-col"
     >
-      <div className="relative aspect-[3/4] overflow-hidden rounded-md bg-muted">
+      <TiltCard maxTilt={6} className="aspect-[3/4] overflow-hidden rounded-md bg-muted">
         <button
           onClick={() => goProduct(product.slug)}
           className="absolute inset-0 z-10"
@@ -36,14 +38,14 @@ export function ProductCard({ product, index = 0 }: { product: ProductCard; inde
           alt={product.title}
           fill
           sizes="(max-width: 768px) 50vw, 25vw"
-          className="object-cover transition-all duration-500 ease-out group-hover:scale-105 group-hover:opacity-0"
+          className="object-cover transition-all duration-700 ease-out group-hover:scale-110 group-hover:opacity-0"
         />
         <Image
           src={altImg}
           alt={`${product.title} alternate view`}
           fill
           sizes="(max-width: 768px) 50vw, 25vw"
-          className="object-cover opacity-0 transition-all duration-500 ease-out group-hover:scale-105 group-hover:opacity-100"
+          className="object-cover opacity-0 transition-all duration-700 ease-out group-hover:scale-110 group-hover:opacity-100"
         />
         {/* badges */}
         <div className="absolute left-2 top-2 z-20 flex flex-col items-start gap-1">
@@ -58,7 +60,7 @@ export function ProductCard({ product, index = 0 }: { product: ProductCard; inde
             </span>
           </div>
         )}
-        {/* quick add */}
+        {/* quick add + quick view */}
         <div className="absolute inset-x-2 bottom-2 z-20 flex translate-y-3 gap-2 opacity-0 transition-all duration-300 ease-out group-hover:translate-y-0 group-hover:opacity-100">
           <button
             onClick={(e) => {
@@ -83,15 +85,16 @@ export function ProductCard({ product, index = 0 }: { product: ProductCard; inde
           <button
             onClick={(e) => {
               e.stopPropagation();
-              goProduct(product.slug);
+              openQuickView(product.id);
             }}
             className="flex items-center justify-center rounded-md border border-border bg-background/90 px-2.5 py-2 text-navy backdrop-blur transition-colors hover:border-gold"
-            aria-label="Quick view"
+            aria-label="Quick view product"
+            title="Quick view"
           >
-            <Eye className="h-3.5 w-3.5" />
+            <Maximize2 className="h-3.5 w-3.5" />
           </button>
         </div>
-      </div>
+      </TiltCard>
 
       <div className="mt-3 flex flex-col gap-1">
         <span className="text-[10px] font-medium uppercase tracking-[0.08em] text-gold-dark">

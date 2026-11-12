@@ -109,6 +109,7 @@ export function Header({ categories }: { categories: { id: string; name: string;
               <Shield className="h-4 w-4" /> Admin
             </button>
             <button
+              onClick={() => window.dispatchEvent(new Event("open-wishlist"))}
               className={cn("relative flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-muted", onHome && !scrolled ? "text-ivory" : "text-foreground")}
               aria-label={`Wishlist, ${wishlistCount} items`}
             >

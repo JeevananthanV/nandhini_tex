@@ -10,6 +10,9 @@ import {
 import { useStore } from "@/lib/store";
 import { ProductCard } from "./product-card";
 import { StarRating, Price, DiscountBadge, NewBadge, BestsellerBadge } from "./primitives";
+import { Viewer360, DeepZoom } from "./viewers";
+import { addRecentlyViewed } from "./premium-features";
+import { SectionReveal } from "./premium";
 import type { ProductDetail, ReviewOut } from "@/lib/format";
 
 export function ProductPage() {
@@ -33,6 +36,7 @@ export function ProductPage() {
   const [pincodeResult, setPincodeResult] = useState<{ ok: boolean; msg: string } | null>(null);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [showReviewForm, setShowReviewForm] = useState(false);
+  const [galleryMode, setGalleryMode] = useState<"gallery" | "360" | "zoom">("gallery");
 
   useEffect(() => {
     if (!slug) return;
@@ -43,6 +47,7 @@ export function ProductPage() {
         if (cancelled) return;
         setData(d);
         setLoading(false);
+        if (d.product?.id) addRecentlyViewed(d.product.id);
         if (d.product?.variants?.length) {
           setSelectedVariant(d.product.variants[0].id);
           const sizes = [...new Set(d.product.variants.map((v: { size: string | null }) => v.size).filter(Boolean))] as string[];
@@ -126,35 +131,60 @@ export function ProductPage() {
         </nav>
 
         <div className="grid gap-8 md:gap-12 lg:grid-cols-2">
-          {/* Gallery */}
-          <div className="flex flex-col gap-3 md:flex-row-reverse">
-            <div className="relative aspect-[3/4] flex-1 overflow-hidden rounded-lg bg-muted">
-              <Image
-                src={product.images[activeImg] || product.images[0]}
-                alt={product.title}
-                fill
-                sizes="(max-width: 768px) 100vw, 50vw"
-                className="cursor-zoom-in object-cover"
-                onClick={() => setLightboxOpen(true)}
-              />
-              <button
-                onClick={() => setLightboxOpen(true)}
-                className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full bg-background/90 px-3 py-1.5 text-xs font-medium text-navy backdrop-blur hover:bg-background"
-              >
-                <ZoomIn className="h-3.5 w-3.5" /> Zoom
-              </button>
+          {/* Gallery with 360° + Deep Zoom modes */}
+          <div className="flex flex-col gap-3">
+            {/* Mode toggle */}
+            <div className="flex gap-2">
+              {[
+                { id: "gallery", label: "Gallery" },
+                { id: "360", label: "View 360°" },
+                { id: "zoom", label: "Deep Zoom" },
+              ].map((m) => (
+                <button
+                  key={m.id}
+                  onClick={() => setGalleryMode(m.id as typeof galleryMode)}
+                  className={`rounded-full border px-3 py-1 text-xs font-semibold transition-colors ${galleryMode === m.id ? "border-navy bg-navy text-ivory" : "border-border text-muted-foreground hover:border-navy"}`}
+                >
+                  {m.label}
+                </button>
+              ))}
             </div>
-            {product.images.length > 1 && (
-              <div className="flex gap-2 md:flex-col">
-                {product.images.map((img, i) => (
+
+            {galleryMode === "360" ? (
+              <Viewer360 images={product.images} alt={product.title} className="w-full" />
+            ) : galleryMode === "zoom" ? (
+              <DeepZoom src={product.images[activeImg] || product.images[0]} alt={product.title} className="w-full" />
+            ) : (
+              <div className="flex flex-col gap-3 md:flex-row-reverse">
+                <div className="relative aspect-[3/4] flex-1 overflow-hidden rounded-lg bg-muted">
+                  <Image
+                    src={product.images[activeImg] || product.images[0]}
+                    alt={product.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="cursor-zoom-in object-cover"
+                    onClick={() => setLightboxOpen(true)}
+                  />
                   <button
-                    key={i}
-                    onClick={() => setActiveImg(i)}
-                    className={`relative h-20 w-16 shrink-0 overflow-hidden rounded-md border-2 transition-colors md:h-24 md:w-20 ${activeImg === i ? "border-gold" : "border-transparent opacity-60 hover:opacity-100"}`}
+                    onClick={() => setLightboxOpen(true)}
+                    className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full bg-background/90 px-3 py-1.5 text-xs font-medium text-navy backdrop-blur hover:bg-background"
                   >
-                    <Image src={img} alt={`${product.title} view ${i + 1}`} fill sizes="80px" className="object-cover" />
+                    <ZoomIn className="h-3.5 w-3.5" /> Zoom
                   </button>
-                ))}
+                </div>
+                {product.images.length > 1 && (
+                  <div className="flex gap-2 md:flex-col">
+                    {product.images.map((img, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setActiveImg(i)}
+                        className={`relative h-20 w-16 shrink-0 overflow-hidden rounded-md border-2 transition-colors md:h-24 md:w-20 ${activeImg === i ? "border-gold" : "border-transparent opacity-60 hover:opacity-100"}`}
+                      >
+                        <Image src={img} alt={`${product.title} view ${i + 1}`} fill sizes="80px" className="object-cover" />
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
           </div>
