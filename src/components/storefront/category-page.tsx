@@ -112,6 +112,39 @@ export function CategoryPage({ categories }: { categories: Category[] }) {
         </div>
       </div>
       <div>
+        <h4 className="mb-3 text-xs font-semibold uppercase tracking-wider text-navy">Saree Type</h4>
+        <div className="flex flex-col gap-2">
+          {["Kanchipuram", "Banarasi", "Mysore", "Tussar", "Arani"].map((t) => (
+            <button key={t} className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-foreground hover:bg-muted">
+              <span className="flex h-4 w-4 items-center justify-center rounded-sm border border-border" />
+              {t}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div>
+        <h4 className="mb-3 text-xs font-semibold uppercase tracking-wider text-navy">Zari Type</h4>
+        <div className="flex flex-col gap-2">
+          {["Pure Zari", "Tested Zari", "Imitation Zari"].map((z) => (
+            <button key={z} className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-foreground hover:bg-muted">
+              <span className="flex h-4 w-4 items-center justify-center rounded-sm border border-border" />
+              {z}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div>
+        <h4 className="mb-3 text-xs font-semibold uppercase tracking-wider text-navy">Occasion</h4>
+        <div className="flex flex-col gap-2">
+          {["Wedding", "Festive", "Casual", "Party", "Bridal"].map((o) => (
+            <button key={o} className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-foreground hover:bg-muted">
+              <span className="flex h-4 w-4 items-center justify-center rounded-sm border border-border" />
+              {o}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div>
         <h4 className="mb-3 text-xs font-semibold uppercase tracking-wider text-navy">Quick Filters</h4>
         <div className="flex flex-col gap-2">
           <CheckboxRow label="New Arrivals" checked={onlyNew} onChange={() => setOnlyNew(!onlyNew)} />
@@ -193,7 +226,7 @@ export function CategoryPage({ categories }: { categories: Category[] }) {
               <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6">
                 {Array.from({ length: 6 }).map((_, i) => (
                   <div key={i} className="animate-pulse">
-                    <div className="aspect-[3/4] rounded-md bg-muted" />
+                    <div className="aspect-[4/5] rounded-md bg-muted" />
                     <div className="mt-3 h-3 w-20 rounded bg-muted" />
                     <div className="mt-2 h-4 w-full rounded bg-muted" />
                     <div className="mt-2 h-4 w-16 rounded bg-muted" />

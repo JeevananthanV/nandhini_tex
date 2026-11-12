@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Fraunces } from "next/font/google";
+import { Inter, Playfair_Display, Cormorant_Garamond, Cinzel } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as SonnerToaster } from "@/components/ui/sonner";
@@ -13,11 +13,25 @@ const inter = Inter({
   display: "swap",
 });
 
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
   subsets: ["latin"],
   display: "swap",
-  axes: ["opsz", "SOFT"],
+  weight: ["400", "500", "600", "700", "800", "900"],
+});
+
+const cormorant = Cormorant_Garamond({
+  variable: "--font-cormorant",
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["300", "400", "500", "600", "700"],
+});
+
+const cinzel = Cinzel({
+  variable: "--font-cinzel",
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 export const viewport: Viewport = {
@@ -25,8 +39,8 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#FBF7F1" },
-    { media: "(prefers-color-scheme: dark)", color: "#061229" },
+    { media: "(prefers-color-scheme: light)", color: "#FAF7F0" },
+    { media: "(prefers-color-scheme: dark)", color: "#050F1F" },
   ],
   colorScheme: "light dark",
 };
@@ -117,7 +131,7 @@ export const metadata: Metadata = {
     "geo.placename": "Elampillai, Salem, Tamil Nadu",
     "geo.position": "11.6087;78.2578",
     "ICBM": "11.6087, 78.2578",
-    "theme-color": "#0A1F44",
+    "theme-color": "#081B3A",
     "msvalidate.01": "bing-site-verification-token",
   },
 };
@@ -135,7 +149,7 @@ export default function RootLayout({
         <meta name="format-detection" content="telephone=yes, address=yes, email=yes" />
       </head>
       <body
-        className={`${inter.variable} ${fraunces.variable} font-sans antialiased bg-background text-foreground`}
+        className={`${inter.variable} ${playfair.variable} ${cormorant.variable} ${cinzel.variable} font-sans antialiased bg-background text-foreground`}
       >
         {children}
         <Toaster />

@@ -345,7 +345,47 @@ export function ProductPage() {
               {product.weaveOrigin && <Detail label="Weave Origin" value={product.weaveOrigin} />}
               {product.weaveDays && <Detail label="Weave Time" value={`${product.weaveDays} days`} />}
               {product.zariType && <Detail label="Zari Type" value={product.zariType} />}
+              <Detail label="Saree Length" value="6.3 m (5.5m + 0.8m blouse)" />
+              <Detail label="SKU" value={currentVariant?.sku || product.slug.toUpperCase().slice(0, 12)} />
             </div>
+
+            {/* Zari detail gallery */}
+            {product.images.length > 1 && (
+              <div className="mt-6">
+                <h3 className="font-heading text-base font-semibold text-navy">Zari & Weave Details</h3>
+                <p className="mt-1 text-xs text-muted-foreground">High-resolution close-ups of border, pallu, and weaving</p>
+                <div className="mt-3 grid grid-cols-3 gap-2">
+                  {product.images.slice(0, 3).map((img, i) => (
+                    <button
+                      key={i}
+                      onClick={() => { setGalleryMode("zoom"); setActiveImg(i); }}
+                      className="group relative aspect-square overflow-hidden rounded-md border border-border"
+                    >
+                      <img src={img} alt={`${product.title} zari detail ${i + 1}`} className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110" />
+                      <div className="absolute inset-0 flex items-end bg-gradient-to-t from-navy/70 to-transparent p-2 opacity-0 transition-opacity group-hover:opacity-100">
+                        <span className="text-[10px] font-medium text-ivory">{["Border", "Pallu", "Weave"][i] || "Detail"}</span>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Blouse matching guide */}
+            {product.blouseIncluded && (
+              <div className="mt-6 rounded-lg border border-gold/30 bg-gold/5 p-4">
+                <h3 className="font-heading text-base font-semibold text-navy">Blouse Matching Guide</h3>
+                <div className="mt-3 flex items-center gap-3">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-md bg-navy-gradient ring-1 ring-gold/40">
+                    <span className="font-display text-xs text-gold">0.8m</span>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-foreground">{product.blouseLengthM}m matching running blouse piece included</p>
+                    <p className="text-xs text-muted-foreground">Unstitched · matches saree colour · ready for tailoring</p>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Trust strip */}
             <div className="mt-5 grid grid-cols-2 gap-3 text-xs text-muted-foreground">

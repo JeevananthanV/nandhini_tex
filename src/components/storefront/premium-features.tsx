@@ -76,7 +76,7 @@ export function QuickViewModal() {
             </button>
             {loading || !data ? (
               <div className="grid gap-4 p-6 sm:grid-cols-2">
-                <div className="aspect-[3/4] animate-pulse rounded-lg bg-muted" />
+                <div className="aspect-[4/5] animate-pulse rounded-lg bg-muted" />
                 <div className="flex flex-col gap-3">
                   <div className="h-4 w-20 animate-pulse rounded bg-muted" />
                   <div className="h-6 w-3/4 animate-pulse rounded bg-muted" />
@@ -85,7 +85,7 @@ export function QuickViewModal() {
               </div>
             ) : (
               <div className="grid gap-0 sm:grid-cols-2">
-                <div className="relative aspect-[3/4] overflow-hidden bg-muted">
+                <div className="relative aspect-[4/5] overflow-hidden bg-muted">
                   <Image src={data.images[0]} alt={data.title} fill sizes="50vw" className="object-cover" />
                   <div className="absolute left-2 top-2 flex flex-col gap-1">
                     {data.isNew && <NewBadge />}

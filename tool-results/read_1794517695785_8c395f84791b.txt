@@ -1,0 +1,979 @@
+     1→# Luxury Saree E-Commerce Website – Complete UI/UX Design Plan
+     2→
+     3→
+     4→
+     5→Luxury Indian Fashion
+     6→
+     7→Navy Blue + Gold
+     8→
+     9→Customer + Admin Dashboard
+    10→
+    11→
+    12→
+    13→The website should look like a premium Indian saree boutique, combining traditional South Indian silk craftsmanship with modern luxury e-commerce design.
+    14→
+    15→Design concept: Royal Heritage – Modern Elegance
+    16→
+    17→The entire experience will use deep navy blue, royal gold, ivory and champagne. Saree photography should be the visual focus, while the interface communicates trust, tradition and premium quality.
+    18→
+    19→[Rewaayat – Luxury Handloom Sarees | Timeless Indian Elegance  – REWAAYAT](https://images.openai.com/static-rsc-4/wb17wIndSqMgVW3MNYBVIlrApln6kSJsCu8n8OUJC66_48WrNXSu7LYxvwX22BPQ1c0p-TfPCmt1QjMndIK9-ZzYuyHYLwA2ov1loL8Cu9PGUIiIxWIVpOgDseVPtujL3l3RU7hsHyOpDgr5DPG2l9hNxG9TYVRPUERN4DEBW6k?purpose=inline)
+    20→
+    21→[Royal Blue Woven Kanjivaran Silk Saree](https://images.openai.com/static-rsc-4/WhnRvPwztiCpBtnlyjafmVoXJC298piG78mH8lBrxvxCw8TlwuXjqiSLzWYIW89plrdI-yHMkevhF_nQSznYvKE8yHGbn2RVfA4yPNThiKbRZw7_0IL6HGAI7lh7_8qEZLLRiBwJkC4mivhTTKPBEuV8Ga_UQMBZxiAhS8e8HQU?purpose=inline)
+    22→
+    23→14
+    24→
+    25→## 1. Brand identity and website color palette
+    26→
+    27→### Primary color palette
+    28→
+    29→# ROYAL HERITAGE
+    30→
+    31→THE TIMELESS ART OF INDIAN SAREES
+    32→
+    33→TRADITION • CRAFTSMANSHIP • ELEGANCE
+    34→
+    35→Core website colors
+    36→
+    37→Royal Navy Blue
+    38→
+    39→\#081B3A · Primary brand, navigation, buttons
+    40→
+    41→Deep Navy
+    42→
+    43→\#10294D · Header, footer, dark sections
+    44→
+    45→Royal Gold
+    46→
+    47→\#D4AF37 · CTA accents, icons, highlights
+    48→
+    49→Antique Gold
+    50→
+    51→\#B9944B · Borders, zari-inspired details
+    52→
+    53→Ivory
+    54→
+    55→\#FAF7F0 · Main website background
+    56→
+    57→Champagne
+    58→
+    59→\#E9DDC5 · Cards, secondary backgrounds
+    60→
+    61→Pure White
+    62→
+    63→\#FFFFFF · Product cards and forms
+    64→
+    65→Text Charcoal
+    66→
+    67→\#292929 · Body text
+    68→
+    69→### Color usage proportions
+    70→
+    71→Ivory 55%Navy 25%Gold 10%Champagne 10%
+    72→
+    73→Important: Gold should be used as a premium accent rather than a background for large text areas. Maintain strong contrast and readability.
+    74→
+    75→### Typography
+    76→
+    77→| Usage            | Font               |
+    78→| ---------------- | ------------------ |
+    79→| Brand logo       | Cinzel             |
+    80→| Main headings    | Playfair Display   |
+    81→| Section headings | Cormorant Garamond |
+    82→| Body             | Inter              |
+    83→| Prices           | Inter Medium       |
+    84→| Tamil content    | Noto Sans Tamil    |
+    85→
+    86→## 2. Website structure and sitemap
+    87→
+    88→## SAREE STORE
+    89→
+    90→CUSTOMER STOREFRONT
+    91→
+    92→Home
+    93→
+    94→Campaigns and featured sarees
+    95→
+    96→Shop Sarees
+    97→
+    98→Browse and filter
+    99→
+   100→Product Details
+   101→
+   102→Images, fabric, zari, price
+   103→
+   104→Collections
+   105→
+   106→Curated saree collections
+   107→
+   108→Wishlist
+   109→
+   110→Saved sarees
+   111→
+   112→Shopping Bag
+   113→
+   114→Cart and coupons
+   115→
+   116→Checkout
+   117→
+   118→Address and payment
+   119→
+   120→My Account
+   121→
+   122→Profile and addresses
+   123→
+   124→My Orders
+   125→
+   126→Tracking and history
+   127→
+   128→Returns
+   129→
+   130→Return and exchange
+   131→
+   132→About Us
+   133→
+   134→Brand heritage
+   135→
+   136→Contact & FAQ
+   137→
+   138→Customer assistance
+   139→
+   140→ADMIN DASHBOARD
+   141→
+   142→Products · Inventory · Orders · Customers · Reports
+   143→
+   144→## 3. Customer website – Page-by-page UI/UX
+   145→
+   146→### Page 01 – Luxury homepage
+   147→
+   148→[Padmavati Silks and Sarees](https://images.openai.com/static-rsc-4/OBdsyd7OVHoSKMiJUiPmYelzkG03lNC2Q4n22Cc99mVkYjJrAewJgdS97KKVMkYwgzBp_WAbDL1XSu3vslxCVRpMPv5mauOhrugEG0pvBNzHLxjwP4MyPRTdCc5anC6M9zhLZU98bgj7Nqzlq8kv5mPHT3RCsE2H3C4I3xK3A2I?purpose=inline)
+   149→
+   150→[padmavatisilksandsarees.com](https://padmavatisilksandsarees.com/?utm_source=chatgpt.com)
+   151→
+   152→Header layout
+   153→
+   154→- Top announcement bar: Free shipping above a specified order value.
+   155→- Brand logo in gold.
+   156→- Main navigation.
+   157→- Search icon.
+   158→- Account icon.
+   159→- Wishlist icon.
+   160→- Shopping bag with item count.
+   161→
+   162→Navigation:
+   163→
+   164→`Home | Silk Sarees | Cotton Sarees | Bridal | Party Wear | New Arrivals | Collections`
+   165→
+   166→Homepage sections
+   167→
+   168→| Section             | Content                               |
+   169→| ------------------- | ------------------------------------- |
+   170→| Hero banner         | Royal saree campaign                  |
+   171→| Shop categories     | Silk, cotton, bridal, designer        |
+   172→| New arrivals        | Latest saree products                 |
+   173→| Best sellers        | Most purchased sarees                 |
+   174→| Bridal collection   | Wedding sarees                        |
+   175→| Heritage story      | Traditional weaving and craftsmanship |
+   176→| Festival collection | Pongal, Diwali and wedding edits      |
+   177→| Customer reviews    | Verified reviews                      |
+   178→| Instagram gallery   | Saree styling inspiration             |
+   179→| Newsletter          | Exclusive collection updates          |
+   180→| Footer              | Policies, contact and social media    |
+   181→
+   182→Hero text example:
+   183→
+   184→THE ROYAL SILK COLLECTION
+   185→
+   186→# Elegance Woven Through Generations
+   187→
+   188→Discover the beauty of traditional Indian sarees, crafted with timeless artistry.
+   189→
+   190→EXPLORE COLLECTION
+   191→
+   192→### Page 02 – Shop sarees / Product listing
+   193→
+   194→[Suta Case Study - SearchTap](https://images.openai.com/static-rsc-4/tZZXzZlyLZ4iGbht3Km0YikLdXSa7j0p9x9Ts3l2278irDqNxlKmI_xMoaaRwslWcIYst7t0k8mYPg4Vh6eq1laNo9Mw5Lp2wvFASHxyO7bS0rAi--ChcUFP5CcHAGduiJvdeuEydM7DqoN_qksqp-RU4Yw8HJ_iptsrVu4iiuU?purpose=inline)
+   195→
+   196→[searchtap.io](https://searchtap.io/success-stories/suta/?utm_source=chatgpt.com)
+   197→
+   198→Layout
+   199→
+   200→Desktop:
+   201→
+   202→- Left filter sidebar.
+   203→- Main product grid.
+   204→- Sorting and product count.
+   205→- Four product columns.
+   206→
+   207→Mobile:
+   208→
+   209→- Two product columns.
+   210→- Filter and sort bottom drawer.
+   211→- Sticky shopping navigation.
+   212→
+   213→Saree filters
+   214→
+   215→| Filter       | Options                                            |
+   216→| ------------ | -------------------------------------------------- |
+   217→| Fabric       | Pure silk, cotton, silk cotton, chiffon, georgette |
+   218→| Saree type   | Kanchipuram, Banarasi, Mysore, Tussar              |
+   219→| Price        | Range selector                                     |
+   220→| Color        | Navy, red, green, gold, pink, etc.                 |
+   221→| Occasion     | Wedding, festive, casual, party                    |
+   222→| Zari         | Pure zari, tested zari, imitation zari             |
+   223→| Length       | Product-specific                                   |
+   224→| Availability | In stock, made to order                            |
+   225→| Work         | Zari, embroidery, printed, woven                   |
+   226→
+   227→### Page 03 – Saree product details
+   228→
+   229→[Dark Blue Floral Woven Pure Kanchipuram Silk Saree | Diadem India](https://images.openai.com/static-rsc-4/WTOl1-3v88AanpILHkDlt2eGweLxygLT6SxCGJ3nGO9QfmMP8jUhYFJkdWk8WODImabjd-E5pMDWclG7bCco-1-SZq7HqROeX7ZyB51F27SQFYyzay8aiVTdM-NKzdOodM0eJBpQuonbtDfqDR8ieAM-OOZMyi1rcpMykAE9wFk?purpose=inline)
+   230→
+   231→[Why One Silk Saree Costs ₹10,000 and Another ₹60,000 (Zari Truth)  – Sampradaya Designer Studio](https://images.openai.com/static-rsc-4/nE4eTtHehfeZit5mxkNTMxWt0PWKfglvcVLghmtNfi5E8RPqr_FIQnRz8VKobJCtt7h9ogPfhp2fBx6yo5bEWawp-KYfyUqVY-BNpXKFkVgr5cF-POrnTM0a06LYyBBlfLrpa8bVItINZg6kG67hm9dV9ZJvlu3UGKXmGrMptFw?purpose=inline)
+   232→
+   233→[Pure Silk Pure Zari Navy Blue Kanchipuram Saree  – Nalli Silk Sarees Pvt Ltd](https://images.openai.com/static-rsc-4/c8y2a88_Ca3n2b1ggSclQsjxBMEphScGKgimMJBWv9D1iQcj8E_GHgRxGoHz3aRQ6JIJJ07ef_beXWxqkOZBGBRJ2bCEOuqXY20h_q7AlkvAMJ6rBMdM8QRXF-ogZ-K0oVjzVxuj1nVn6X7YVOa4BRNM3V5tScU_Sa29zhT6OE8?purpose=inline)
+   234→
+   235→7
+   236→
+   237→Product detail layout
+   238→
+   239→Left side:
+   240→
+   241→- Main saree image.
+   242→- Front view.
+   243→- Back view.
+   244→- Pallu close-up.
+   245→- Border close-up.
+   246→- Blouse piece.
+   247→- Video / 360-degree view.
+   248→
+   249→Right side:
+   250→
+   251→- Saree name.
+   252→- Product SKU.
+   253→- Price.
+   254→- Discount.
+   255→- Available stock.
+   256→- Color.
+   257→- Fabric.
+   258→- Zari information.
+   259→- Saree length.
+   260→- Blouse piece details.
+   261→- Delivery PIN code.
+   262→- Quantity.
+   263→- Add to bag.
+   264→- Buy now.
+   265→
+   266→Example product card
+   267→
+   268→[Dark Blue Floral Woven Pure Kanchipuram Silk Saree | Diadem India](https://images.openai.com/static-rsc-4/WTOl1-3v88AanpILHkDlt2eGweLxygLT6SxCGJ3nGO9QfmMP8jUhYFJkdWk8WODImabjd-E5pMDWclG7bCco-1-SZq7HqROeX7ZyB51F27SQFYyzay8aiVTdM-NKzdOodM0eJBpQuonbtDfqDR8ieAM-OOZMyi1rcpMykAE9wFk?purpose=inline)
+   269→
+   270→[diademstore.com](https://diademstore.com/products/dark-blue-floral-weave-pure-kanchipuram-silk-saree-134228?utm_source=chatgpt.com)
+   271→
+   272→Best Seller
+   273→
+   274→Royal Navy Blue Kanchipuram Silk Saree
+   275→
+   276→Pure silk · Gold zari border · Unstitched blouse piece
+   277→
+   278→# ₹12,999
+   279→
+   280→₹15,999
+   281→
+   282→Illustrative pricing · 18.75% off
+   283→
+   284→ADD TO BAG
+   285→
+   286→Free delivery · Secure payment · Easy support
+   287→
+   288→Sample product and pricing for design demonstration only.
+   289→
+   290→### Page 04 – Saree category and collection pages
+   291→
+   292→[Kamadhenu Silks | Pure Kanchipuram Silk Sarees Since 1992](https://images.openai.com/static-rsc-4/Ywf8t5VUfKRyAG3RZSHPf_w4ZAQKbE6AyLEinAST4ATqpwKiYKdpExWHr4mxd9KIqpzMthpdsP40hxmFVWtC6fbOsNSb560jUvnfBjM9-mUgRY9y2LzqirVar4KFjqyoUVkd95bJXToyMO3HhRb36_yz5KyH-hMqFJ6UFtfSCrg?purpose=inline)
+   293→
+   294→Kanchipuram Silk
+   295→
+   296→[Pure vs Fake Banarasi Saree – How to Identify an Authentic Banarasi Sa – SILK KOTHI](https://images.openai.com/static-rsc-4/wANtXbSxSvcawnALjm1AA52kNvOzFn_KQ12jTzpmNkxt4_i43kJwacr_iF1NHD9tleyktUsMJdTJibgD5csTcWlimAHmVrP_VZjOGxR9irNZLE2YhUSa6A-uOBbuceI7k1JHpdaOI_uAsZFYsVx6Duk6brVRWag-upI_aGfvon8?purpose=inline)
+   297→
+   298→Banarasi Silk
+   299→
+   300→[Mysore Silk Sarees Online | Pure Mysore Silk Sarees – Kuberan Silks](https://images.openai.com/static-rsc-4/n1ZF4asYZXFmDfMavEjrEz8XD2XjpnD_uAXZKigmvW6sHFR_qq8Jt8QxIhENzvuuOTbA7n2wWenaibuen91a7rpd3l3aGssSbNwdJJcL4JyuR0qkOaPpN9_G-44HIbsRrCCf7xgpOGjEqOC0RH6Z22kFpX2QPBAtbgtjsTCRIms?purpose=inline)
+   301→
+   302→Mysore Silk
+   303→
+   304→[Gaurangi \~ Garbhreshmi Handloom Cotton Silk Saree with Golden Border i                    – verymuchindian.com](https://images.openai.com/static-rsc-4/C2IfpzvEb56OkxDOWnhSQrh6cpfhdcIIc_2IEWIjOmBpRQbmC2lqT0uWnxxz0n_MhzaO_HzZJpCxV3a0mk2g4TKa-KZ4Kh10FtIq7j_-a8hWbN02tiO-tm7MG0ILaJwgGa1vZaLsBrmp5g75-VdU2-H-ZLG3LC8E5J5n-PBRixY?purpose=inline)
+   305→
+   306→Cotton Silk
+   307→
+   308→[Kanchipattu Brocade Silk Sarees | Handloom Zari | Silk Tatva](https://images.openai.com/static-rsc-4/9D8DMJODXQNtu3F8CrbCmeiv7qc3taG-UARXnCrt3-tcV17iKH5DRKxfMMjxWTLaGq-Eq4pZJ1g9otH2D4oBml40J4RPx_5UDb4zeJCM9DF2-KTKPhDycSA-sY-BiuSmK2R4-FzUUOPQxR1_aLPpR0OkHowz5srHgEkWM5PhpXQ?purpose=inline)
+   309→
+   310→Bridal Sarees
+   311→
+   312→[Cocktail saree wear | Sri Vidya](https://images.openai.com/static-rsc-4/NuQKFxooiKGNMjJESn3UBy1_ngDbsZ8O_P7M1eiFtRymoQivSZuMIqE3Fp1lPOMblLjTQnsYU8XHIUW2GnMXP3eKPUbghCTjN6Ye0sc2-q4txH90Md14JlcRplwWoz-D9Y0lwQMqPDg8KHYU2tlsvcem-TRK0nS_A-aX2SgTobY?purpose=inline)
+   313→
+   314→Designer Sarees
+   315→
+   316→### Page 05 – Wishlist
+   317→
+   318→- Product image and name.
+   319→- Price.
+   320→- Available colors.
+   321→- Remove option.
+   322→- Add to bag.
+   323→- Stock availability.
+   324→- Share wishlist.
+   325→
+   326→### Page 06 – Shopping cart
+   327→
+   328→[Sabyasachi Website Re-design :: Behance](https://images.openai.com/static-rsc-4/KANaH0-cfp895iJKVD-pUA-Aok7d-waQ9FOFCN9GXYEZGrYE6lFsf65sQUumarLlJdZ_yYBTTXnNe1lotpCJFpBwjHB6-4b26IG9QMXMdrv6PKZeVPxNAsnrFC4Ku0mKmUWn9AKc9vqWxcUi-D2SOTuayDiyftoQEvFzRnaAISs?purpose=inline)
+   329→
+   330→[behance.net](https://www.behance.net/gallery/164800003/Sabyasachi-Website-Re-design?utm_source=chatgpt.com)
+   331→
+   332→Cart must show:
+   333→
+   334→- Saree image.
+   335→- Product name and SKU.
+   336→- Price.
+   337→- Quantity.
+   338→- Stock availability.
+   339→- Coupon.
+   340→- Subtotal.
+   341→- Shipping.
+   342→- Tax.
+   343→- Total.
+   344→- Continue shopping.
+   345→- Checkout.
+   346→
+   347→### Page 07 – Checkout and payment
+   348→
+   349→[Luxury Jewellery Checkout Flow Website by Darshan Shah on Dribbble](https://images.openai.com/static-rsc-4/YFqrdQn_fnoe10U_BA1yRX21Qm_0fASG7EpKaaKiZhcBlhkC0AVnjjXlb5t5wBQNRmkDwm9A31Zb-eelsU_33sqmJx75o3cMjA0AQJKFUlq2tl4s6SyBEh1enUfyf7-KkyQi0UZe8lcbyOn3fDeGOOvgQVE-aH7lkDFvES1lNSg?purpose=inline)
+   350→
+   351→[dribbble.com](https://dribbble.com/shots/27126690-Luxury-Jewellery-Checkout-Flow-Website?utm_source=chatgpt.com)
+   352→
+   353→Checkout steps
+   354→
+   355→1. Customer details.
+   356→2. Delivery address.
+   357→3. Shipping method.
+   358→4. Payment.
+   359→5. Order confirmation.
+   360→
+   361→Payment methods:
+   362→
+   363→- UPI.
+   364→- Cards.
+   365→- Net banking.
+   366→- Supported wallets.
+   367→- COD if enabled.
+   368→
+   369→Integrate Razorpay with server-side verification.
+   370→
+   371→### Page 08 – Customer account
+   372→
+   373→- Profile.
+   374→- Saved addresses.
+   375→- Order history.
+   376→- Track order.
+   377→- Wishlist.
+   378→- Returns and exchange.
+   379→- Refund history.
+   380→- Notification preferences.
+   381→
+   382→### Page 09 – Order tracking
+   383→
+   384→Order #SR1001
+   385→
+   386→Shipped
+   387→
+   388→1. Order confirmed
+   389→2. Payment completed
+   390→3. Product packed
+   391→4. Dispatched
+   392→5. Out for delivery
+   393→6. Delivered
+   394→
+   395→### Page 10 – Additional pages
+   396→
+   397→| Page             | Requirements                         |
+   398→| ---------------- | ------------------------------------ |
+   399→| About us         | Heritage, craftsmanship, brand story |
+   400→| Contact us       | Contact form, phone, WhatsApp        |
+   401→| FAQ              | Saree care, sizing, shipping         |
+   402→| Saree care guide | Washing and storage instructions     |
+   403→| Size guide       | Saree and blouse measurements        |
+   404→| Return policy    | Return and exchange terms            |
+   405→| Privacy policy   | Data protection                      |
+   406→| Terms            | Store terms and conditions           |
+   407→
+   408→## 4. Admin dashboard – Saree store management
+   409→
+   410→The admin dashboard should follow the same royal navy and gold identity, with a professional operational layout.
+   411→
+   412→[Deep insights and performance metrics for all your stores | App Store Shopify](https://images.openai.com/static-rsc-4/iz6gctIqu3p2kwlHfTmy8NUAPyr6zVyA1fRnfc3q5WQzkIetTN4cwUZ_cs13gkco6sGI8huA_70tv42Nh8fky5NZ5GGza8ayBQ_pMuR5NPIXSpctERqp3vqojjsfq_8k2pPfIDDxvhJVZ04WAkgk7FBRH3Xd0ZxwlRD3F-1Enik?purpose=inline)
+   413→
+   414→[apps.shopify.com](https://apps.shopify.com/netsight?locale=pt-PT\&utm_source=chatgpt.com)
+   415→
+   416→### Admin navigation
+   417→
+   418→## ROYAL HERITAGE
+   419→
+   420→STORE ADMINISTRATION
+   421→
+   422→Dashboard
+   423→
+   424→Products & Sarees
+   425→
+   426→Categories & Collections
+   427→
+   428→Inventory & Stock
+   429→
+   430→Orders
+   431→
+   432→Customers
+   433→
+   434→Payments & Refunds
+   435→
+   436→Coupons & Offers
+   437→
+   438→Reviews
+   439→
+   440→Shipping & Delivery
+   441→
+   442→Banners & Lookbook
+   443→
+   444→Analytics & Reports
+   445→
+   446→Staff & Permissions
+   447→
+   448→Store Settings
+   449→
+   450→### Admin dashboard overview
+   451→
+   452→Total sales
+   453→
+   454→# ₹8,45,000
+   455→
+   456→+12.5%
+   457→
+   458→Orders
+   459→
+   460→# 1,284
+   461→
+   462→+8.2%
+   463→
+   464→Customers
+   465→
+   466→# 3,540
+   467→
+   468→+15.3%
+   469→
+   470→Active sarees
+   471→
+   472→# 486
+   473→
+   474→In catalogue
+   475→
+   476→All figures are sample dashboard data.
+   477→
+   478→### Admin modules
+   479→
+   480→| Module           | Functionality                      |
+   481→| ---------------- | ---------------------------------- |
+   482→| Dashboard        | Sales, orders, revenue, KPIs       |
+   483→| Saree products   | Add, edit, delete, publish         |
+   484→| Categories       | Silk, cotton, bridal, designer     |
+   485→| Collections      | Festival, wedding, seasonal        |
+   486→| Product gallery  | Front, back, border, pallu images  |
+   487→| Saree attributes | Fabric, zari, length, blouse       |
+   488→| Inventory        | SKU, stock, stock movements        |
+   489→| Orders           | Confirmation, packing, dispatch    |
+   490→| Customers        | Profile and purchase history       |
+   491→| Payments         | Transactions and refunds           |
+   492→| Coupons          | Promotional offers                 |
+   493→| Reviews          | Customer feedback                  |
+   494→| Returns          | Return and exchange approvals      |
+   495→| Shipping         | Courier and tracking               |
+   496→| Banners          | Homepage campaign management       |
+   497→| Reports          | Sales and inventory analytics      |
+   498→| Staff            | Admin roles and permissions        |
+   499→| Settings         | Tax, shipping and payment settings |
+   500→
+   501→### Saree product creation form
+   502→
+   503→[SalesSync - Dashboard Sales Marketing Add Product by Vektora UIUX for Vektora on Dribbble](https://images.openai.com/static-rsc-4/hviwf0Phkb8Afb89qTYn_XYwYzBoc07_nuXJWwtTBSMX1B4Z_xcJvkc23tz8GywHZlaUPa0JcwFnXPZwiqS-3HuVO_TyHL9f2jO0Y0ZdKawD6TZLR-TK7dK7r47_gJAbmK89glPh8Nn6clJoePjtlvUkKnruoB5T_Cqqx6MYjJo?purpose=inline)
+   504→
+   505→[dribbble.com](https://dribbble.com/shots/23726881-SalesSync-Dashboard-Sales-Marketing-Add-Product?utm_source=chatgpt.com)
+   506→
+   507→The product form should include:
+   508→
+   509→Basic information
+   510→
+   511→- Product name.
+   512→- Product slug.
+   513→- SKU.
+   514→- Category.
+   515→- Collection.
+   516→- Brand.
+   517→- Product description.
+   518→
+   519→Saree-specific information
+   520→
+   521→- Fabric type.
+   522→- Weaving technique.
+   523→- Saree color.
+   524→- Border color.
+   525→- Zari type.
+   526→- Zari percentage or description where verified.
+   527→- Saree length.
+   528→- Blouse piece availability.
+   529→- Blouse piece length.
+   530→- Occasion.
+   531→- Care instructions.
+   532→- Country and place of origin where known.
+   533→
+   534→Commercial information
+   535→
+   536→- Cost price.
+   537→- Selling price.
+   538→- MRP.
+   539→- Discount.
+   540→- GST/tax category.
+   541→- Quantity.
+   542→- Stock status.
+   543→
+   544→Media
+   545→
+   546→- Main image.
+   547→- Front image.
+   548→- Back image.
+   549→- Pallu image.
+   550→- Border close-up.
+   551→- Blouse image.
+   552→- Product video.
+   553→
+   554→Publishing
+   555→
+   556→- Draft.
+   557→- Active.
+   558→- Out of stock.
+   559→- Archived.
+   560→
+   561→### Admin order management
+   562→
+   563→Order processing
+   564→
+   565→1. New order received
+   566→2. Payment verified
+   567→3. Stock reserved
+   568→4. Order confirmed
+   569→5. Quality check and packing
+   570→6. Shipping label generated
+   571→7. Courier tracking updated
+   572→8. Delivered / return / exchange
+   573→
+   574→### Admin staff permissions
+   575→
+   576→| Role              | Access                        |
+   577→| ----------------- | ----------------------------- |
+   578→| Super Admin       | All modules                   |
+   579→| Store Manager     | Products, orders, customers   |
+   580→| Inventory Manager | Stock and product variants    |
+   581→| Order Manager     | Orders and shipping           |
+   582→| Marketing Manager | Banners and coupons           |
+   583→| Customer Support  | Customer queries and returns  |
+   584→| Accountant        | Payments, refunds and reports |
+   585→
+   586→## 5. Saree-specific product UX and database requirements
+   587→
+   588→This is particularly important because sarees have different attributes from ordinary fashion clothing.
+   589→
+   590→### Product information structure
+   591→
+   592→| Attribute     | Example                      |
+   593→| ------------- | ---------------------------- |
+   594→| Product name  | Royal Navy Kanchipuram Saree |
+   595→| Fabric        | Pure silk                    |
+   596→| Primary color | Navy blue                    |
+   597→| Border color  | Antique gold                 |
+   598→| Zari          | Gold zari                    |
+   599→| Length        | 6.3 metres                   |
+   600→| Blouse        | Included                     |
+   601→| Blouse piece  | 0.8 metres                   |
+   602→| Occasion      | Wedding                      |
+   603→| Weaving       | Traditional handloom         |
+   604→| SKU           | KAN-NV-001                   |
+   605→
+   606→These are example attributes, not verified details of an actual product.
+   607→
+   608→### Product variants
+   609→
+   610→Unlike standard clothing stores, a saree store should not force every saree into size variations.
+   611→
+   612→Use variants based on:
+   613→
+   614→- Color.
+   615→- Design.
+   616→- Border type.
+   617→- Blouse color.
+   618→- Product-specific SKU.
+   619→
+   620→For individual one-of-a-kind sarees, use individual stock quantities, often one unit per SKU. For repeatable designs, allow multiple units.
+   621→
+   622→### Database architecture
+   623→
+   624→Recommended MySQL tables:
+   625→
+   626→Users and authentication
+   627→
+   628→- users
+   629→- roles
+   630→- permissions
+   631→- user_roles
+   632→- addresses
+   633→
+   634→Saree catalogue
+   635→
+   636→- categories
+   637→- collections
+   638→- products
+   639→- saree_attributes
+   640→- product_variants
+   641→- product_images
+   642→- product_videos
+   643→
+   644→Shopping
+   645→
+   646→- carts
+   647→- cart_items
+   648→- wishlists
+   649→- wishlist_items
+   650→- coupons
+   651→- coupon_usage
+   652→
+   653→Orders
+   654→
+   655→- orders
+   656→- order_items
+   657→- payments
+   658→- refunds
+   659→- shipments
+   660→- order_status_history
+   661→
+   662→Inventory and content
+   663→
+   664→- inventory
+   665→- inventory_movements
+   666→- stock_reservations
+   667→- banners
+   668→- reviews
+   669→- notifications
+   670→- newsletter_subscribers
+   671→- audit_logs
+   672→
+   673→### Database relationship diagram
+   674→
+   675→\#chatgpt-mermaid-\_r_1p4\_{font-family:-apple-system-body,ui-sans-serif,-apple-system,system-ui,"Segoe UI",Helvetica,"Apple Color Emoji",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol";font-size:16px;fill:rgb(237, 237, 237);}@keyframes edge-animation-frame{from{stroke-dashoffset:0;}}@keyframes dash{to{stroke-dashoffset:0;}}#chatgpt-mermaid-\_r_1p4\_ .edge-animation-slow{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 50s linear infinite;stroke-linecap:round;}#chatgpt-mermaid-\_r_1p4\_ .edge-animation-fast{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 20s linear infinite;stroke-linecap:round;}#chatgpt-mermaid-\_r_1p4\_ .error-icon{fill:rgb(48, 48, 48);}#chatgpt-mermaid-\_r_1p4\_ .error-text{fill:rgb(237, 237, 237);stroke:rgb(237, 237, 237);}#chatgpt-mermaid-\_r_1p4\_ .edge-thickness-normal{stroke-width:1px;}#chatgpt-mermaid-\_r_1p4\_ .edge-thickness-thick{stroke-width:3.5px;}#chatgpt-mermaid-\_r_1p4\_ .edge-pattern-solid{stroke-dasharray:0;}#chatgpt-mermaid-\_r_1p4\_ .edge-thickness-invisible{stroke-width:0;fill:none;}#chatgpt-mermaid-\_r_1p4\_ .edge-pattern-dashed{stroke-dasharray:3;}#chatgpt-mermaid-\_r_1p4\_ .edge-pattern-dotted{stroke-dasharray:2;}#chatgpt-mermaid-\_r_1p4\_ .marker{fill:rgb(175, 175, 175);stroke:rgb(175, 175, 175);}#chatgpt-mermaid-\_r_1p4\_ .marker.cross{stroke:rgb(175, 175, 175);}#chatgpt-mermaid-\_r_1p4\_ svg{font-family:-apple-system-body,ui-sans-serif,-apple-system,system-ui,"Segoe UI",Helvetica,"Apple Color Emoji",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol";font-size:16px;}#chatgpt-mermaid-\_r_1p4\_ p{margin:0;}#chatgpt-mermaid-\_r_1p4\_ .entityBox{fill:rgb(9, 23, 44);stroke:rgb(31, 78, 148);}#chatgpt-mermaid-\_r_1p4\_ .relationshipLabelBox{fill:rgb(48, 48, 48);opacity:0.7;background-color:rgb(48, 48, 48);}#chatgpt-mermaid-\_r_1p4\_ .relationshipLabelBox rect{opacity:0.5;}#chatgpt-mermaid-\_r_1p4\_ .labelBkg{background-color:rgba(48, 48, 48, 0.5);}#chatgpt-mermaid-\_r_1p4\_ .edgeLabel{background-color:rgb(0, 0, 0);}#chatgpt-mermaid-\_r_1p4\_ .edgeLabel .label rect{fill:rgb(0, 0, 0);}#chatgpt-mermaid-\_r_1p4\_ .edgeLabel .label text{fill:rgb(237, 237, 237);}#chatgpt-mermaid-\_r_1p4\_ .edgeLabel .label{fill:rgb(31, 78, 148);font-size:14px;}#chatgpt-mermaid-\_r_1p4\_ .label{font-family:-apple-system-body,ui-sans-serif,-apple-system,system-ui,"Segoe UI",Helvetica,"Apple Color Emoji",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol";color:rgb(237, 237, 237);}#chatgpt-mermaid-\_r_1p4\_ .edge-pattern-dashed{stroke-dasharray:8,8;}#chatgpt-mermaid-\_r_1p4\_ .node rect,#chatgpt-mermaid-\_r_1p4\_ .node circle,#chatgpt-mermaid-\_r_1p4\_ .node ellipse,#chatgpt-mermaid-\_r_1p4\_ .node polygon{fill:rgb(9, 23, 44);stroke:rgb(31, 78, 148);stroke-width:1px;}#chatgpt-mermaid-\_r_1p4\_ .relationshipLine{stroke:rgb(175, 175, 175);stroke-width:1px;fill:none;}#chatgpt-mermaid-\_r_1p4\_ .marker{fill:none!important;stroke:rgb(175, 175, 175)!important;stroke-width:1;}#chatgpt-mermaid-\_r_1p4\_ [data-look=neo].labelBkg{background-color:rgba(48, 48, 48, 0.5);}#chatgpt-mermaid-\_r_1p4\_ .node .neo-node{stroke:rgb(31, 78, 148);}#chatgpt-mermaid-\_r_1p4\_ [data-look="neo"].node rect,#chatgpt-mermaid-\_r_1p4\_ [data-look="neo"].cluster rect,#chatgpt-mermaid-\_r_1p4\_ [data-look="neo"].node polygon{stroke:url(#chatgpt-mermaid-\_r_1p4\_-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#chatgpt-mermaid-\_r_1p4\_ [data-look="neo"].swimlane.cluster rect{filter:none;}#chatgpt-mermaid-\_r_1p4\_ [data-look="neo"].node path{stroke:url(#chatgpt-mermaid-\_r_1p4\_-gradient);stroke-width:1px;}#chatgpt-mermaid-\_r_1p4\_ [data-look="neo"].node .outer-path{filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#chatgpt-mermaid-\_r_1p4\_ [data-look="neo"].node .neo-line path{stroke:rgb(31, 78, 148);filter:none;}#chatgpt-mermaid-\_r_1p4\_ [data-look="neo"].node circle{stroke:url(#chatgpt-mermaid-\_r_1p4\_-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#chatgpt-mermaid-\_r_1p4\_ [data-look="neo"].node circle .state-start{fill:#000000;}#chatgpt-mermaid-\_r_1p4\_ [data-look="neo"].icon-shape .icon{fill:url(#chatgpt-mermaid-\_r_1p4\_-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#chatgpt-mermaid-\_r_1p4\_ [data-look="neo"].icon-shape .icon-neo path{stroke:url(#chatgpt-mermaid-\_r_1p4\_-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#chatgpt-mermaid-\_r_1p4\_ :root{--mermaid-font-family:-apple-system-body,ui-sans-serif,-apple-system,system-ui,"Segoe UI",Helvetica,"Apple Color Emoji",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol";}USERSADDRESSESORDERSCATEGORIESPRODUCTSCOLLECTIONSPRODUCT_VARIANTSPRODUCT_IMAGESSAREE_ATTRIBUTESINVENTORYCARTSCART_ITEMSORDER_ITEMSPAYMENTSSHIPMENTSWISHLISTSREVIEWShasplacescontainsgroupshasdisplaysdescribestracksownscontainsincludesreceiveshasownsreceives
+   676→
+   677→## 6. React + Node.js project architecture
+   678→
+   679→### Frontend structure
+   680→
+   681→```
+   682→frontend/
+   683→└── src/
+   684→    ├── app/
+   685→    │   ├── App.jsx
+   686→    │   ├── router.jsx
+   687→    │   └── providers.jsx
+   688→    ├── components/
+   689→    │   ├── common/
+   690→    │   ├── layout/
+   691→    │   ├── product/
+   692→    │   ├── saree/
+   693→    │   ├── cart/
+   694→    │   ├── checkout/
+   695→    │   └── admin/
+   696→    ├── pages/
+   697→    │   ├── home/
+   698→    │   ├── shop/
+   699→    │   ├── product/
+   700→    │   ├── collections/
+   701→    │   ├── wishlist/
+   702→    │   ├── checkout/
+   703→    │   ├── account/
+   704→    │   └── admin/
+   705→    ├── hooks/
+   706→    ├── services/
+   707→    ├── context/
+   708→    ├── utils/
+   709→    └── styles/
+   710→```
+   711→
+   712→### Backend structure
+   713→
+   714→```
+   715→backend/
+   716→└── src/
+   717→    ├── config/
+   718→    ├── controllers/
+   719→    ├── services/
+   720→    ├── models/
+   721→    ├── routes/
+   722→    ├── middleware/
+   723→    ├── validators/
+   724→    ├── utils/
+   725→    └── server.js
+   726→```
+   727→
+   728→### Recommended packages
+   729→
+   730→| Purpose        | Technology            |
+   731→| -------------- | --------------------- |
+   732→| Frontend       | React + Vite          |
+   733→| Styling        | Tailwind CSS          |
+   734→| Components     | shadcn/ui             |
+   735→| Icons          | Lucide React          |
+   736→| Routing        | React Router          |
+   737→| API data       | TanStack Query        |
+   738→| Forms          | React Hook Form + Zod |
+   739→| Backend        | Express.js            |
+   740→| Database       | MySQL                 |
+   741→| ORM            | Prisma or Sequelize   |
+   742→| Authentication | JWT + bcrypt          |
+   743→| Payment        | Razorpay              |
+   744→| Image hosting  | Cloudinary            |
+   745→| Analytics      | Recharts              |
+   746→
+   747→## 7. Responsive design specification
+   748→
+   749→[Best Sarees Websites on Shopify From YellowEstores | Online Saree Brands](https://images.openai.com/static-rsc-4/GbcPWPXEMO-qBorurlcA8hkvQqGBVJMFUSFTy99GcY0LSbw1Cn4Bv2aWYxhcRWn4aB2ylWEjqRmFqWyhwSj5_ks-g7A50cjurKnMc0Y0fl5EmznmEWJdnzsCuMl5iL5plfM4FJLF4VIQBSUVrp2dcSfxGm1_wWqiprph1xt6kXo?purpose=inline)
+   750→
+   751→Desktop
+   752→
+   753→1440px+
+   754→
+   755→[Tharee an E-commerce Web Design :: Behance](https://images.openai.com/static-rsc-4/RR4naY2dil5bqwtPrysytbLxNXIA392yaCYVtO9VK00HuLZf77S-unK5Dc74MmQy6_EPOsUpbw27tIiduJyRQGtVaF_L83_fIYEB5yIq46wGU9oJeyjWvfe8Zx6Gj2f49q_TTs4YJCT7x6T7agkesvSmr-URYSFRCzipRfsmfus?purpose=inline)
+   756→
+   757→Tablet
+   758→
+   759→768–1024px
+   760→
+   761→[Traditional Saree Shopping App: Daily UI Day 20 by Nishita Singh on Dribbble](https://images.openai.com/static-rsc-4/gXff1Oc5FTmNgM1JU3FQ4z_ry-N_41wraw3jwCRp9XPQSESykDUNXxHS1WRzr6H49BhtMDD9gTH6Pb62JVrign6mVeprLNZb-mHjiZ8XRHAJqAf3N4ZyCjbyVrU4HVLCx9wc85GR5MzhWpJSlsHB3TQGN09blXOKBIVIwJ_Cn-c?purpose=inline)
+   762→
+   763→Mobile
+   764→
+   765→320–767px
+   766→
+   767→| Element        | Desktop         | Mobile        |
+   768→| -------------- | --------------- | ------------- |
+   769→| Navigation     | Full navigation | Hamburger     |
+   770→| Product grid   | 4 columns       | 2 columns     |
+   771→| Filters        | Sidebar         | Bottom drawer |
+   772→| Product images | Gallery grid    | Swipe gallery |
+   773→| Checkout       | Two columns     | Single column |
+   774→| Admin sidebar  | Expanded        | Collapsible   |
+   775→| Cart           | Side drawer     | Full page     |
+   776→
+   777→Mobile bottom navigation: Home, Shop, Wishlist, Account, Bag.
+   778→
+   779→## 8. Important user journeys
+   780→
+   781→### Customer shopping flow
+   782→
+   783→\#chatgpt-mermaid-\_r_1q0\_{font-family:-apple-system-body,ui-sans-serif,-apple-system,system-ui,"Segoe UI",Helvetica,"Apple Color Emoji",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol";font-size:16px;fill:rgb(237, 237, 237);}@keyframes edge-animation-frame{from{stroke-dashoffset:0;}}@keyframes dash{to{stroke-dashoffset:0;}}#chatgpt-mermaid-\_r_1q0\_ .edge-animation-slow{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 50s linear infinite;stroke-linecap:round;}#chatgpt-mermaid-\_r_1q0\_ .edge-animation-fast{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 20s linear infinite;stroke-linecap:round;}#chatgpt-mermaid-\_r_1q0\_ .error-icon{fill:rgb(48, 48, 48);}#chatgpt-mermaid-\_r_1q0\_ .error-text{fill:rgb(237, 237, 237);stroke:rgb(237, 237, 237);}#chatgpt-mermaid-\_r_1q0\_ .edge-thickness-normal{stroke-width:1px;}#chatgpt-mermaid-\_r_1q0\_ .edge-thickness-thick{stroke-width:3.5px;}#chatgpt-mermaid-\_r_1q0\_ .edge-pattern-solid{stroke-dasharray:0;}#chatgpt-mermaid-\_r_1q0\_ .edge-thickness-invisible{stroke-width:0;fill:none;}#chatgpt-mermaid-\_r_1q0\_ .edge-pattern-dashed{stroke-dasharray:3;}#chatgpt-mermaid-\_r_1q0\_ .edge-pattern-dotted{stroke-dasharray:2;}#chatgpt-mermaid-\_r_1q0\_ .marker{fill:rgb(175, 175, 175);stroke:rgb(175, 175, 175);}#chatgpt-mermaid-\_r_1q0\_ .marker.cross{stroke:rgb(175, 175, 175);}#chatgpt-mermaid-\_r_1q0\_ svg{font-family:-apple-system-body,ui-sans-serif,-apple-system,system-ui,"Segoe UI",Helvetica,"Apple Color Emoji",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol";font-size:16px;}#chatgpt-mermaid-\_r_1q0\_ p{margin:0;}#chatgpt-mermaid-\_r_1q0\_ .label{font-family:-apple-system-body,ui-sans-serif,-apple-system,system-ui,"Segoe UI",Helvetica,"Apple Color Emoji",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol";color:rgb(237, 237, 237);}#chatgpt-mermaid-\_r_1q0\_ .cluster-label text{fill:rgb(237, 237, 237);}#chatgpt-mermaid-\_r_1q0\_ .cluster-label span{color:rgb(237, 237, 237);}#chatgpt-mermaid-\_r_1q0\_ .cluster-label span p{background-color:transparent;}#chatgpt-mermaid-\_r_1q0\_ .label text,#chatgpt-mermaid-\_r_1q0\_ span{fill:rgb(237, 237, 237);color:rgb(237, 237, 237);}#chatgpt-mermaid-\_r_1q0\_ .node rect,#chatgpt-mermaid-\_r_1q0\_ .node circle,#chatgpt-mermaid-\_r_1q0\_ .node ellipse,#chatgpt-mermaid-\_r_1q0\_ .node polygon,#chatgpt-mermaid-\_r_1q0\_ .node path{fill:rgb(9, 23, 44);stroke:rgb(31, 78, 148);stroke-width:1px;}#chatgpt-mermaid-\_r_1q0\_ .rough-node .label text,#chatgpt-mermaid-\_r_1q0\_ .node .label text,#chatgpt-mermaid-\_r_1q0\_ .image-shape .label,#chatgpt-mermaid-\_r_1q0\_ .icon-shape .label{text-anchor:middle;}#chatgpt-mermaid-\_r_1q0\_ .node .katex path{fill:#000;stroke:#000;stroke-width:1px;}#chatgpt-mermaid-\_r_1q0\_ .rough-node .label,#chatgpt-mermaid-\_r_1q0\_ .node .label,#chatgpt-mermaid-\_r_1q0\_ .image-shape .label,#chatgpt-mermaid-\_r_1q0\_ .icon-shape .label{text-align:center;}#chatgpt-mermaid-\_r_1q0\_ .node.clickable{cursor:pointer;}#chatgpt-mermaid-\_r_1q0\_ .root .anchor path{fill:rgb(175, 175, 175)!important;stroke-width:0;stroke:rgb(175, 175, 175);}#chatgpt-mermaid-\_r_1q0\_ .arrowheadPath{fill:rgb(175, 175, 175);}#chatgpt-mermaid-\_r_1q0\_ .edgePath .path{stroke:rgb(175, 175, 175);stroke-width:1px;}#chatgpt-mermaid-\_r_1q0\_ .flowchart-link{stroke:rgb(175, 175, 175);fill:none;}#chatgpt-mermaid-\_r_1q0\_ .edgeLabel{background-color:rgb(0, 0, 0);text-align:center;}#chatgpt-mermaid-\_r_1q0\_ .edgeLabel p{background-color:rgb(0, 0, 0);}#chatgpt-mermaid-\_r_1q0\_ .edgeLabel rect{opacity:0.5;background-color:rgb(0, 0, 0);fill:rgb(0, 0, 0);}#chatgpt-mermaid-\_r_1q0\_ .labelBkg{background-color:rgba(0, 0, 0, 0.5);}#chatgpt-mermaid-\_r_1q0\_ .cluster rect{fill:rgb(48, 48, 48);stroke:rgba(255, 255, 255, 0.15);stroke-width:1px;}#chatgpt-mermaid-\_r_1q0\_ .cluster text{fill:rgb(237, 237, 237);}#chatgpt-mermaid-\_r_1q0\_ .cluster span{color:rgb(237, 237, 237);}#chatgpt-mermaid-\_r_1q0\_ div.mermaidTooltip{position:absolute;text-align:center;max-width:200px;padding:2px;font-family:-apple-system-body,ui-sans-serif,-apple-system,system-ui,"Segoe UI",Helvetica,"Apple Color Emoji",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol";font-size:12px;background:rgb(48, 48, 48);border:1px solid rgba(255, 255, 255, 0.15);border-radius:2px;pointer-events:none;z-index:100;}#chatgpt-mermaid-\_r_1q0\_ .flowchartTitleText{text-anchor:middle;font-size:18px;fill:rgb(237, 237, 237);}#chatgpt-mermaid-\_r_1q0\_ rect.text{fill:none;stroke-width:0;}#chatgpt-mermaid-\_r_1q0\_ .icon-shape,#chatgpt-mermaid-\_r_1q0\_ .image-shape{background-color:rgb(0, 0, 0);text-align:center;}#chatgpt-mermaid-\_r_1q0\_ .icon-shape p,#chatgpt-mermaid-\_r_1q0\_ .image-shape p{background-color:rgb(0, 0, 0);padding:2px;}#chatgpt-mermaid-\_r_1q0\_ .icon-shape .label rect,#chatgpt-mermaid-\_r_1q0\_ .image-shape .label rect{opacity:0.5;background-color:rgb(0, 0, 0);fill:rgb(0, 0, 0);}#chatgpt-mermaid-\_r_1q0\_ .label-icon{display:inline-block;height:1em;overflow:visible;vertical-align:-0.125em;}#chatgpt-mermaid-\_r_1q0\_ .node .label-icon path{fill:currentColor;stroke:revert;stroke-width:revert;}#chatgpt-mermaid-\_r_1q0\_ .node .neo-node{stroke:rgb(31, 78, 148);}#chatgpt-mermaid-\_r_1q0\_ [data-look="neo"].node rect,#chatgpt-mermaid-\_r_1q0\_ [data-look="neo"].cluster rect,#chatgpt-mermaid-\_r_1q0\_ [data-look="neo"].node polygon{stroke:url(#chatgpt-mermaid-\_r_1q0\_-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#chatgpt-mermaid-\_r_1q0\_ [data-look="neo"].swimlane.cluster rect{filter:none;}#chatgpt-mermaid-\_r_1q0\_ [data-look="neo"].node path{stroke:url(#chatgpt-mermaid-\_r_1q0\_-gradient);stroke-width:1px;}#chatgpt-mermaid-\_r_1q0\_ [data-look="neo"].node .outer-path{filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#chatgpt-mermaid-\_r_1q0\_ [data-look="neo"].node .neo-line path{stroke:rgb(31, 78, 148);filter:none;}#chatgpt-mermaid-\_r_1q0\_ [data-look="neo"].node circle{stroke:url(#chatgpt-mermaid-\_r_1q0\_-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#chatgpt-mermaid-\_r_1q0\_ [data-look="neo"].node circle .state-start{fill:#000000;}#chatgpt-mermaid-\_r_1q0\_ [data-look="neo"].icon-shape .icon{fill:url(#chatgpt-mermaid-\_r_1q0\_-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#chatgpt-mermaid-\_r_1q0\_ [data-look="neo"].icon-shape .icon-neo path{stroke:url(#chatgpt-mermaid-\_r_1q0\_-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#chatgpt-mermaid-\_r_1q0\_ .node text{font-size:14px;font-weight:600;letter-spacing:normal;fill:rgb(153, 206, 255);}#chatgpt-mermaid-\_r_1q0\_ .edgeLabels text{font-size:13px;font-weight:600;letter-spacing:-0.08px;fill:rgb(153, 206, 255);}#chatgpt-mermaid-\_r_1q0\_ .node tspan[font-weight="normal"],#chatgpt-mermaid-\_r_1q0\_ .edgeLabels tspan[font-weight="normal"]{font-weight:600;}#chatgpt-mermaid-\_r_1q0\_ .edgeLabel .label rect{opacity:1;rx:13px;ry:13px;fill:rgb(0, 14, 26);stroke:rgb(26, 62, 95);stroke-width:1px;}#chatgpt-mermaid-\_r_1q0\_ .node rect,#chatgpt-mermaid-\_r_1q0\_ .node circle,#chatgpt-mermaid-\_r_1q0\_ .node ellipse,#chatgpt-mermaid-\_r_1q0\_ .node polygon,#chatgpt-mermaid-\_r_1q0\_ .node path{fill:rgb(0, 40, 77);stroke:rgba(255, 255, 255, 0.1);stroke-width:1px;}#chatgpt-mermaid-\_r_1q0\_ .node rect{rx:16px;ry:16px;}#chatgpt-mermaid-\_r_1q0\_ .mermaid-decision .label-container{fill:rgb(0, 14, 26);stroke:rgb(26, 62, 95);stroke-dasharray:2,2;}#chatgpt-mermaid-\_r_1q0\_ .edgePaths .flowchart-link{stroke:rgb(175, 175, 175);stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;}#chatgpt-mermaid-\_r_1q0\_ .marker{fill:rgb(175, 175, 175);stroke:rgb(175, 175, 175);}#chatgpt-mermaid-\_r_1q0\_ :root{--mermaid-font-family:-apple-system-body,ui-sans-serif,-apple-system,system-ui,"Segoe UI",Helvetica,"Apple Color Emoji",Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol";}HomepageSelect Saree CollectionBrowse SareesApply FiltersProduct DetailsSelect QuantityAdd to BagCheckoutDelivery AddressPaymentOrder ConfirmationTrack Order
+   784→
+   785→### Return and exchange flow
+   786→
+   787→1. Customer opens order history.
+   788→2. Selects eligible saree.
+   789→3. Chooses return or exchange.
+   790→4. Selects return reason.
+   791→5. Admin reviews request.
+   792→6. Pickup is scheduled if supported.
+   793→7. Product quality is checked.
+   794→8. Refund or exchange is processed.
+   795→
+   796→### Admin product workflow
+   797→
+   798→1. Create a new saree.
+   799→2. Upload product photography.
+   800→3. Enter fabric, zari and other specifications.
+   801→4. Add price and SKU.
+   802→5. Set inventory.
+   803→6. Preview product page.
+   804→7. Publish.
+   805→8. Monitor orders and stock.
+   806→
+   807→## 9. Backend API specification
+   808→
+   809→Base URL: `/api/v1`
+   810→
+   811→| Module          | API                                    |
+   812→| --------------- | -------------------------------------- |
+   813→| Authentication  | `/auth/register`, `/auth/login`        |
+   814→| Sarees          | `/products`, `/products/:slug`         |
+   815→| Categories      | `/categories`                          |
+   816→| Collections     | `/collections`                         |
+   817→| Search          | `/search`                              |
+   818→| Cart            | `/cart`, `/cart/items`                 |
+   819→| Wishlist        | `/wishlist`                            |
+   820→| Checkout        | `/checkout`                            |
+   821→| Orders          | `/orders`                              |
+   822→| Payments        | `/payments/create`, `/payments/verify` |
+   823→| Reviews         | `/products/:id/reviews`                |
+   824→| Customer        | `/customers/me`                        |
+   825→| Returns         | `/returns`                             |
+   826→| Admin dashboard | `/admin/dashboard`                     |
+   827→| Admin products  | `/admin/products`                      |
+   828→| Admin inventory | `/admin/inventory`                     |
+   829→| Admin orders    | `/admin/orders`                        |
+   830→| Admin reports   | `/admin/reports`                       |
+   831→
+   832→### Payment integration
+   833→
+   834→Use Razorpay for:
+   835→
+   836→- UPI payments.
+   837→- Cards.
+   838→- Net banking.
+   839→- Supported payment methods.
+   840→
+   841→Important implementation requirements:
+   842→
+   843→- Verify payment signatures on the backend.
+   844→- Verify Razorpay webhooks.
+   845→- Prevent duplicate order processing.
+   846→- Maintain payment and refund records.
+   847→- Handle failed and pending payments.
+   848→- Never expose secret API keys in React.
+   849→
+   850→## 10. Special features for a saree business
+   851→
+   852→These features can differentiate the website from ordinary fashion stores.
+   853→
+   854→[Royal Blue & Azure Blue Mysore silk Saree with Half Border in KSIC Grade Thickness – Shobitam India](https://images.openai.com/static-rsc-4/Jj6EBIb5ZSkSVcABnONcSFaXad6ftG4yA17wNHfZQLV1Udql8n5jmOEjUxIwEvoe_JldaSbagZ41iQnzcTylL4vsOTkTKBmppEicqp88tDbA8eFvC4bL8CbaZKCrd2We8TBKkSZRIGd4OCfsKmYH3T586_Be1BCzGfRSSzb_VDY?purpose=inline)
+   855→
+   856→1\. Zari detail gallery
+   857→
+   858→High-resolution close-ups showing border, pallu, weaving and zari craftsmanship.
+   859→
+   860→[Buy Silk Sarees Online | Soft Silk Sarees | Vijayalakshmi Silks](https://images.openai.com/static-rsc-4/HcbSf_Yj4RN_ORUD6vs5YKRi7ZAyrC0FYZhLxtSbJy8U3ZLE_R3Bi2UkeJlJB9MW5EHIMGZepDbPeyLgSQbl72gSmKXf1P4Ig5peADyrgyOgRYSX9XLS-JnzC2_maN1yVqqm9D5w_AROkl_zzOS7CQVyh5I3cJcc7_wG6TYMEZA?purpose=inline)
+   861→
+   862→2\. Saree styling inspiration
+   863→
+   864→Show how the saree looks when worn, alongside the folded product photographs.
+   865→
+   866→[Traditional Navy Blue Kanchipuram Silk Saree With Peacock And Chakram– Kumaran Silks](https://images.openai.com/static-rsc-4/5x6GuBFWnZx8LGgnVU4B_bJrqevuwRO3EM6ob6IdGm42apZ-ZFSy9OifulRwGF-nXB3bCoKiS7iugaXbZioK8tJdQJq53mia74hf9uE-O3FpWqT1RhgUpxgB3IIzwlVwO2FKTg9_q5AMlMYVYq4V9855bQgF95SqRzTlylJqOs4?purpose=inline)
+   867→
+   868→3\. Blouse matching guide
+   869→
+   870→Display matching blouse color, contrast combinations and blouse-piece information.
+   871→
+   872→[Printing & Packaging Manufacturer in Salem, Tamil Nadu | Ellora Print Pack LLP](https://images.openai.com/static-rsc-4/BiNVu-aaEEZ6-dexXVd7w0Cohw80lBVT7Z7rvnXpXvzl9tamMKX_j84pu7dXsqIzsEmfeSFO6Zhvt3Ypu5DXgrL5p7b4rFH4FFIZteFbYvbcTbdhUSjtaB04hJTA51OvhYHmn1VKGrg3B9ycxpiLLL12gUXNcl9FWGvjN0Un9Z0?purpose=inline)
+   873→
+   874→4\. Gift packaging
+   875→
+   876→Premium packaging, gift messages and special wedding orders.
+   877→
+   878→[Silk Saree Storage Tips: How to Store Safely at Home  – Rangvarsha Sarees](https://images.openai.com/static-rsc-4/lJCBJH7RtBZHk5fV3vBzZbieCBbmRwlL_2eQ__eeieyfMwMkNkCtsb7FVqf6zkDxAI2s8Y5v5NNkDuyDFRtdtx5GO__0ahCZzDO_qnXqLoKieHNkGIpY7Mpp-A52H6LztLkyfs8VxzepbLUyHuc8D2878d6dD_YzLKHH1o4CRKM?purpose=inline)
+   879→
+   880→5\. Saree care guide
+   881→
+   882→Explain washing, dry cleaning, storage and zari care.
+   883→
+   884→Additional features:
+   885→
+   886→- WhatsApp customer support.
+   887→- PIN code delivery checker.
+   888→- Wedding shopping assistance.
+   889→- Saree comparison.
+   890→- Recently viewed products.
+   891→- Festival collections.
+   892→- Stock availability notifications.
+   893→- Tamil and English language support.
+   894→- GST invoice downloads.
+   895→
+   896→## 11. Implementation roadmap
+   897→
+   898→Recommended 8-week development schedule.
+   899→
+   900→| Week | Tasks                                        |
+   901→| ---- | -------------------------------------------- |
+   902→| 1    | Brand design, colors, typography, wireframes |
+   903→| 2    | Homepage, navigation, collections            |
+   904→| 3    | Saree catalogue, filters, product details    |
+   905→| 4    | Wishlist, cart, checkout, customer account   |
+   906→| 5    | Node.js backend, MySQL and APIs              |
+   907→| 6    | Admin dashboard, inventory and orders        |
+   908→| 7    | Razorpay, shipping, notifications            |
+   909→| 8    | Testing, SEO, security and deployment        |
+   910→
+   911→## 12. Quality and production checklist
+   912→
+   913→Project completion checklist
+   914→
+   915→0/14
+   916→
+   917→Navy blue and gold design system applied consistently
+   918→
+   919→Homepage responsive across devices
+   920→
+   921→All saree categories and filters working
+   922→
+   923→Product gallery supports high-resolution images
+   924→
+   925→Saree fabric and zari details displayed correctly
+   926→
+   927→Cart and wishlist work correctly
+   928→
+   929→Checkout and address validation tested
+   930→
+   931→Razorpay payments verified on backend
+   932→
+   933→Inventory prevents overselling
+   934→
+   935→Admin role permissions enforced
+   936→
+   937→Order tracking and returns working
+   938→
+   939→Tamil and English content tested
+   940→
+   941→SEO metadata and sitemap configured
+   942→
+   943→SSL, database backup and error logging enabled
+   944→
+   945→## 13. Final design reference
+   946→
+   947→[Kancheepuram Vara Mahalakshmi Silks](https://images.openai.com/static-rsc-4/XfDmI8oWxUUijmna00wH8kS2ARjbTDCHiqxcdzfVHPFOjT3TJVviZEmoirTe9K7Csht1LV1wLP7t6z6qr2SQti7k7aBErW58FL_KviLwdR8_o1_Sn9qr4TctDImit4ZTWsPU6BXdoYYZcc1yOMkEBUZTBbx6DoYAJ0AR781uFsk?purpose=inline)
+   948→
+   949→[Buy Kanchipuram Saree in Navy Blue Online : SNGA5463 - Utsav Fashion](https://images.openai.com/static-rsc-4/Pg6hQ9DffwhwDj7pkgxL3bcX5cxY3f8tY46GjYg_WKqp3Qfqjuw6Ij0wQaqUvV26tR4IvuA4elB76ZKNNUVi1GyZ1bDzU4IwniChyqUWwqUNxJ6g83DbvDALfO6D9rmO_xW8Nm2uemBaUIZFj9VkNd5biuhItlTWCrk5Stg9CFQ?purpose=inline)
+   950→
+   951→[Saree Catalog Maker Free Online | StitchMagic](https://images.openai.com/static-rsc-4/15TmGqIKXU1TUvbdP9B6YpUF7fuERjvkcVDC6ffKVjCrZOBgEXABr_xy69m99kNtxja9wXVJZVFbVNAuFSSsSi07EkAlxaTGvZIBoN0CtIaKzKqM2ljJap4bTpuzbAC-jPZCfVuYxyoaYJUyVeygEk4vszNvJWpPA-knRflDWIY?purpose=inline)
+   952→
+   953→12
+   954→
+   955→### My final design recommendations
+   956→
+   957→| Design element      | Final choice           |
+   958→| ------------------- | ---------------------- |
+   959→| Primary color       | Royal Navy `#081B3A`   |
+   960→| Secondary color     | Deep Navy `#10294D`    |
+   961→| Accent              | Royal Gold `#D4AF37`   |
+   962→| Border accent       | Antique Gold `#B9944B` |
+   963→| Background          | Ivory `#FAF7F0`        |
+   964→| Main heading        | Playfair Display       |
+   965→| Body font           | Inter                  |
+   966→| Logo font           | Cinzel                 |
+   967→| Product image ratio | 4:5                    |
+   968→| Product grid        | 4 desktop / 2 mobile   |
+   969→| Website style       | Royal Indian luxury    |
+   970→
+   971→Three important design decisions:
+   972→
+   973→1. Keep the website background ivory so colorful sarees stand out.
+   974→2. Use navy blue for headers, navigation, buttons and footer.
+   975→3. Use gold for logo, fine borders, icons, highlights and selected elements.
+   976→
+   977→The result should feel like a premium South Indian silk saree boutique rather than a generic shopping website.
+   978→
+   979→Suggested project identity: A luxury saree brand with traditional craftsmanship, modern shopping and a royal navy-and-gold visual experience.

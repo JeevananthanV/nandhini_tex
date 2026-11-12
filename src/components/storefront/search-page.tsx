@@ -63,7 +63,7 @@ export function SearchPage() {
           <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
             {Array.from({ length: 4 }).map((_, i) => (
               <div key={i} className="animate-pulse">
-                <div className="aspect-[3/4] rounded-md bg-muted" />
+                <div className="aspect-[4/5] rounded-md bg-muted" />
                 <div className="mt-3 h-3 w-20 rounded bg-muted" />
                 <div className="mt-2 h-4 w-full rounded bg-muted" />
               </div>

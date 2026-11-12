@@ -91,22 +91,22 @@ export function HomePage({ categories }: { categories: Category[] }) {
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             className="max-w-xl"
           >
-            <span className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-navy/30 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.15em] text-gold backdrop-blur">
-              <Sparkles className="h-3 w-3" /> Handwoven in Tamil Nadu
+            <span className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-navy/30 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.2em] text-gold backdrop-blur font-display">
+              <Sparkles className="h-3 w-3" /> The Royal Silk Collection
             </span>
-            <h1 className="mt-5 font-serif text-4xl font-semibold leading-[1.1] text-ivory md:text-6xl">
-              Elegance Meets
-              <span className="block text-gold-gradient">Tradition</span>
+            <h1 className="mt-5 font-serif text-4xl font-bold leading-[1.05] text-ivory md:text-6xl">
+              Elegance Woven
+              <span className="block text-gold-gradient">Through Generations</span>
             </h1>
-            <p className="mt-5 max-w-md text-base text-ivory/80 md:text-lg">
-              Curated handwoven silk & cotton sarees from Elampillai, Kanchipuram & Arani — woven on traditional looms by master artisans.
+            <p className="mt-5 max-w-md text-base text-ivory/80 md:text-lg font-light">
+              Discover the beauty of traditional Indian sarees, crafted with timeless artistry by master weavers of Elampillai, Kanchipuram & Arani.
             </p>
             <div className="mt-7 flex flex-wrap gap-3">
               <MagneticButton
                 onClick={() => goCategory("bridal")}
-                className="rounded-sm bg-gold-gradient px-7 py-3 text-sm font-semibold text-navy shadow-gold"
+                className="rounded-sm bg-gold-gradient px-7 py-3 text-sm font-semibold text-navy shadow-gold uppercase tracking-wider"
               >
-                Explore Bridal Collection
+                Explore Collection
               </MagneticButton>
               <MagneticButton
                 onClick={() => goCategory("soft-silk")}
@@ -285,6 +285,94 @@ export function HomePage({ categories }: { categories: Category[] }) {
       {menswear.length > 0 && (
         <ProductRail eyebrow="For Him" title="Menswear" products={menswear} bg="bg-ivory" />
       )}
+
+      {/* ===== FESTIVAL COLLECTION ===== */}
+      <section className="bg-navy-gradient text-ivory">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:px-8 md:py-24">
+          <SectionHeading eyebrow="Seasonal Edits" title="Festival Collection" />
+          <p className="mt-4 max-w-2xl text-ivory/70">Celebrate Pongal, Diwali, and wedding seasons with our curated festive sarees — rich colours, pure zari, and heirloom weaves for every auspicious occasion.</p>
+          <div className="mt-10 grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-5 lg:grid-cols-4">
+            {[
+              { name: "Pongal Edit", desc: "Vibrant silks for the harvest festival", img: "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/c5af66d51871.jpg", color: "#D4AF37" },
+              { name: "Diwali Collection", desc: "Luminous zari weaves for the festival of lights", img: "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/dc4814dd8745.jpeg", color: "#B3261E" },
+              { name: "Wedding Season", desc: "Grand bridal and reception sarees", img: "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/34b61bbedff3.jpg", color: "#7A1F2B" },
+              { name: "Navratri Specials", desc: "Festive nine-night celebration weaves", img: "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/b0c231bcd321.jpg", color: "#5B2A6B" },
+            ].map((f, i) => (
+              <motion.button
+                key={f.name}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-5%" }}
+                transition={{ duration: 0.4, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                onClick={() => goCategory("bridal")}
+                className="group relative aspect-[4/5] overflow-hidden rounded-lg"
+              >
+                <Image src={f.img} alt={f.name} fill sizes="(max-width: 768px) 50vw, 25vw" className="object-cover transition-transform duration-500 group-hover:scale-110" />
+                <div className="absolute inset-0 bg-gradient-to-t from-navy-dark/90 via-navy-dark/30 to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 p-4 text-left">
+                  <span className="font-serif text-lg font-semibold text-ivory md:text-xl">{f.name}</span>
+                  <span className="mt-1 block text-xs text-ivory/70">{f.desc}</span>
+                </div>
+                <div className="absolute right-3 top-3 h-2 w-2 rounded-full ring-2 ring-white/30" style={{ backgroundColor: f.color }} />
+              </motion.button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== INSTAGRAM GALLERY ===== */}
+      <section className="bg-ivory">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:px-8 md:py-24">
+          <SectionHeading eyebrow="#NandhiniTex" title="Saree Styling Inspiration" center />
+          <p className="mx-auto mt-4 max-w-lg text-center text-sm text-muted-foreground">Follow us on Instagram for saree draping styles, blouse pairing ideas, and behind-the-scenes weaving stories.</p>
+          <div className="mt-10 grid grid-cols-3 gap-2 md:grid-cols-6 md:gap-3">
+            {[
+              "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/f2d2d11dfedb.jpg",
+              "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/e57893896ef2.webp",
+              "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/8c5dcb89a6fe.jpg",
+              "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/fbb5a4b85795.jpg",
+              "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/34b61bbedff3.jpg",
+              "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/da6a6323db3d.jpg",
+            ].map((img, i) => (
+              <motion.a
+                key={i}
+                href="https://instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.3, delay: i * 0.05 }}
+                className="group relative aspect-square overflow-hidden rounded-md bg-muted"
+              >
+                <Image src={img} alt={`Instagram post ${i + 1}`} fill sizes="(max-width: 768px) 33vw, 16vw" className="object-cover transition-transform duration-500 group-hover:scale-110" />
+                <div className="absolute inset-0 flex items-center justify-center bg-navy/0 opacity-0 transition-all duration-300 group-hover:bg-navy/40 group-hover:opacity-100">
+                  <svg className="h-6 w-6 text-ivory" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <rect x="2" y="2" width="20" height="20" rx="5" />
+                    <circle cx="12" cy="12" r="4" />
+                    <line x1="17.5" y1="6.5" x2="17.5" y2="6.5" />
+                  </svg>
+                </div>
+              </motion.a>
+            ))}
+          </div>
+          <div className="mt-8 text-center">
+            <a
+              href="https://instagram.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-sm border border-navy px-6 py-2.5 text-sm font-semibold text-navy transition-colors hover:bg-navy hover:text-ivory"
+            >
+              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                <rect x="2" y="2" width="20" height="20" rx="5" />
+                <circle cx="12" cy="12" r="4" />
+                <line x1="17.5" y1="6.5" x2="17.5" y2="6.5" />
+              </svg>
+              Follow @nandhinitex
+            </a>
+          </div>
+        </div>
+      </section>
 
       {/* ===== TESTIMONIALS ===== */}
       {testimonials.length > 0 && (

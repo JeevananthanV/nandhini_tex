@@ -12,7 +12,7 @@ import { ProductPage } from "./product-page";
 import { CartPage } from "./cart-page";
 import { SearchPage } from "./search-page";
 import {
-  ScrollProgress, BackToTop, PageLoader, LiveChatWidget, FestiveBanner, GradientMesh,
+  ScrollProgress, BackToTop, PageLoader, LiveChatWidget, FestiveBanner, GradientMesh, MobileBottomNav,
 } from "./premium";
 import { QuickViewModal, WishlistDrawer } from "./premium-features";
 
@@ -35,7 +35,7 @@ export function Storefront({ categories }: { categories: Category[] }) {
       <GradientMesh className="fixed inset-0 z-0" />
       <div className="relative z-10 flex flex-1 flex-col">
         <Header categories={categories} />
-        <main className="flex-1">
+        <main className="flex-1 pb-16 md:pb-0">
           {mounted ? (
             <motion.div
               key={routeKey}
@@ -60,6 +60,7 @@ export function Storefront({ categories }: { categories: Category[] }) {
       <WishlistDrawer />
       <BackToTop />
       <LiveChatWidget />
+      <MobileBottomNav />
     </div>
   );
 }

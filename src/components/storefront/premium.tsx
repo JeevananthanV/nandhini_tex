@@ -2,7 +2,8 @@
 
 import { useRef, useState, useEffect, type ReactNode, type MouseEvent } from "react";
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence, useScroll, useReducedMotion, useInView } from "framer-motion";
-import { ArrowUp, X, Sparkles, Loader2 } from "lucide-react";
+import { ArrowUp, X, Sparkles, Loader2, Home, ShoppingBag, Heart, User } from "lucide-react";
+import { useStore } from "@/lib/store";
 import { EASE_SILK, DUR, VIEWPORT_ONCE } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
@@ -598,5 +599,69 @@ export function StaggerItem({ children, className }: { children: ReactNode; clas
     >
       {children}
     </motion.div>
+  );
+}
+
+// ============================================================================
+// 16. MobileBottomNav — fixed bottom nav for mobile (Home, Shop, Wishlist, Account, Bag)
+// ============================================================================
+export function MobileBottomNav() {
+  const goHome = useStore((s) => s.goHome);
+  const goCategory = useStore((s) => s.goCategory);
+  const openCart = useStore((s) => s.openCart);
+  const cartCount = useStore((s) => s.cartCount());
+  const wishlistCount = useStore((s) => s.wishlist.length);
+  const storeView = useStore((s) => s.storeView);
+
+  const items = [
+    { icon: Home, label: "Home", onClick: goHome, active: storeView === "home" },
+    { icon: ShoppingBag, label: "Shop", onClick: () => goCategory("soft-silk"), active: storeView === "category" || storeView === "product" || storeView === "search" },
+    { icon: Heart, label: "Wishlist", onClick: () => window.dispatchEvent(new Event("open-wishlist")), badge: wishlistCount, active: false },
+    { icon: User, label: "Account", onClick: () => {}, active: false },
+    { icon: ShoppingBag, label: "Bag", onClick: openCart, badge: cartCount, active: storeView === "cart" },
+  ];
+
+  return (
+    <motion.nav
+      initial={{ y: 80 }}
+      animate={{ y: 0 }}
+      transition={{ delay: 0.5, duration: DUR.base, ease: EASE_SILK }}
+      className="fixed inset-x-0 bottom-0 z-[80] flex items-center justify-around border-t border-gold/20 bg-navy-gradient/95 backdrop-blur-lg md:hidden"
+      aria-label="Mobile navigation"
+      style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+    >
+      {items.map((item, i) => (
+        <button
+          key={i}
+          onClick={item.onClick}
+          className="relative flex flex-1 flex-col items-center gap-0.5 py-2.5"
+          aria-label={item.label}
+          aria-current={item.active ? "page" : undefined}
+        >
+          <item.icon
+            className={cn(
+              "h-5 w-5 transition-colors",
+              item.active ? "text-gold" : "text-ivory/60"
+            )}
+            strokeWidth={item.active ? 2 : 1.5}
+          />
+          <span className={cn("text-[9px] font-medium uppercase tracking-wider", item.active ? "text-gold" : "text-ivory/60")}>
+            {item.label}
+          </span>
+          {item.badge !== undefined && item.badge > 0 && (
+            <span className="absolute right-[28%] top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-gold px-1 text-[9px] font-bold text-navy">
+              {item.badge}
+            </span>
+          )}
+          {item.active && (
+            <motion.span
+              layoutId="mobile-nav-active"
+              className="absolute -top-px h-0.5 w-8 rounded-full bg-gold-gradient"
+              transition={{ duration: DUR.base, ease: EASE_SILK }}
+            />
+          )}
+        </button>
+      ))}
+    </motion.nav>
   );
 }

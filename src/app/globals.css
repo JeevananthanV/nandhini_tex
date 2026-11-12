@@ -55,84 +55,85 @@
 }
 
 :root {
-  /* Brand palette — Navy Blue + Gold */
-  --navy: #0A1F44;
-  --navy-light: #13294B;
-  --navy-dark: #061229;
-  --gold: #C9A227;
-  --gold-light: #E0BE4A;
-  --gold-dark: #A07E16;
-  --ivory: #FBF7F1;
-  --charcoal: #1F1B16;
+  /* Brand palette — Royal Heritage (Navy Blue + Gold) per design plan */
+  --navy: #081B3A;          /* Royal Navy Blue — primary brand, navigation, buttons */
+  --navy-light: #10294D;     /* Deep Navy — header, footer, dark sections */
+  --navy-dark: #050F1F;     /* Darkest navy for overlays */
+  --gold: #D4AF37;          /* Royal Gold — CTA accents, icons, highlights */
+  --gold-light: #E8C96A;    /* Lighter gold for gradients */
+  --gold-dark: #B9944B;     /* Antique Gold — borders, zari-inspired details */
+  --ivory: #FAF7F0;         /* Main website background */
+  --champagne: #F5E6CA;     /* Champagne — secondary background accent */
+  --charcoal: #292929;      /* Text Charcoal — body text */
   --taupe: #8B7E74;
   --sage: #A9B79C;
 
   --radius: 0.5rem;
-  --background: #FBF7F1;
-  --foreground: #1F1B16;
-  --card: #FFFFFF;
-  --card-foreground: #1F1B16;
+  --background: #FAF7F0;     /* Ivory background */
+  --foreground: #292929;    /* Charcoal text */
+  --card: #FFFFFF;          /* Pure White — product cards and forms */
+  --card-foreground: #292929;
   --popover: #FFFFFF;
-  --popover-foreground: #1F1B16;
-  --primary: #0A1F44;
-  --primary-foreground: #FBF7F1;
-  --secondary: #F3EDE2;
-  --secondary-foreground: #0A1F44;
-  --muted: #F3EDE2;
+  --popover-foreground: #292929;
+  --primary: #081B3A;       /* Royal Navy */
+  --primary-foreground: #FAF7F0;
+  --secondary: #F5E6CA;      /* Champagne */
+  --secondary-foreground: #081B3A;
+  --muted: #F5E6CA;
   --muted-foreground: #8B7E74;
-  --accent: #C9A227;
-  --accent-foreground: #0A1F44;
+  --accent: #D4AF37;        /* Royal Gold */
+  --accent-foreground: #081B3A;
   --destructive: #B3261E;
   --border: #E7DFD5;
   --input: #E7DFD5;
-  --ring: #C9A227;
-  --chart-1: #0A1F44;
-  --chart-2: #C9A227;
-  --chart-3: #1E3A6B;
-  --chart-4: #E0BE4A;
+  --ring: #D4AF37;          /* Royal Gold ring */
+  --chart-1: #081B3A;
+  --chart-2: #D4AF37;
+  --chart-3: #10294D;
+  --chart-4: #B9944B;
   --chart-5: #A9B79C;
-  --sidebar: #061229;
-  --sidebar-foreground: #FBF7F1;
-  --sidebar-primary: #C9A227;
-  --sidebar-primary-foreground: #061229;
-  --sidebar-accent: #13294B;
-  --sidebar-accent-foreground: #FBF7F1;
+  --sidebar: #050F1F;
+  --sidebar-foreground: #FAF7F0;
+  --sidebar-primary: #D4AF37;
+  --sidebar-primary-foreground: #050F1F;
+  --sidebar-accent: #10294D;
+  --sidebar-accent-foreground: #FAF7F0;
   --sidebar-border: #1E3A6B;
-  --sidebar-ring: #C9A227;
+  --sidebar-ring: #D4AF37;
 }
 
 .dark {
-  --background: #061229;
-  --foreground: #FBF7F1;
-  --card: #0A1F44;
-  --card-foreground: #FBF7F1;
-  --popover: #0A1F44;
-  --popover-foreground: #FBF7F1;
-  --primary: #C9A227;
-  --primary-foreground: #061229;
-  --secondary: #13294B;
-  --secondary-foreground: #FBF7F1;
-  --muted: #13294B;
+  --background: #050F1F;
+  --foreground: #FAF7F0;
+  --card: #081B3A;
+  --card-foreground: #FAF7F0;
+  --popover: #081B3A;
+  --popover-foreground: #FAF7F0;
+  --primary: #D4AF37;
+  --primary-foreground: #050F1F;
+  --secondary: #10294D;
+  --secondary-foreground: #FAF7F0;
+  --muted: #10294D;
   --muted-foreground: #A9A09A;
-  --accent: #C9A227;
-  --accent-foreground: #061229;
+  --accent: #D4AF37;
+  --accent-foreground: #050F1F;
   --destructive: #E5484D;
   --border: #1E3A6B;
   --input: #1E3A6B;
-  --ring: #C9A227;
-  --chart-1: #C9A227;
-  --chart-2: #1E3A6B;
-  --chart-3: #E0BE4A;
+  --ring: #D4AF37;
+  --chart-1: #D4AF37;
+  --chart-2: #10294D;
+  --chart-3: #E8C96A;
   --chart-4: #A9B79C;
   --chart-5: #8B7E74;
-  --sidebar: #040E1F;
-  --sidebar-foreground: #FBF7F1;
-  --sidebar-primary: #C9A227;
-  --sidebar-primary-foreground: #061229;
-  --sidebar-accent: #13294B;
-  --sidebar-accent-foreground: #FBF7F1;
+  --sidebar: #050F1F;
+  --sidebar-foreground: #FAF7F0;
+  --sidebar-primary: #D4AF37;
+  --sidebar-primary-foreground: #050F1F;
+  --sidebar-accent: #10294D;
+  --sidebar-accent-foreground: #FAF7F0;
   --sidebar-border: #1E3A6B;
-  --sidebar-ring: #C9A227;
+  --sidebar-ring: #D4AF37;
 }
 
 @layer base {
@@ -151,31 +152,37 @@
 
 @layer utilities {
   .font-serif {
-    font-family: var(--font-fraunces), Georgia, serif;
+    font-family: var(--font-playfair), var(--font-cormorant), Georgia, serif;
+  }
+  .font-display {
+    font-family: var(--font-cinzel), serif;
+  }
+  .font-heading {
+    font-family: var(--font-cormorant), var(--font-playfair), Georgia, serif;
   }
   .text-gold-gradient {
-    background: linear-gradient(135deg, #E0BE4A 0%, #C9A227 45%, #A07E16 100%);
+    background: linear-gradient(135deg, #E8C96A 0%, #D4AF37 45%, #B9944B 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
   }
   .bg-gold-gradient {
-    background: linear-gradient(135deg, #E0BE4A 0%, #C9A227 50%, #A07E16 100%);
+    background: linear-gradient(135deg, #E8C96A 0%, #D4AF37 50%, #B9944B 100%);
   }
   .bg-navy-gradient {
-    background: linear-gradient(135deg, #13294B 0%, #0A1F44 50%, #061229 100%);
+    background: linear-gradient(135deg, #10294D 0%, #081B3A 50%, #050F1F 100%);
   }
   .border-gold-soft {
-    border-color: rgba(201, 162, 39, 0.35);
+    border-color: rgba(212, 175, 55, 0.35);
   }
   .shadow-gold {
-    box-shadow: 0 8px 30px -8px rgba(201, 162, 39, 0.35);
+    box-shadow: 0 8px 30px -8px rgba(212, 175, 55, 0.35);
   }
   .shadow-navy {
-    box-shadow: 0 10px 40px -10px rgba(10, 31, 68, 0.45);
+    box-shadow: 0 10px 40px -10px rgba(8, 27, 58, 0.45);
   }
   .gold-hairline {
-    background: linear-gradient(90deg, transparent, #C9A227, transparent);
+    background: linear-gradient(90deg, transparent, #D4AF37, transparent);
   }
   .scrollbar-elegant::-webkit-scrollbar {
     width: 6px;

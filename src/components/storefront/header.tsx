@@ -62,15 +62,15 @@ export function Header({ categories }: { categories: { id: string; name: string;
               <Menu className={cn("h-5 w-5", onHome && !scrolled ? "text-ivory" : "text-foreground")} />
             </button>
             <button onClick={goHome} className="flex items-center gap-2" aria-label="Nandhini Tex home">
-              <div className="flex h-9 w-9 items-center justify-center rounded-sm bg-navy-gradient ring-1 ring-gold/40">
-                <span className="font-serif text-lg font-bold text-gold-gradient">N</span>
+              <div className="flex h-9 w-9 items-center justify-center rounded-sm bg-navy-gradient ring-1 ring-gold/50">
+                <span className="font-display text-lg font-bold text-gold-gradient">N</span>
               </div>
               <div className="flex flex-col leading-none">
-                <span className={cn("font-serif text-lg font-semibold tracking-tight md:text-xl", onHome && !scrolled ? "text-ivory" : "text-navy")}>
-                  Nandhini Tex
+                <span className={cn("font-display text-base font-semibold tracking-wider md:text-lg", onHome && !scrolled ? "text-ivory" : "text-navy")}>
+                  NANDHINI TEX
                 </span>
-                <span className={cn("text-[9px] uppercase tracking-[0.2em]", onHome && !scrolled ? "text-ivory/70" : "text-gold-dark")}>
-                  Handwoven Heritage
+                <span className={cn("text-[8px] uppercase tracking-[0.25em]", onHome && !scrolled ? "text-gold/80" : "text-gold-dark")}>
+                  Royal Heritage
                 </span>
               </div>
             </button>

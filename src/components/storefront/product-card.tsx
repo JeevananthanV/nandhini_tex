@@ -27,7 +27,7 @@ export function ProductCard({ product, index = 0 }: { product: ProductCard; inde
       transition={{ duration: 0.4, delay: (index % 4) * 0.06, ease: [0.22, 1, 0.36, 1] }}
       className="group relative flex flex-col"
     >
-      <TiltCard maxTilt={6} className="aspect-[3/4] overflow-hidden rounded-md bg-muted">
+      <TiltCard maxTilt={6} className="aspect-[4/5] overflow-hidden rounded-md bg-muted">
         <button
           onClick={() => goProduct(product.slug)}
           className="absolute inset-0 z-10"

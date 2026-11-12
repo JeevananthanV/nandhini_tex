@@ -481,11 +481,11 @@ function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
       {/* Logo */}
       <div className="flex items-center gap-2.5 px-5 py-5 border-b border-white/10">
         <div className="flex h-9 w-9 items-center justify-center rounded-sm bg-white/5 ring-1 ring-gold/40">
-          <span className="font-serif text-lg font-bold text-gold-gradient">N</span>
+          <span className="font-display text-lg font-bold text-gold-gradient">N</span>
         </div>
         <div className="flex flex-col leading-none">
-          <span className="font-serif text-base font-semibold text-ivory">Nandhini Tex</span>
-          <span className="text-[10px] uppercase tracking-[0.2em] text-gold/80">Admin Console</span>
+          <span className="font-display text-sm font-semibold tracking-wider text-ivory">ROYAL HERITAGE</span>
+          <span className="text-[9px] uppercase tracking-[0.2em] text-gold/80">Store Administration</span>
         </div>
       </div>
 
