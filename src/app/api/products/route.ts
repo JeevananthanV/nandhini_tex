@@ -37,12 +37,12 @@ export async function GET(req: NextRequest) {
   if (isBestseller) where.isBestseller = true;
   if (isFeatured) where.isFeatured = true;
 
-  let orderBy: Record<string, "asc" | "desc"> = { createdAt: "desc" };
+  let orderBy: Record<string, "asc" | "desc">[] | Record<string, "asc" | "desc"> = { createdAt: "desc" };
   if (sort === "price-low") orderBy = { basePrice: "asc" };
   else if (sort === "price-high") orderBy = { basePrice: "desc" };
   else if (sort === "newest") orderBy = { createdAt: "desc" };
   else if (sort === "rating") orderBy = { rating: "desc" };
-  else orderBy = { isBestseller: "desc" };
+  else orderBy = [{ isBestseller: "desc" }, { createdAt: "desc" }];
 
   const products = await db.product.findMany({
     where,

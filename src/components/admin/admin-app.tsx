@@ -19,6 +19,7 @@ import {
   Pencil,
   Trash2,
   Eye,
+  MoreVertical,
   TrendingUp,
   IndianRupee,
   ShoppingBag,
@@ -1195,8 +1196,8 @@ function ProductsView() {
                   <TableCell className="text-right">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8">
-                          <Eye className="h-4 w-4" />
+                        <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Product actions">
+                          <MoreVertical className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">

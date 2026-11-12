@@ -14,7 +14,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ slu
 
   const reviews = await db.review.findMany({
     where: { productId: product.id, status: "approved" },
-    orderBy: { featured: "desc", createdAt: "desc" },
+    orderBy: [{ featured: "desc" }, { createdAt: "desc" }],
   });
 
   const related = await db.product.findMany({

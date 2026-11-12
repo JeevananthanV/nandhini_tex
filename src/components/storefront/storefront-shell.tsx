@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { useStore } from "@/lib/store";
 import { useIsClient } from "@/hooks/use-is-client";
 import { Header } from "./header";
@@ -27,22 +27,22 @@ export function Storefront({ categories }: { categories: Category[] }) {
     <div className="flex min-h-screen flex-col bg-background">
       <Header categories={categories} />
       <main className="flex-1">
-        <AnimatePresence mode="wait">
+        {mounted ? (
           <motion.div
             key={routeKey}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
           >
-            {mounted && storeView === "home" && <HomePage categories={categories} />}
-            {mounted && storeView === "category" && <CategoryPage categories={categories} />}
-            {mounted && storeView === "product" && <ProductPage />}
-            {mounted && storeView === "cart" && <CartPage />}
-            {mounted && storeView === "search" && <SearchPage />}
-            {!mounted && <div className="h-screen" />}
+            {storeView === "home" && <HomePage categories={categories} />}
+            {storeView === "category" && <CategoryPage categories={categories} />}
+            {storeView === "product" && <ProductPage />}
+            {storeView === "cart" && <CartPage />}
+            {storeView === "search" && <SearchPage />}
           </motion.div>
-        </AnimatePresence>
+        ) : (
+          <div className="h-screen" />
+        )}
       </main>
       <Footer categories={categories} />
       <CartDrawer />

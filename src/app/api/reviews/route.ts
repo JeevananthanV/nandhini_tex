@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
   if (!productId) return NextResponse.json({ reviews: [] });
   const reviews = await db.review.findMany({
     where: { productId, status: "approved" },
-    orderBy: { featured: "desc", createdAt: "desc" },
+    orderBy: [{ featured: "desc" }, { createdAt: "desc" }],
   });
   return NextResponse.json({ reviews: reviews.map(toReviewOut) });
 }
