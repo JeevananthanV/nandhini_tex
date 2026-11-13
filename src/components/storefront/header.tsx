@@ -214,13 +214,13 @@ export function Header({ categories }: { categories: { id: string; name: string;
                   Home
                 </button>
                 <button
-                  onClick={() => { goAllProducts(); }}
+                  onClick={() => { goAllProducts(); toggleMobileMenu(); }}
                   className="rounded-md px-3 py-2.5 text-left text-sm font-semibold text-navy hover:bg-muted"
                 >
                   Shop All Products
                 </button>
                 <button
-                  onClick={() => { goTrack(); }}
+                  onClick={() => { goTrack(); toggleMobileMenu(); }}
                   className="rounded-md px-3 py-2.5 text-left text-sm font-medium text-foreground hover:bg-muted"
                 >
                   Track Order

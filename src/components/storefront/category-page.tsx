@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { ProductCard } from "./product-card";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { ProductGridSkeleton } from "./skeletons";
 import type { ProductCard as ProductCardType } from "@/lib/format";
 
 type Category = { id: string; name: string; slug: string; description: string | null };
@@ -261,16 +262,7 @@ export function CategoryPage({ categories }: { categories: Category[] }) {
             </div>
 
             {loading ? (
-              <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6">
-                {Array.from({ length: 6 }).map((_, i) => (
-                  <div key={i} className="animate-pulse">
-                    <div className="aspect-[4/5] rounded-md bg-muted" />
-                    <div className="mt-3 h-3 w-20 rounded bg-muted" />
-                    <div className="mt-2 h-4 w-full rounded bg-muted" />
-                    <div className="mt-2 h-4 w-16 rounded bg-muted" />
-                  </div>
-                ))}
-              </div>
+              <ProductGridSkeleton count={6} className="md:grid-cols-3" />
             ) : filtered.length === 0 ? (
               <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-border py-20 text-center">
                 <p className="font-serif text-lg text-foreground">No sarees match your filters</p>

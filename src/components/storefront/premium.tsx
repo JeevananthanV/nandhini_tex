@@ -308,7 +308,7 @@ export function BackToTop() {
           whileHover={{ y: -3 }}
           whileTap={{ scale: 0.92 }}
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="fixed bottom-6 right-6 z-[90] flex h-11 w-11 items-center justify-center rounded-full bg-navy-gradient text-gold shadow-navy ring-1 ring-gold/40"
+          className="fixed bottom-20 right-6 z-[90] flex h-11 w-11 items-center justify-center rounded-full bg-navy-gradient text-gold shadow-navy ring-1 ring-gold/40 md:bottom-6"
           aria-label="Back to top"
         >
           <ArrowUp className="h-5 w-5" />
@@ -465,7 +465,7 @@ export function LiveChatWidget() {
         whileHover={reduce ? undefined : { scale: 1.08 }}
         whileTap={reduce ? undefined : { scale: 0.95 }}
         onClick={() => setOpen((v) => !v)}
-        className="fixed bottom-6 left-6 z-[90] flex h-12 w-12 items-center justify-center rounded-full bg-navy-gradient text-gold shadow-navy ring-1 ring-gold/40"
+        className="fixed bottom-20 left-6 z-[90] flex h-12 w-12 items-center justify-center rounded-full bg-navy-gradient text-gold shadow-navy ring-1 ring-gold/40 md:bottom-6"
         aria-label="Open chat"
       >
         <motion.span
@@ -492,7 +492,7 @@ export function LiveChatWidget() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.9 }}
             transition={{ duration: DUR.base, ease: EASE_SILK }}
-            className="fixed bottom-24 left-6 z-[95] w-[300px] overflow-hidden rounded-xl border border-border bg-card shadow-navy"
+            className="fixed bottom-36 left-6 z-[95] w-[300px] overflow-hidden rounded-xl border border-border bg-card shadow-navy md:bottom-24"
           >
             <div className="bg-navy-gradient p-4 text-ivory">
               <div className="flex items-center justify-between">

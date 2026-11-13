@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { useStore } from "@/lib/store";
 import { useIsClient } from "@/hooks/use-is-client";
@@ -13,6 +14,7 @@ import { ProductPage } from "./product-page";
 import { CartPage } from "./cart-page";
 import { SearchPage } from "./search-page";
 import { TrackOrderPage } from "./track-order-page";
+import { HomeSkeleton } from "./skeletons";
 import {
   ScrollProgress, BackToTop, PageLoader, LiveChatWidget, FestiveBanner, GradientMesh, MobileBottomNav,
 } from "./premium";
@@ -28,6 +30,12 @@ export function Storefront({ categories }: { categories: Category[] }) {
   const mounted = useIsClient();
 
   const routeKey = `${storeView}:${selectedCategorySlug}:${selectedProductSlug}:${searchQuery}`;
+
+  // Always start a new view at the top — otherwise navigating from a scrolled
+  // position keeps the stale scroll offset, which feels broken.
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [routeKey]);
 
   return (
     <div className="relative flex min-h-screen flex-col bg-background">
@@ -54,7 +62,7 @@ export function Storefront({ categories }: { categories: Category[] }) {
               {storeView === "track" && <TrackOrderPage />}
             </motion.div>
           ) : (
-            <div className="h-screen" />
+            <HomeSkeleton />
           )}
         </main>
         <Footer categories={categories} />

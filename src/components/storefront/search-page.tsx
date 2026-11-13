@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Search, ChevronRight } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { ProductCard } from "./product-card";
+import { ProductGridSkeleton } from "./skeletons";
 import type { ProductCard as ProductCardType } from "@/lib/format";
 
 export function SearchPage() {
@@ -60,15 +61,7 @@ export function SearchPage() {
         </p>
 
         {loading ? (
-          <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="animate-pulse">
-                <div className="aspect-[4/5] rounded-md bg-muted" />
-                <div className="mt-3 h-3 w-20 rounded bg-muted" />
-                <div className="mt-2 h-4 w-full rounded bg-muted" />
-              </div>
-            ))}
-          </div>
+          <ProductGridSkeleton count={4} className="mt-8 md:grid-cols-4" />
         ) : results.length === 0 ? (
           <div className="mt-12 flex flex-col items-center justify-center text-center">
             <Search className="h-12 w-12 text-muted-foreground/40" />

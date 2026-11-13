@@ -10,6 +10,14 @@ export function Footer({ categories }: { categories: { id: string; name: string;
   const goTrack = useStore((s) => s.goTrack);
   const setMode = useStore((s) => s.setMode);
 
+  const goFaq = () => {
+    goHome();
+    // Wait for the home view to mount, then scroll to the FAQ section.
+    window.setTimeout(() => {
+      document.getElementById("faq")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 120);
+  };
+
   return (
     <footer className="mt-auto bg-navy-gradient text-ivory">
       <div className="mx-auto max-w-7xl px-6 py-14 md:px-8">
@@ -59,8 +67,8 @@ export function Footer({ categories }: { categories: { id: string; name: string;
               {["FAQs", "Shipping Policy", "Returns & Exchange", "Saree Care Guide", "Size Guide", "Track Order"].map((l) => (
                 <li key={l}>
                   <button
-                    onClick={l === "Track Order" ? goTrack : undefined}
-                    className="text-ivory/70 transition-colors hover:text-gold"
+                    onClick={l === "Track Order" ? goTrack : l === "FAQs" ? goFaq : undefined}
+                    className={l === "FAQs" || l === "Track Order" ? "text-ivory/70 transition-colors hover:text-gold" : "cursor-default text-ivory/70"}
                   >
                     {l}
                   </button>
@@ -108,8 +116,8 @@ export function Footer({ categories }: { categories: { id: string; name: string;
         </div>
       </div>
 
-      {/* Bottom bar */}
-      <div className="border-t border-ivory/10">
+      {/* Bottom bar — extra bottom padding on mobile clears the fixed bottom nav */}
+      <div className="border-t border-ivory/10 pb-20 md:pb-0">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-6 py-5 text-xs text-ivory/50 md:flex-row md:px-8">
           <p>© {new Date().getFullYear()} Nandhini Tex. Handwoven with care in Tamil Nadu.</p>
           <div className="flex items-center gap-4">

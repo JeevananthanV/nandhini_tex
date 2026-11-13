@@ -60,8 +60,9 @@ export function ProductCard({ product, index = 0 }: { product: ProductCard; inde
             </span>
           </div>
         )}
-        {/* quick add + quick view */}
-        <div className="absolute inset-x-2 bottom-2 z-20 flex translate-y-3 gap-2 opacity-0 transition-all duration-300 ease-out group-hover:translate-y-0 group-hover:opacity-100">
+        {/* quick add + quick view — always visible on touch screens (<lg),
+            hover-reveal on desktop where hover exists */}
+        <div className="absolute inset-x-2 bottom-2 z-20 flex translate-y-3 gap-2 opacity-0 transition-all duration-300 ease-out max-lg:translate-y-0 max-lg:opacity-100 lg:group-hover:translate-y-0 lg:group-hover:opacity-100">
           <button
             onClick={(e) => {
               e.stopPropagation();

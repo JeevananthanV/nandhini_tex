@@ -10,11 +10,13 @@ import {
 import {
   Accordion, AccordionContent, AccordionItem, AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useStore } from "@/lib/store";
 import { ProductCard } from "./product-card";
 import { StarRating } from "./primitives";
 import { AnimatedCounter, Marquee, TextReveal, MagneticButton, SectionReveal, StaggerGrid, StaggerItem } from "./premium";
 import { CountdownTimer } from "./premium-features";
+import { ProductRailSkeleton, ProductGridSkeleton } from "./skeletons";
 import type { ProductCard as ProductCardType } from "@/lib/format";
 
 type Category = { id: string; name: string; slug: string; description: string | null; bannerImage: string | null; productCount: number };
@@ -34,8 +36,10 @@ export function HomePage({ categories }: { categories: Category[] }) {
   const [faqs, setFaqs] = useState<Faq[]>([]);
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const [newsletterDone, setNewsletterDone] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let cancelled = false;
     Promise.all([
       fetch("/api/products?isNew=true&limit=4").then((r) => r.json()),
       fetch("/api/products?isBestseller=true&limit=4").then((r) => r.json()),
@@ -44,15 +48,24 @@ export function HomePage({ categories }: { categories: Category[] }) {
       fetch("/api/products?category=dhotis&limit=4").then((r) => r.json()),
       fetch("/api/testimonials").then((r) => r.json()),
       fetch("/api/faqs").then((r) => r.json()),
-    ]).then(([na, bs, br, of, mw, ts, fq]) => {
-      setNewArrivals(na.products || []);
-      setBestsellers(bs.products || []);
-      setBridal(br.products || []);
-      setOffers(of.products || []);
-      setMenswear(mw.products || []);
-      setTestimonials(ts.testimonials || []);
-      setFaqs(fq.faqs || []);
-    });
+    ])
+      .then(([na, bs, br, of, mw, ts, fq]) => {
+        if (cancelled) return;
+        setNewArrivals(na.products || []);
+        setBestsellers(bs.products || []);
+        setBridal(br.products || []);
+        setOffers(of.products || []);
+        setMenswear(mw.products || []);
+        setTestimonials(ts.testimonials || []);
+        setFaqs(fq.faqs || []);
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const subscribe = async (e: React.FormEvent) => {
@@ -178,13 +191,21 @@ export function HomePage({ categories }: { categories: Category[] }) {
       </section>
 
       {/* ===== NEW ARRIVALS ===== */}
-      {newArrivals.length > 0 && (
-        <ProductRail eyebrow="Just In" title="New Arrivals" products={newArrivals} />
+      {loading ? (
+        <ProductRailSkeleton />
+      ) : (
+        newArrivals.length > 0 && (
+          <ProductRail eyebrow="Just In" title="New Arrivals" products={newArrivals} />
+        )
       )}
 
       {/* ===== BESTSELLERS ===== */}
-      {bestsellers.length > 0 && (
-        <ProductRail eyebrow="Customer Favourites" title="Bestsellers" products={bestsellers} bg="bg-ivory" />
+      {loading ? (
+        <ProductRailSkeleton bg="bg-ivory" />
+      ) : (
+        bestsellers.length > 0 && (
+          <ProductRail eyebrow="Customer Favourites" title="Bestsellers" products={bestsellers} bg="bg-ivory" />
+        )
       )}
 
       {/* ===== BRIDAL BANNER ===== */}
@@ -219,7 +240,7 @@ export function HomePage({ categories }: { categories: Category[] }) {
       </section>
 
       {/* ===== BRIDAL PRODUCTS ===== */}
-      {bridal.length > 0 && <ProductRail eyebrow="Heirloom Weaves" title="Bridal Collection" products={bridal} />}
+      {loading ? <ProductRailSkeleton /> : bridal.length > 0 && <ProductRail eyebrow="Heirloom Weaves" title="Bridal Collection" products={bridal} />}
 
       {/* ===== STORY / ABOUT ===== */}
       <section className="bg-navy-gradient text-ivory">
@@ -266,25 +287,44 @@ export function HomePage({ categories }: { categories: Category[] }) {
       </section>
 
       {/* ===== OFFERS ===== */}
-      {offers.length > 0 && (
+      {loading ? (
         <section className="bg-ivory">
           <div className="mx-auto max-w-7xl px-6 py-16 md:px-8 md:py-24">
             <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
-              <SectionHeading eyebrow="Limited Time" title="Offer Sarees" />
-              <CountdownTimer targetDate={new Date(Date.now() + 3 * 24 * 60 * 60 * 1000)} className="rounded-lg border border-gold/30 bg-gold/5 px-4 py-2" />
+              <div>
+                <Skeleton className="h-3 w-24" />
+                <Skeleton className="mt-3 h-9 w-44" />
+              </div>
+              <Skeleton className="h-11 w-40 rounded-lg" />
             </div>
-            <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
-              {offers.map((p, i) => (
-                <ProductCard key={p.id} product={p} index={i} />
-              ))}
-            </div>
+            <ProductGridSkeleton count={4} className="mt-10 md:grid-cols-4" />
           </div>
         </section>
+      ) : (
+        offers.length > 0 && (
+          <section className="bg-ivory">
+            <div className="mx-auto max-w-7xl px-6 py-16 md:px-8 md:py-24">
+              <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
+                <SectionHeading eyebrow="Limited Time" title="Offer Sarees" />
+                <CountdownTimer targetDate={new Date(Date.now() + 3 * 24 * 60 * 60 * 1000)} className="rounded-lg border border-gold/30 bg-gold/5 px-4 py-2" />
+              </div>
+              <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
+                {offers.map((p, i) => (
+                  <ProductCard key={p.id} product={p} index={i} />
+                ))}
+              </div>
+            </div>
+          </section>
+        )
       )}
 
       {/* ===== MENSWEAR ===== */}
-      {menswear.length > 0 && (
-        <ProductRail eyebrow="For Him" title="Menswear" products={menswear} bg="bg-ivory" />
+      {loading ? (
+        <ProductRailSkeleton bg="bg-ivory" />
+      ) : (
+        menswear.length > 0 && (
+          <ProductRail eyebrow="For Him" title="Menswear" products={menswear} bg="bg-ivory" />
+        )
       )}
 
       {/* ===== ENTIRE COLLECTION CTA ===== */}
@@ -442,7 +482,7 @@ export function HomePage({ categories }: { categories: Category[] }) {
 
       {/* ===== FAQ ===== */}
       {faqs.length > 0 && (
-        <section className="bg-ivory">
+        <section id="faq" className="bg-ivory">
           <div className="mx-auto max-w-3xl px-6 py-16 md:px-8 md:py-24">
             <SectionHeading eyebrow="Good to Know" title="Frequently Asked Questions" center />
             <Accordion type="single" collapsible className="mt-10">
@@ -479,7 +519,7 @@ export function HomePage({ categories }: { categories: Category[] }) {
                 value={newsletterEmail}
                 onChange={(e) => setNewsletterEmail(e.target.value)}
                 placeholder="Your email address"
-                className="h-12 flex-1 rounded-sm border border-ivory/30 bg-navy-dark/40 px-4 text-sm text-ivory placeholder:text-ivory/50 focus:border-gold focus:outline-none"
+                className="h-12 min-w-0 flex-1 rounded-sm border border-ivory/30 bg-navy-dark/40 px-4 text-sm text-ivory placeholder:text-ivory/50 focus:border-gold focus:outline-none"
               />
               <button type="submit" className="rounded-sm bg-gold-gradient px-6 text-sm font-semibold text-navy hover:opacity-90">
                 Subscribe

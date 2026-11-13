@@ -14,6 +14,7 @@ import { StarRating, Price, DiscountBadge, NewBadge, BestsellerBadge } from "./p
 import { Viewer360, DeepZoom } from "./viewers";
 import { addRecentlyViewed } from "./premium-features";
 import { SectionReveal } from "./premium";
+import { PdpSkeleton } from "./skeletons";
 import { getProductWhatsAppUrl, getBulkWhatsAppUrl } from "@/lib/whatsapp";
 import type { ProductDetail, ReviewOut } from "@/lib/format";
 
@@ -93,21 +94,7 @@ export function ProductPage() {
   };
 
   if (loading || !data) {
-    return (
-      <div className="min-h-screen pt-20">
-        <div className="mx-auto max-w-7xl px-6 py-12 md:px-8">
-          <div className="grid gap-10 md:grid-cols-2">
-            <div className="aspect-[3/4] animate-pulse rounded-lg bg-muted" />
-            <div className="flex flex-col gap-4">
-              <div className="h-4 w-24 animate-pulse rounded bg-muted" />
-              <div className="h-8 w-3/4 animate-pulse rounded bg-muted" />
-              <div className="h-6 w-32 animate-pulse rounded bg-muted" />
-              <div className="h-24 w-full animate-pulse rounded bg-muted" />
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+    return <PdpSkeleton />;
   }
 
   const { product, reviews, related } = data;
@@ -134,7 +121,7 @@ export function ProductPage() {
 
         <div className="grid gap-8 md:gap-12 lg:grid-cols-2">
           {/* Gallery with 360° + Deep Zoom modes */}
-          <div className="flex flex-col gap-3">
+          <div className="flex min-w-0 flex-col gap-3">
             {/* Mode toggle */}
             <div className="flex gap-2">
               {[
@@ -175,7 +162,7 @@ export function ProductPage() {
                   </button>
                 </div>
                 {product.images.length > 1 && (
-                  <div className="flex gap-2 md:flex-col">
+                  <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-elegant md:flex-col md:overflow-visible md:pb-0">
                     {product.images.map((img, i) => (
                       <button
                         key={i}
@@ -192,7 +179,7 @@ export function ProductPage() {
           </div>
 
           {/* Info */}
-          <div className="flex flex-col">
+          <div className="flex min-w-0 flex-col">
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-[11px] font-semibold uppercase tracking-[0.1em] text-gold-dark">{product.categoryName}</span>
               {product.isNew && <NewBadge />}
