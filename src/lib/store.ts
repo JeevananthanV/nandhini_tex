@@ -5,7 +5,7 @@ import { persist } from "zustand/middleware";
 
 // ---- Types ----
 export type AppMode = "store" | "admin";
-export type StoreView = "home" | "category" | "all-products" | "product" | "cart" | "search";
+export type StoreView = "home" | "category" | "all-products" | "product" | "cart" | "search" | "track";
 export type AdminView =
   | "dashboard"
   | "products"
@@ -47,6 +47,7 @@ type State = {
   selectedCategorySlug: string | null;
   selectedProductSlug: string | null;
   searchQuery: string;
+  trackQuery: string;
 
   // UI state
   cartOpen: boolean;
@@ -70,6 +71,7 @@ type State = {
   goProduct: (slug: string) => void;
   goCart: () => void;
   goSearch: (q: string) => void;
+  goTrack: (q?: string) => void;
   setAdminView: (v: AdminView) => void;
   setAdminProductEditing: (id: string | null) => void;
   setAdminOrderEditing: (id: string | null) => void;
@@ -107,6 +109,7 @@ export const useStore = create<State>()(
       selectedCategorySlug: null,
       selectedProductSlug: null,
       searchQuery: "",
+      trackQuery: "",
       cartOpen: false,
       mobileMenuOpen: false,
       adminProductEditingId: null,
@@ -129,6 +132,8 @@ export const useStore = create<State>()(
         set({ mode: "store", storeView: "product", selectedProductSlug: slug, cartOpen: false, mobileMenuOpen: false }),
       goCart: () => set({ mode: "store", storeView: "cart", cartOpen: false }),
       goSearch: (q) => set({ mode: "store", storeView: "search", searchQuery: q, selectedProductSlug: null }),
+      goTrack: (q) =>
+        set({ mode: "store", storeView: "track", trackQuery: q ?? "", selectedCategorySlug: null, selectedProductSlug: null, cartOpen: false, mobileMenuOpen: false }),
 
       setAdminView: (v) => set({ mode: "admin", adminView: v, adminProductEditingId: null, adminOrderEditingId: null, adminCouponEditingId: null }),
       setAdminProductEditing: (id) => set({ adminProductEditingId: id }),

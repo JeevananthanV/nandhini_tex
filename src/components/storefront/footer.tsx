@@ -7,6 +7,7 @@ export function Footer({ categories }: { categories: { id: string; name: string;
   const goHome = useStore((s) => s.goHome);
   const goAllProducts = useStore((s) => s.goAllProducts);
   const goCategory = useStore((s) => s.goCategory);
+  const goTrack = useStore((s) => s.goTrack);
   const setMode = useStore((s) => s.setMode);
 
   return (
@@ -57,7 +58,12 @@ export function Footer({ categories }: { categories: { id: string; name: string;
             <ul className="mt-4 space-y-2.5 text-sm">
               {["FAQs", "Shipping Policy", "Returns & Exchange", "Saree Care Guide", "Size Guide", "Track Order"].map((l) => (
                 <li key={l}>
-                  <button className="text-ivory/70 transition-colors hover:text-gold">{l}</button>
+                  <button
+                    onClick={l === "Track Order" ? goTrack : undefined}
+                    className="text-ivory/70 transition-colors hover:text-gold"
+                  >
+                    {l}
+                  </button>
                 </li>
               ))}
             </ul>

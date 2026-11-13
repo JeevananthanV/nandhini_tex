@@ -12,6 +12,7 @@ import { AllProductsPage } from "./all-products-page";
 import { ProductPage } from "./product-page";
 import { CartPage } from "./cart-page";
 import { SearchPage } from "./search-page";
+import { TrackOrderPage } from "./track-order-page";
 import {
   ScrollProgress, BackToTop, PageLoader, LiveChatWidget, FestiveBanner, GradientMesh, MobileBottomNav,
 } from "./premium";
@@ -50,6 +51,7 @@ export function Storefront({ categories }: { categories: Category[] }) {
               {storeView === "product" && <ProductPage />}
               {storeView === "cart" && <CartPage />}
               {storeView === "search" && <SearchPage />}
+              {storeView === "track" && <TrackOrderPage />}
             </motion.div>
           ) : (
             <div className="h-screen" />

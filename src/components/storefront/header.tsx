@@ -13,6 +13,7 @@ export function Header({ categories }: { categories: { id: string; name: string;
   const [query, setQuery] = useState("");
 
   const goHome = useStore((s) => s.goHome);
+  const goTrack = useStore((s) => s.goTrack);
   const goAllProducts = useStore((s) => s.goAllProducts);
   const goCategory = useStore((s) => s.goCategory);
   const goSearch = useStore((s) => s.goSearch);
@@ -104,15 +105,13 @@ export function Header({ categories }: { categories: { id: string; name: string;
 
           {/* Right: actions */}
           <div className="flex items-center gap-1 md:gap-2">
-            <a
-              href="https://www.delhivery.com/tracking"
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              onClick={goTrack}
               className={cn("hidden h-9 items-center gap-1.5 rounded-full px-3 text-xs font-semibold transition-colors hover:bg-muted sm:flex", onHome && !scrolled ? "text-ivory/90 hover:bg-ivory/10" : "text-navy hover:bg-muted")}
-              title="Track your parcel via Delhivery / DTDC / India Post"
+              title="Track your order — delivered via Delhivery / DTDC / India Post"
             >
               <PackageSearch className="h-4 w-4" /> Track Parcel
-            </a>
+            </button>
             <button
               onClick={() => setSearchOpen((v) => !v)}
               className={cn("flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-muted", onHome && !scrolled ? "text-ivory" : "text-foreground")}
@@ -219,6 +218,12 @@ export function Header({ categories }: { categories: { id: string; name: string;
                   className="rounded-md px-3 py-2.5 text-left text-sm font-semibold text-navy hover:bg-muted"
                 >
                   Shop All Products
+                </button>
+                <button
+                  onClick={() => { goTrack(); }}
+                  className="rounded-md px-3 py-2.5 text-left text-sm font-medium text-foreground hover:bg-muted"
+                >
+                  Track Order
                 </button>
                 {categories.map((c) => (
                   <button

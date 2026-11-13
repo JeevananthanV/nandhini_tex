@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 
 export function CartPage() {
   const goHome = useStore((s) => s.goHome);
+  const goTrack = useStore((s) => s.goTrack);
   const goCategory = useStore((s) => s.goCategory);
   const goProduct = useStore((s) => s.goProduct);
   const cart = useStore((s) => s.cart);
@@ -98,6 +99,9 @@ export function CartPage() {
         </div>
         <div className="mt-8 flex gap-3">
           <Button onClick={goHome} className="bg-navy hover:bg-navy-light">Continue Shopping</Button>
+          <Button onClick={() => goTrack(placedOrder.orderNumber)} variant="outline" className="border-navy/30 text-navy hover:bg-navy/5">
+            Track Your Order
+          </Button>
         </div>
         <p className="mt-4 text-xs text-muted-foreground">For any queries, call us at +91 76048 11838</p>
       </div>
