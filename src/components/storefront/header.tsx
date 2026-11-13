@@ -13,6 +13,7 @@ export function Header({ categories }: { categories: { id: string; name: string;
   const [query, setQuery] = useState("");
 
   const goHome = useStore((s) => s.goHome);
+  const goAllProducts = useStore((s) => s.goAllProducts);
   const goCategory = useStore((s) => s.goCategory);
   const goSearch = useStore((s) => s.goSearch);
   const openCart = useStore((s) => s.openCart);
@@ -81,7 +82,16 @@ export function Header({ categories }: { categories: { id: string; name: string;
             <button onClick={goHome} className={cn("text-sm font-medium transition-colors hover:text-gold", onHome && !scrolled ? "text-ivory/90" : "text-foreground")}>
               Home
             </button>
-            {categories.slice(0, 7).map((c) => (
+            <button
+              onClick={goAllProducts}
+              className={cn(
+                "text-sm font-semibold tracking-wide transition-colors hover:text-gold",
+                storeView === "all-products" ? "text-gold" : onHome && !scrolled ? "text-ivory/90" : "text-foreground"
+              )}
+            >
+              Shop All
+            </button>
+            {categories.slice(0, 6).map((c) => (
               <button
                 key={c.id}
                 onClick={() => goCategory(c.slug)}
@@ -203,6 +213,12 @@ export function Header({ categories }: { categories: { id: string; name: string;
                   className="rounded-md px-3 py-2.5 text-left text-sm font-medium text-foreground hover:bg-muted"
                 >
                   Home
+                </button>
+                <button
+                  onClick={() => { goAllProducts(); }}
+                  className="rounded-md px-3 py-2.5 text-left text-sm font-semibold text-navy hover:bg-muted"
+                >
+                  Shop All Products
                 </button>
                 {categories.map((c) => (
                   <button

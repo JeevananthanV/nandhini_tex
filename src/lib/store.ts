@@ -5,7 +5,7 @@ import { persist } from "zustand/middleware";
 
 // ---- Types ----
 export type AppMode = "store" | "admin";
-export type StoreView = "home" | "category" | "product" | "cart" | "search";
+export type StoreView = "home" | "category" | "all-products" | "product" | "cart" | "search";
 export type AdminView =
   | "dashboard"
   | "products"
@@ -65,6 +65,7 @@ type State = {
   // Actions
   setMode: (m: AppMode) => void;
   goHome: () => void;
+  goAllProducts: () => void;
   goCategory: (slug: string) => void;
   goProduct: (slug: string) => void;
   goCart: () => void;
@@ -120,6 +121,8 @@ export const useStore = create<State>()(
 
       setMode: (m) => set({ mode: m }),
       goHome: () => set({ mode: "store", storeView: "home", selectedCategorySlug: null, selectedProductSlug: null }),
+      goAllProducts: () =>
+        set({ mode: "store", storeView: "all-products", selectedCategorySlug: null, selectedProductSlug: null, cartOpen: false, mobileMenuOpen: false }),
       goCategory: (slug) =>
         set({ mode: "store", storeView: "category", selectedCategorySlug: slug, selectedProductSlug: null, cartOpen: false, mobileMenuOpen: false }),
       goProduct: (slug) =>

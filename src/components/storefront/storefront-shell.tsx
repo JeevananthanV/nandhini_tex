@@ -8,6 +8,7 @@ import { Footer } from "./footer";
 import { CartDrawer } from "./cart-drawer";
 import { HomePage } from "./home";
 import { CategoryPage } from "./category-page";
+import { AllProductsPage } from "./all-products-page";
 import { ProductPage } from "./product-page";
 import { CartPage } from "./cart-page";
 import { SearchPage } from "./search-page";
@@ -44,6 +45,7 @@ export function Storefront({ categories }: { categories: Category[] }) {
               transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
             >
               {storeView === "home" && <HomePage categories={categories} />}
+              {storeView === "all-products" && <AllProductsPage categories={categories} />}
               {storeView === "category" && <CategoryPage categories={categories} />}
               {storeView === "product" && <ProductPage />}
               {storeView === "cart" && <CartPage />}

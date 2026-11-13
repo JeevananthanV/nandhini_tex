@@ -607,7 +607,7 @@ export function StaggerItem({ children, className }: { children: ReactNode; clas
 // ============================================================================
 export function MobileBottomNav() {
   const goHome = useStore((s) => s.goHome);
-  const goCategory = useStore((s) => s.goCategory);
+  const goAllProducts = useStore((s) => s.goAllProducts);
   const openCart = useStore((s) => s.openCart);
   const cartCount = useStore((s) => s.cartCount());
   const wishlistCount = useStore((s) => s.wishlist.length);
@@ -615,7 +615,7 @@ export function MobileBottomNav() {
 
   const items = [
     { icon: Home, label: "Home", onClick: goHome, active: storeView === "home" },
-    { icon: ShoppingBag, label: "Shop", onClick: () => goCategory("soft-silk"), active: storeView === "category" || storeView === "product" || storeView === "search" },
+    { icon: ShoppingBag, label: "Shop", onClick: goAllProducts, active: storeView === "all-products" || storeView === "category" || storeView === "product" || storeView === "search" },
     { icon: Heart, label: "Wishlist", onClick: () => window.dispatchEvent(new Event("open-wishlist")), badge: wishlistCount, active: false },
     { icon: User, label: "Account", onClick: () => {}, active: false },
     { icon: ShoppingBag, label: "Bag", onClick: openCart, badge: cartCount, active: storeView === "cart" },

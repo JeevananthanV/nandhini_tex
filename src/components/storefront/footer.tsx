@@ -5,6 +5,7 @@ import { useStore } from "@/lib/store";
 
 export function Footer({ categories }: { categories: { id: string; name: string; slug: string }[] }) {
   const goHome = useStore((s) => s.goHome);
+  const goAllProducts = useStore((s) => s.goAllProducts);
   const goCategory = useStore((s) => s.goCategory);
   const setMode = useStore((s) => s.setMode);
 
@@ -39,6 +40,9 @@ export function Footer({ categories }: { categories: { id: string; name: string;
           <div>
             <h4 className="font-serif text-sm font-semibold uppercase tracking-wider text-gold">Shop</h4>
             <ul className="mt-4 space-y-2.5 text-sm">
+              <li>
+                <button onClick={goAllProducts} className="font-medium text-gold transition-colors hover:text-ivory">Shop All Products</button>
+              </li>
               {categories.slice(0, 6).map((c) => (
                 <li key={c.id}>
                   <button onClick={() => goCategory(c.slug)} className="text-ivory/70 transition-colors hover:text-gold">{c.name}</button>

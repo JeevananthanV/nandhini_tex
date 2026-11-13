@@ -23,6 +23,7 @@ type Faq = { id: string; question: string; answer: string; category: string };
 
 export function HomePage({ categories }: { categories: Category[] }) {
   const goCategory = useStore((s) => s.goCategory);
+  const goAllProducts = useStore((s) => s.goAllProducts);
   const goProduct = useStore((s) => s.goProduct);
   const [newArrivals, setNewArrivals] = useState<ProductCardType[]>([]);
   const [bestsellers, setBestsellers] = useState<ProductCardType[]>([]);
@@ -285,6 +286,39 @@ export function HomePage({ categories }: { categories: Category[] }) {
       {menswear.length > 0 && (
         <ProductRail eyebrow="For Him" title="Menswear" products={menswear} bg="bg-ivory" />
       )}
+
+      {/* ===== ENTIRE COLLECTION CTA ===== */}
+      <section aria-label="Browse the entire collection">
+        <div className="mx-auto max-w-7xl px-6 py-10 md:px-8 md:py-14">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-10%" }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            className="relative overflow-hidden rounded-xl bg-navy-gradient px-6 py-10 text-center md:px-12 md:py-14"
+          >
+            <div
+              className="pointer-events-none absolute inset-0 opacity-[0.06]"
+              style={{ backgroundImage: "url(/patterns/heritage-motif.svg)", backgroundSize: "180px" }}
+            />
+            <div className="absolute -left-16 -top-16 h-56 w-56 rounded-full bg-gold/10 blur-3xl" />
+            <div className="absolute -bottom-20 -right-12 h-56 w-56 rounded-full bg-gold/10 blur-3xl" />
+            <div className="relative">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-gold">One Loom, Every Weave</p>
+              <h2 className="mt-2 font-serif text-2xl font-semibold text-ivory md:text-4xl">Browse the Entire Collection</h2>
+              <p className="mx-auto mt-3 max-w-lg text-sm text-ivory/70">
+                Every silk, cotton, bridal and everyday weave from our Elampillai looms — filter by price, fabric and occasion to find yours.
+              </p>
+              <button
+                onClick={goAllProducts}
+                className="mt-6 inline-flex items-center gap-2 rounded-full bg-gold px-7 py-3 text-sm font-bold text-navy shadow-lg transition-all hover:bg-ivory hover:shadow-xl"
+              >
+                Shop All Products <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      </section>
 
       {/* ===== FESTIVAL COLLECTION ===== */}
       <section className="bg-navy-gradient text-ivory">
