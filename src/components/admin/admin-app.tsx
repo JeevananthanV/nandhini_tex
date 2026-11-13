@@ -39,6 +39,7 @@ import {
   Mail,
   CreditCard,
   Truck,
+  Activity,
 } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -347,6 +348,15 @@ const VIEW_TITLES: Record<AdminView, { title: string; subtitle: string }> = {
   content: { title: "Content", subtitle: "FAQs and testimonials" },
   settings: { title: "Settings", subtitle: "Store configuration" },
 };
+
+function formatUptimeShort(seconds: number): string {
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = Math.floor(seconds % 60);
+  if (h > 0) return `${h}h ${m}m`;
+  if (m > 0) return `${m}m ${s}s`;
+  return `${s}s`;
+}
 
 function orderStatusClasses(status: string): string {
   switch (status) {
@@ -678,6 +688,7 @@ function AdminViewRouter() {
 function DashboardView() {
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [health, setHealth] = useState<{ status: string; uptime: number; responseMs: number; services: Record<string, { status: string; latencyMs?: number }> } | null>(null);
 
   useEffect(() => {
     let alive = true;
@@ -694,6 +705,11 @@ function DashboardView() {
         .catch(() => {
           if (alive) setLoading(false);
         });
+      // Also fetch system health
+      fetch("/api/health")
+        .then((r) => r.json())
+        .then((h) => { if (alive) setHealth(h); })
+        .catch(() => {});
     };
     load();
     return () => {
@@ -759,6 +775,52 @@ function DashboardView() {
           hint="Across all categories"
         />
       </div>
+
+      {/* System Health Widget */}
+      {health && (
+        <Card className="border-l-4 border-l-emerald-500">
+          <CardContent className="flex items-center justify-between p-4">
+            <div className="flex items-center gap-3">
+              <div className={cn(
+                "flex h-10 w-10 items-center justify-center rounded-full",
+                health.status === "healthy" ? "bg-emerald-100" : health.status === "degraded" ? "bg-amber-100" : "bg-red-100"
+              )}>
+                <Activity className={cn(
+                  "h-5 w-5",
+                  health.status === "healthy" ? "text-emerald-600" : health.status === "degraded" ? "text-amber-600" : "text-red-600"
+                )} />
+              </div>
+              <div>
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">System Health</p>
+                <p className="font-serif text-lg font-bold capitalize text-navy">
+                  {health.status}
+                  <span className="ml-2 text-xs font-normal text-muted-foreground">
+                    · DB {health.services?.database?.status} {health.services?.database?.latencyMs !== undefined ? `(${health.services.database.latencyMs}ms)` : ""}
+                  </span>
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4 text-right">
+              <div>
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Uptime</p>
+                <p className="text-sm font-semibold text-navy">{formatUptimeShort(health.uptime)}</p>
+              </div>
+              <div>
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Response</p>
+                <p className="text-sm font-semibold text-navy">{health.responseMs}ms</p>
+              </div>
+              <a
+                href="/api/docs"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-full border border-border px-3 py-1.5 text-xs font-semibold text-navy hover:bg-muted"
+              >
+                API Docs
+              </a>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Charts */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
