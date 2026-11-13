@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard,
   Package,
+  Boxes,
   ShoppingCart,
   Users,
   Star,
@@ -15,7 +16,10 @@ import {
   LogOut,
   Search,
   Menu,
+  X,
   Plus,
+  Minus,
+  Check,
   Pencil,
   Trash2,
   Eye,
@@ -323,6 +327,7 @@ type DashboardData = {
 const NAV_ITEMS: { id: AdminView; label: string; icon: typeof LayoutDashboard }[] = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
   { id: "products", label: "Products", icon: Package },
+  { id: "inventory", label: "Inventory", icon: Boxes },
   { id: "orders", label: "Orders", icon: ShoppingCart },
   { id: "customers", label: "Customers", icon: Users },
   { id: "reviews", label: "Reviews", icon: Star },
@@ -334,6 +339,7 @@ const NAV_ITEMS: { id: AdminView; label: string; icon: typeof LayoutDashboard }[
 const VIEW_TITLES: Record<AdminView, { title: string; subtitle: string }> = {
   dashboard: { title: "Dashboard", subtitle: "Store performance overview" },
   products: { title: "Products", subtitle: "Manage your saree catalog" },
+  inventory: { title: "Inventory", subtitle: "Track and manage stock levels" },
   orders: { title: "Orders", subtitle: "Track and fulfil customer orders" },
   customers: { title: "Customers", subtitle: "Customer insights and segments" },
   reviews: { title: "Reviews", subtitle: "Moderate product reviews" },
@@ -654,6 +660,7 @@ function AdminViewRouter() {
       >
         {adminView === "dashboard" && <DashboardView />}
         {adminView === "products" && <ProductsView />}
+        {adminView === "inventory" && <InventoryView />}
         {adminView === "orders" && <OrdersView />}
         {adminView === "customers" && <CustomersView />}
         {adminView === "reviews" && <ReviewsView />}
@@ -1458,6 +1465,493 @@ function ToggleRow({ label, checked, onChange }: { label: string; checked: boole
     <div className="flex items-center gap-2">
       <Switch checked={checked} onCheckedChange={onChange} />
       <span className="text-sm text-foreground">{label}</span>
+    </div>
+  );
+}
+
+// ----------------------------------------------------------------------------
+// View: Inventory
+// ----------------------------------------------------------------------------
+type InventoryRow = {
+  id: string;
+  productId: string;
+  productTitle: string;
+  slug: string;
+  images: string[];
+  category: string;
+  color: string;
+  colorHex: string | null;
+  size: string | null;
+  sku: string;
+  stockQty: number;
+  priceOverride: number | null;
+  basePrice: number;
+  mrp: number;
+  status: string;
+};
+
+type InventorySummary = {
+  totalVariants: number;
+  totalUnits: number;
+  lowStockCount: number;
+  outOfStockCount: number;
+  totalStockValue: number;
+};
+
+function InventoryView() {
+  const [rows, setRows] = useState<InventoryRow[]>([]);
+  const [summary, setSummary] = useState<InventorySummary | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState<string>("all");
+  const [q, setQ] = useState("");
+  const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
+  const [categoryFilter, setCategoryFilter] = useState("");
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editValue, setEditValue] = useState("");
+  const [editAction, setEditAction] = useState<"set" | "add" | "subtract">("set");
+  const [bulkOpen, setBulkOpen] = useState(false);
+  const [bulkValue, setBulkValue] = useState("");
+  const [bulkAction, setBulkAction] = useState<"set" | "add">("add");
+  const [saving, setSaving] = useState(false);
+
+  const fetchInventory = async () => {
+    setLoading(true);
+    const params = new URLSearchParams();
+    if (filter !== "all") params.set("filter", filter);
+    if (q) params.set("q", q);
+    if (categoryFilter) params.set("category", categoryFilter);
+    try {
+      const res = await fetch(`/api/admin/inventory?${params.toString()}`);
+      const data = await res.json();
+      setRows(data.rows || []);
+      setSummary(data.summary || null);
+    } catch {
+      toast.error("Failed to load inventory");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetch("/api/categories").then((r) => r.json()).then((d) => setCategories(d.categories || []));
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    const params = new URLSearchParams();
+    if (filter !== "all") params.set("filter", filter);
+    if (q) params.set("q", q);
+    if (categoryFilter) params.set("category", categoryFilter);
+    fetch(`/api/admin/inventory?${params.toString()}`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (cancelled) return;
+        setRows(data.rows || []);
+        setSummary(data.summary || null);
+      })
+      .catch(() => { if (!cancelled) toast.error("Failed to load inventory"); })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
+  }, [filter, q, categoryFilter]);
+
+  const handleQuickUpdate = async (variantId: string, delta: number) => {
+    setSaving(true);
+    try {
+      await fetch(`/api/admin/inventory/${variantId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ stockQty: delta, action: "add" }),
+      });
+      // optimistic update
+      setRows((prev) => prev.map((r) => (r.id === variantId ? { ...r, stockQty: Math.max(0, r.stockQty + delta) } : r)));
+      setSummary((prev) => prev ? { ...prev, totalUnits: Math.max(0, (prev.totalUnits || 0) + delta) } : prev);
+      toast.success(delta > 0 ? `Added ${delta} units` : `Removed ${Math.abs(delta)} units`);
+    } catch {
+      toast.error("Update failed");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleSaveEdit = async (variantId: string) => {
+    const qty = parseInt(editValue);
+    if (isNaN(qty) || qty < 0) {
+      toast.error("Enter a valid quantity");
+      return;
+    }
+    setSaving(true);
+    try {
+      await fetch(`/api/admin/inventory/${variantId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ stockQty: qty, action: editAction }),
+      });
+      toast.success("Stock updated");
+      setEditingId(null);
+      setEditValue("");
+      fetchInventory();
+    } catch {
+      toast.error("Update failed");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleBulkUpdate = async () => {
+    const qty = parseInt(bulkValue);
+    if (isNaN(qty) || qty < 0) {
+      toast.error("Enter a valid quantity");
+      return;
+    }
+    // apply to all filtered rows
+    const updates = rows.map((r) => ({
+      id: r.id,
+      stockQty: bulkAction === "add" ? r.stockQty + qty : qty,
+    }));
+    setSaving(true);
+    try {
+      const res = await fetch("/api/admin/inventory/bulk", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ updates }),
+      });
+      const data = await res.json();
+      toast.success(`Updated ${data.updated} variants`);
+      setBulkOpen(false);
+      setBulkValue("");
+      fetchInventory();
+    } catch {
+      toast.error("Bulk update failed");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const stockBadge = (qty: number) => {
+    if (qty === 0) return <Badge className="bg-red-100 text-red-700 border-red-200">Out of Stock</Badge>;
+    if (qty < 5) return <Badge className="bg-amber-100 text-amber-700 border-amber-200">Low · {qty} left</Badge>;
+    return <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200">In Stock · {qty}</Badge>;
+  };
+
+  const FILTER_TABS = [
+    { id: "all", label: "All", count: summary?.totalVariants || 0 },
+    { id: "instock", label: "In Stock", count: (summary?.totalVariants || 0) - (summary?.lowStockCount || 0) - (summary?.outOfStockCount || 0) },
+    { id: "low", label: "Low Stock", count: summary?.lowStockCount || 0 },
+    { id: "out", label: "Out of Stock", count: summary?.outOfStockCount || 0 },
+  ];
+
+  return (
+    <div className="space-y-5">
+      {/* Summary cards */}
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
+        <Card className="border-l-4 border-l-navy">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Total Variants</p>
+                <p className="mt-1 font-serif text-2xl font-bold text-navy">{summary?.totalVariants ?? "—"}</p>
+              </div>
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-navy text-gold"><Boxes className="h-4 w-4" /></div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="border-l-4 border-l-emerald-500">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Total Units</p>
+                <p className="mt-1 font-serif text-2xl font-bold text-navy">{summary?.totalUnits?.toLocaleString("en-IN") ?? "—"}</p>
+              </div>
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-100 text-emerald-700"><Package className="h-4 w-4" /></div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="border-l-4 border-l-amber-500">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Low Stock</p>
+                <p className="mt-1 font-serif text-2xl font-bold text-amber-600">{summary?.lowStockCount ?? "—"}</p>
+              </div>
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-amber-100 text-amber-600"><AlertTriangle className="h-4 w-4" /></div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="border-l-4 border-l-red-500">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Out of Stock</p>
+                <p className="mt-1 font-serif text-2xl font-bold text-red-600">{summary?.outOfStockCount ?? "—"}</p>
+              </div>
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-red-100 text-red-600"><XCircle className="h-4 w-4" /></div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="border-l-4 border-l-gold">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Stock Value</p>
+                <p className="mt-1 font-serif text-2xl font-bold text-navy">{summary ? formatINR(summary.totalStockValue) : "—"}</p>
+              </div>
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-navy-gradient text-gold"><IndianRupee className="h-4 w-4" /></div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Low stock alert banner */}
+      {summary && summary.lowStockCount > 0 && (
+        <div className="flex items-center gap-3 rounded-lg border border-amber-300 bg-amber-50 px-4 py-3">
+          <AlertTriangle className="h-5 w-5 shrink-0 text-amber-600" />
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-amber-900">{summary.lowStockCount} variant{summary.lowStockCount === 1 ? "" : "s"} running low on stock</p>
+            <p className="text-xs text-amber-700">Consider restocking soon to avoid stockouts.</p>
+          </div>
+          <Button size="sm" variant="outline" onClick={() => setFilter("low")} className="border-amber-400 text-amber-700 hover:bg-amber-100">
+            View Low Stock
+          </Button>
+        </div>
+      )}
+
+      {/* Toolbar */}
+      <Card>
+        <CardContent className="p-4">
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+            {/* Filter tabs */}
+            <div className="flex flex-wrap gap-1.5">
+              {FILTER_TABS.map((t) => (
+                <button
+                  key={t.id}
+                  onClick={() => setFilter(t.id)}
+                  className={cn(
+                    "rounded-full px-3 py-1.5 text-xs font-semibold transition-colors",
+                    filter === t.id ? "bg-navy text-ivory" : "bg-muted text-muted-foreground hover:bg-muted/70"
+                  )}
+                >
+                  {t.label} <span className="ml-1 opacity-70">({t.count})</span>
+                </button>
+              ))}
+            </div>
+            {/* Search + category + bulk */}
+            <div className="flex flex-wrap gap-2">
+              <div className="relative">
+                <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  value={q}
+                  onChange={(e) => setQ(e.target.value)}
+                  placeholder="Search product..."
+                  className="h-9 w-44 pl-8 text-sm"
+                />
+              </div>
+              <select
+                value={categoryFilter}
+                onChange={(e) => setCategoryFilter(e.target.value)}
+                className="h-9 rounded-md border border-border bg-background px-3 text-sm outline-none focus:border-gold"
+              >
+                <option value="">All categories</option>
+                {categories.map((c) => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </select>
+              <Button onClick={() => setBulkOpen(true)} className="h-9 bg-gold-gradient text-navy hover:opacity-90">
+                <Plus className="mr-1 h-4 w-4" /> Bulk Update
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Inventory table */}
+      <Card>
+        <CardContent className="p-0">
+          {loading ? (
+            <div className="space-y-2 p-4">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="h-12 animate-pulse rounded-md bg-muted" />
+              ))}
+            </div>
+          ) : rows.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-16 text-center">
+              <Boxes className="h-10 w-10 text-muted-foreground/40" />
+              <p className="mt-3 font-serif text-lg text-foreground">No variants found</p>
+              <p className="text-sm text-muted-foreground">Try adjusting your filters.</p>
+            </div>
+          ) : (
+            <div className="overflow-x-auto scrollbar-elegant">
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-muted/50 hover:bg-muted/50">
+                    <TableHead className="min-w-[200px]">Product / Variant</TableHead>
+                    <TableHead className="min-w-[100px]">SKU</TableHead>
+                    <TableHead className="min-w-[80px]">Color</TableHead>
+                    <TableHead className="min-w-[60px]">Size</TableHead>
+                    <TableHead className="min-w-[90px] text-right">Price</TableHead>
+                    <TableHead className="min-w-[120px]">Stock Status</TableHead>
+                    <TableHead className="min-w-[140px] text-right">Quick Adjust</TableHead>
+                    <TableHead className="min-w-[100px] text-right">Set Stock</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {rows.map((r) => (
+                    <TableRow key={r.id} className="group">
+                      <TableCell>
+                        <div className="flex items-center gap-2.5">
+                          {r.images[0] && (
+                            <img src={r.images[0]} alt={r.productTitle} className="h-10 w-8 shrink-0 rounded object-cover" />
+                          )}
+                          <div className="min-w-0">
+                            <p className="truncate text-sm font-medium text-foreground">{r.productTitle}</p>
+                            <p className="text-[10px] uppercase tracking-wider text-gold-dark">{r.category}</p>
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <span className="font-mono text-[11px] text-muted-foreground">{r.sku}</span>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-1.5">
+                          {r.colorHex && (
+                            <span className="h-3.5 w-3.5 rounded-full border border-border" style={{ backgroundColor: r.colorHex }} />
+                          )}
+                          <span className="text-xs text-foreground">{r.color}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <span className="text-xs text-muted-foreground">{r.size || "—"}</span>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <span className="text-sm font-semibold text-navy">{formatINR(r.priceOverride || r.basePrice)}</span>
+                      </TableCell>
+                      <TableCell>{stockBadge(r.stockQty)}</TableCell>
+                      <TableCell>
+                        <div className="flex items-center justify-end gap-1">
+                          <Button
+                            size="icon"
+                            variant="outline"
+                            className="h-7 w-7 border-red-300 text-red-600 hover:bg-red-50"
+                            onClick={() => handleQuickUpdate(r.id, -1)}
+                            disabled={saving || r.stockQty === 0}
+                            aria-label="Decrease stock by 1"
+                          >
+                            <Minus className="h-3 w-3" />
+                          </Button>
+                          <span className="w-10 text-center text-sm font-bold tabular-nums text-navy">{r.stockQty}</span>
+                          <Button
+                            size="icon"
+                            variant="outline"
+                            className="h-7 w-7 border-emerald-300 text-emerald-600 hover:bg-emerald-50"
+                            onClick={() => handleQuickUpdate(r.id, 1)}
+                            disabled={saving}
+                            aria-label="Increase stock by 1"
+                          >
+                            <Plus className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {editingId === r.id ? (
+                          <div className="flex items-center justify-end gap-1">
+                            <select
+                              value={editAction}
+                              onChange={(e) => setEditAction(e.target.value as typeof editAction)}
+                              className="h-8 rounded border border-border bg-background px-1.5 text-xs"
+                            >
+                              <option value="set">Set</option>
+                              <option value="add">Add</option>
+                              <option value="subtract">Subtract</option>
+                            </select>
+                            <Input
+                              type="number"
+                              min="0"
+                              value={editValue}
+                              onChange={(e) => setEditValue(e.target.value)}
+                              className="h-8 w-16 text-sm"
+                              autoFocus
+                            />
+                            <Button size="sm" className="h-8 bg-navy px-2 text-ivory hover:bg-navy-light" onClick={() => handleSaveEdit(r.id)} disabled={saving}>
+                              <Check className="h-3.5 w-3.5" />
+                            </Button>
+                            <Button size="sm" variant="ghost" className="h-8 px-2" onClick={() => { setEditingId(null); setEditValue(""); }}>
+                              <X className="h-3.5 w-3.5" />
+                            </Button>
+                          </div>
+                        ) : (
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="h-8 text-xs text-navy hover:bg-muted"
+                            onClick={() => { setEditingId(r.id); setEditAction("set"); setEditValue(String(r.stockQty)); }}
+                          >
+                            <Pencil className="mr-1 h-3 w-3" /> Edit
+                          </Button>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Bulk update dialog */}
+      <Dialog open={bulkOpen} onOpenChange={setBulkOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-navy">Bulk Stock Update</DialogTitle>
+            <DialogDescription>
+              Apply a stock change to all {rows.length} variant{rows.length === 1 ? "" : "s"} matching your current filter. This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div>
+              <Label className="text-xs font-semibold uppercase tracking-wider text-navy">Action</Label>
+              <div className="mt-2 flex gap-2">
+                <button
+                  onClick={() => setBulkAction("add")}
+                  className={cn("flex-1 rounded-md border px-3 py-2 text-sm font-medium", bulkAction === "add" ? "border-emerald-500 bg-emerald-50 text-emerald-700" : "border-border text-muted-foreground")}
+                >
+                  Add units
+                </button>
+                <button
+                  onClick={() => setBulkAction("set")}
+                  className={cn("flex-1 rounded-md border px-3 py-2 text-sm font-medium", bulkAction === "set" ? "border-navy bg-navy/5 text-navy" : "border-border text-muted-foreground")}
+                >
+                  Set absolute
+                </button>
+              </div>
+            </div>
+            <div>
+              <Label className="text-xs font-semibold uppercase tracking-wider text-navy">
+                {bulkAction === "add" ? "Units to add" : "Stock level to set"}
+              </Label>
+              <Input
+                type="number"
+                min="0"
+                value={bulkValue}
+                onChange={(e) => setBulkValue(e.target.value)}
+                placeholder="Enter quantity"
+                className="mt-2"
+                autoFocus
+              />
+            </div>
+            <div className="rounded-md bg-muted p-3 text-xs text-muted-foreground">
+              <p className="font-medium text-foreground">Summary:</p>
+              <p className="mt-1">This will {bulkAction === "add" ? "add" : "set"} {bulkValue || "0"} units to {rows.length} variant{rows.length === 1 ? "" : "s"}.</p>
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" onClick={() => setBulkOpen(false)}>Cancel</Button>
+            <Button onClick={handleBulkUpdate} disabled={saving} className="bg-navy text-ivory hover:bg-navy-light">
+              {saving ? "Updating..." : "Apply to All"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

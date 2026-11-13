@@ -9,6 +9,7 @@ export type StoreView = "home" | "category" | "product" | "cart" | "search";
 export type AdminView =
   | "dashboard"
   | "products"
+  | "inventory"
   | "orders"
   | "customers"
   | "reviews"
