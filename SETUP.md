@@ -30,3 +30,4 @@ This repository acts as the single source of truth for engineering the Nandhini 
    Use the typography pairings and hex codes specified in `design.md` for Tailwind CSS configuration.
 3. **Delivery Milestones**:
    Track phase-by-phase implementation using `tasks.md`.
+
