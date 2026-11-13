@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { SlidersHorizontal, X, ChevronRight } from "lucide-react";
 import { useStore } from "@/lib/store";
+import { cn } from "@/lib/utils";
 import { ProductCard } from "./product-card";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -178,6 +179,43 @@ export function CategoryPage({ categories }: { categories: Category[] }) {
       </div>
 
       <div className="mx-auto max-w-7xl px-6 py-8 md:px-8">
+        {/* Quick Filter Pills — Instagram-style scannable filters */}
+        <div className="mb-6 flex gap-2 overflow-x-auto pb-2 scrollbar-elegant">
+          <span className="shrink-0 self-center text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Quick:</span>
+          {[
+            { label: "All", onClick: () => { setPriceRange(null); setFabric(""); setOnlyNew(false); setOnlyBestseller(false); setOnlyOffers(false); } },
+            { label: "Under ₹1,000", onClick: () => setPriceRange(0) },
+            { label: "₹1K–₹3K", onClick: () => setPriceRange(1) },
+            { label: "₹3K–₹8K", onClick: () => setPriceRange(2) },
+            { label: "Bridal ₹8K+", onClick: () => setPriceRange(3) },
+            { label: "Soft Silk", onClick: () => setFabric("Soft Silk") },
+            { label: "Pure Silk", onClick: () => setFabric("Pure Mulberry Silk") },
+            { label: "Cotton", onClick: () => setFabric("Handloom Cotton") },
+            { label: "Art Silk", onClick: () => setFabric("Art Silk") },
+            { label: "New Arrivals", onClick: () => setOnlyNew(!onlyNew) },
+            { label: "Bestsellers", onClick: () => setOnlyBestseller(!onlyBestseller) },
+            { label: "On Offer", onClick: () => setOnlyOffers(!onlyOffers) },
+          ].map((pill, i) => {
+            const active =
+              (pill.label === "New Arrivals" && onlyNew) ||
+              (pill.label === "Bestsellers" && onlyBestseller) ||
+              (pill.label === "On Offer" && onlyOffers) ||
+              (pill.label === "All" && !priceRange && !fabric && !onlyNew && !onlyBestseller && !onlyOffers);
+            return (
+              <button
+                key={i}
+                onClick={pill.onClick}
+                className={cn(
+                  "shrink-0 rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors",
+                  active ? "border-navy bg-navy text-ivory" : "border-border bg-card text-muted-foreground hover:border-navy hover:text-navy"
+                )}
+              >
+                {pill.label}
+              </button>
+            );
+          })}
+        </div>
+
         <div className="flex gap-8">
           {/* Desktop sidebar */}
           <aside className="hidden w-64 shrink-0 lg:block">

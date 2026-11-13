@@ -3,8 +3,9 @@
 import Image from "next/image";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Minus, Plus, Trash2, ShoppingBag, Tag, Check, ChevronRight, Truck, ShieldCheck, RefreshCw } from "lucide-react";
+import { Minus, Plus, Trash2, ShoppingBag, Tag, Check, ChevronRight, Truck, ShieldCheck, RefreshCw, MessageCircle } from "lucide-react";
 import { useStore } from "@/lib/store";
+import { getCartWhatsAppUrl } from "@/lib/whatsapp";
 import { Button } from "@/components/ui/button";
 
 export function CartPage() {
@@ -231,6 +232,24 @@ export function CartPage() {
                     {loading ? "Placing Order..." : `Place Order · ₹${total.toLocaleString("en-IN")}`}
                   </Button>
                 </div>
+                {/* WhatsApp Order Alternative */}
+                <div className="mt-4 flex items-center gap-3">
+                  <div className="h-px flex-1 bg-border" />
+                  <span className="text-[10px] uppercase tracking-wider text-muted-foreground">or</span>
+                  <div className="h-px flex-1 bg-border" />
+                </div>
+                <a
+                  href={getCartWhatsAppUrl(
+                    cart.map((c) => ({ title: c.title, sku: c.variantId, price: c.price, color: c.color, size: c.size, qty: c.qty })),
+                    total
+                  )}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-3 flex w-full items-center justify-center gap-2 rounded-sm border border-green-600 bg-green-50 py-3 text-sm font-semibold text-green-700 transition-colors hover:bg-green-600 hover:text-white"
+                >
+                  <MessageCircle className="h-4 w-4" /> Order via WhatsApp instead
+                </a>
+                <p className="mt-2 text-center text-[10px] text-muted-foreground">Prefer to chat? Send your cart details to our WhatsApp and pay via UPI / COD.</p>
               </div>
             )}
           </div>

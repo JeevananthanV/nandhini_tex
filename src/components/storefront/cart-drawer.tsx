@@ -2,10 +2,11 @@
 
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Plus, Minus, ShoppingBag, Trash2, ArrowRight, Tag } from "lucide-react";
+import { X, Plus, Minus, ShoppingBag, Trash2, ArrowRight, Tag, MessageCircle } from "lucide-react";
 import { useState } from "react";
 import { useStore } from "@/lib/store";
 import { Price } from "./primitives";
+import { getCartWhatsAppUrl } from "@/lib/whatsapp";
 
 export function CartDrawer() {
   const open = useStore((s) => s.cartOpen);
@@ -191,6 +192,17 @@ export function CartDrawer() {
                   >
                     Proceed to Checkout <ArrowRight className="h-4 w-4" />
                   </button>
+                  <a
+                    href={getCartWhatsAppUrl(
+                      cart.map((c) => ({ title: c.title, sku: c.variantId, price: c.price, color: c.color, size: c.size, qty: c.qty })),
+                      total
+                    )}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-2 flex w-full items-center justify-center gap-2 rounded-sm border border-green-600 bg-green-50 py-2.5 text-sm font-semibold text-green-700 transition-colors hover:bg-green-600 hover:text-white"
+                  >
+                    <MessageCircle className="h-4 w-4" /> Order via WhatsApp
+                  </a>
                 </div>
               </>
             )}

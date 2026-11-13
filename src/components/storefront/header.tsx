@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Heart, ShoppingBag, Menu, X, Shield } from "lucide-react";
+import { Search, Heart, ShoppingBag, Menu, X, Shield, PackageSearch } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
@@ -94,6 +94,15 @@ export function Header({ categories }: { categories: { id: string; name: string;
 
           {/* Right: actions */}
           <div className="flex items-center gap-1 md:gap-2">
+            <a
+              href="https://www.delhivery.com/tracking"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cn("hidden h-9 items-center gap-1.5 rounded-full px-3 text-xs font-semibold transition-colors hover:bg-muted sm:flex", onHome && !scrolled ? "text-ivory/90 hover:bg-ivory/10" : "text-navy hover:bg-muted")}
+              title="Track your parcel via Delhivery / DTDC / India Post"
+            >
+              <PackageSearch className="h-4 w-4" /> Track Parcel
+            </a>
             <button
               onClick={() => setSearchOpen((v) => !v)}
               className={cn("flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-muted", onHome && !scrolled ? "text-ivory" : "text-foreground")}

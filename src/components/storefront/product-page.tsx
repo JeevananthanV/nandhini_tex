@@ -5,7 +5,8 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Heart, ShoppingBag, Truck, RefreshCw, ShieldCheck, Hand, ChevronRight,
-  Check, Minus, Plus, Star, MapPin, ZoomIn, X
+  Check, Minus, Plus, Star, MapPin, ZoomIn, X,
+  MessageCircle, Flame, PackageCheck, Award, Camera,
 } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { ProductCard } from "./product-card";
@@ -13,6 +14,7 @@ import { StarRating, Price, DiscountBadge, NewBadge, BestsellerBadge } from "./p
 import { Viewer360, DeepZoom } from "./viewers";
 import { addRecentlyViewed } from "./premium-features";
 import { SectionReveal } from "./premium";
+import { getProductWhatsAppUrl, getBulkWhatsAppUrl } from "@/lib/whatsapp";
 import type { ProductDetail, ReviewOut } from "@/lib/format";
 
 export function ProductPage() {
@@ -312,6 +314,97 @@ export function ProductPage() {
               >
                 <Heart className={`h-5 w-5 ${isWishlisted ? "fill-navy" : ""}`} />
               </button>
+            </div>
+
+            {/* WhatsApp Order Button */}
+            <a
+              href={getProductWhatsAppUrl({
+                title: product.title,
+                sku: currentVariant?.sku,
+                price: currentVariant?.priceOverride || product.basePrice,
+                color: currentVariant?.color,
+                size: currentVariant?.size,
+                qty,
+              })}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 flex items-center justify-center gap-2 rounded-sm border border-green-600 bg-green-50 px-6 py-3 text-sm font-semibold text-green-700 transition-colors hover:bg-green-600 hover:text-white"
+            >
+              <MessageCircle className="h-4 w-4" />
+              Order on WhatsApp
+              <span className="ml-1 text-[10px] font-normal text-green-600/70">Auto-fills saree details</span>
+            </a>
+
+            {/* Stock urgency indicator */}
+            {inStock && currentVariant && currentVariant.stockQty <= 5 && currentVariant.stockQty > 0 && (
+              <div className="mt-4 flex items-center gap-2 rounded-md bg-amber-50 px-3 py-2 text-amber-800">
+                <Flame className="h-4 w-4 shrink-0 animate-pulse text-amber-600" />
+                <span className="text-xs font-semibold">
+                  Only {currentVariant.stockQty} {currentVariant.stockQty === 1 ? "piece" : "pieces"} left! Selling fast — order now.
+                </span>
+              </div>
+            )}
+
+            {/* Trust & Social Proof Strip */}
+            <div className="mt-5 rounded-lg border border-gold/20 bg-gradient-to-b from-gold/5 to-transparent p-4">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="flex items-start gap-2">
+                  <Hand className="mt-0.5 h-4 w-4 shrink-0 text-gold-dark" />
+                  <div>
+                    <p className="text-xs font-semibold text-navy">Direct Elampillai Weaver Pricing</p>
+                    <p className="text-[10px] text-muted-foreground">No middleman markup</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-2">
+                  <Star className="mt-0.5 h-4 w-4 shrink-0 fill-gold text-gold" />
+                  <div>
+                    <p className="text-xs font-semibold text-navy">4.8★ Google Rating</p>
+                    <p className="text-[10px] text-muted-foreground">2,450+ verified reviews</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-2">
+                  <Truck className="mt-0.5 h-4 w-4 shrink-0 text-gold-dark" />
+                  <div>
+                    <p className="text-xs font-semibold text-navy">Pan-India Courier</p>
+                    <p className="text-[10px] text-muted-foreground">Delhivery · DTDC · India Post</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-2">
+                  <Camera className="mt-0.5 h-4 w-4 shrink-0 text-gold-dark" />
+                  <div>
+                    <p className="text-xs font-semibold text-navy">Dispatch Proof Gallery</p>
+                    <p className="text-[10px] text-muted-foreground">Photo on WhatsApp before shipping</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Bulk & Uniform Inquiry Module */}
+            <div className="mt-4 rounded-lg border border-navy/20 bg-navy/5 p-4">
+              <div className="flex items-center gap-2">
+                <PackageCheck className="h-4 w-4 text-navy" />
+                <h4 className="text-sm font-semibold text-navy">Bulk & Uniform Orders</h4>
+              </div>
+              <p className="mt-1.5 text-xs text-muted-foreground">
+                Planning a wedding or event? Get tiered pricing on 10+ pieces for this saree.
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {[
+                  { qty: 10, label: "10+ pieces" },
+                  { qty: 25, label: "25+ pieces" },
+                  { qty: 50, label: "50+ pieces" },
+                ].map((b) => (
+                  <a
+                    key={b.qty}
+                    href={getBulkWhatsAppUrl(product.title, b.qty)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-full border border-navy/30 bg-card px-3 py-1.5 text-xs font-medium text-navy transition-colors hover:bg-navy hover:text-ivory"
+                  >
+                    {b.label} →
+                  </a>
+                ))}
+              </div>
             </div>
 
             {/* Pincode check */}
