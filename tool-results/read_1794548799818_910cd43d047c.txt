@@ -1,0 +1,390 @@
+     1→import { PrismaClient } from "@prisma/client";
+     2→import seedImages from "../seed-images.json";
+     3→
+     4→const db = new PrismaClient();
+     5→
+     6→type ImgKey = keyof typeof seedImages;
+     7→const IMG = seedImages as Record<ImgKey, string[]>;
+     8→
+     9→function pick(arr: string[], i: number): string {
+    10→  return arr[i % arr.length];
+    11→}
+    12→function twoImages(arr: string[], i: number): string[] {
+    13→  return [pick(arr, i), pick(arr, i + 1)];
+    14→}
+    15→
+    16→// ---- Category definitions (from PRD §2) ----
+    17→const categories = [
+    18→  { name: "Soft Silk", slug: "soft-silk", desc: "Lightweight, everyday-elegant silk sarees with a soft sheen and subtle zari.", imgKey: "softSilk" as ImgKey, count: 12 },
+    19→  { name: "Kanchipuram Silk", slug: "kanchipuram-silk", desc: "Pure mulberry silk Kanchipuram sarees with temple borders and real zari.", imgKey: "kanchipuram" as ImgKey, count: 10 },
+    20→  { name: "Cotton", slug: "cotton", desc: "Breathable handloom cotton sarees — perfect for daily wear and summers.", imgKey: "cotton" as ImgKey, count: 14 },
+    21→  { name: "Bridal", slug: "bridal", desc: "Grand bridal silks in rich reds, maroons and gold — woven for your big day.", imgKey: "bridal" as ImgKey, count: 8 },
+    22→  { name: "Designer", slug: "designer", desc: "Contemporary designer sarees with modern motifs and statement blouses.", imgKey: "designer" as ImgKey, count: 8 },
+    23→  { name: "Offer Sarees", slug: "offer-sarees", desc: "Best-value picks — handloom quality at irresistible prices.", imgKey: "cotton" as ImgKey, count: 7 },
+    24→  { name: "Dhotis", slug: "dhotis", desc: "Traditional men's dhotis in silk & cotton — festive and wedding-ready.", imgKey: "dhoti" as ImgKey, count: 10 },
+    25→  { name: "Shirts", slug: "shirts", desc: "Ethnic silk & cotton shirts for men — pair with dhotis for a complete look.", imgKey: "shirt" as ImgKey, count: 10 },
+    26→  { name: "Couple Combo", slug: "couple-combo", desc: "Coordinated saree + dhoti combos for engagements, weddings & receptions.", imgKey: "couple" as ImgKey, count: 5 },
+    27→];
+    28→
+    29→// ---- Product templates per category ----
+    30→type ProductSeed = {
+    31→  title: string;
+    32→  desc: string;
+    33→  fabric: string;
+    34→  origin: string;
+    35→  zari: string;
+    36→  price: number;
+    37→  mrp: number;
+    38→  isNew?: boolean;
+    39→  isBestseller?: boolean;
+    40→  isFeatured?: boolean;
+    41→  colors: { name: string; hex: string }[];
+    42→  sizes?: string[];
+    43→};
+    44→
+    45→const productSets: Record<string, ProductSeed[]> = {
+    46→  "soft-silk": [
+    47→    { title: "Anjali Soft Silk Saree", desc: "A graceful soft silk saree in peacock blue with a delicate gold zari border and mango motifs on the pallu. Woven on traditional handlooms in Elampillai, it drapes effortlessly for festive mornings and evening functions alike.", fabric: "Soft Silk", origin: "Elampillai", zari: "Tested zari", price: 2499, mrp: 3999, isBestseller: true, colors: [{ name: "Peacock Blue", hex: "#1E5F74" }, { name: "Maroon", hex: "#7A1F2B" }] },
+    48→    { title: "Meenakshi Soft Silk Saree", desc: "Muted mustard soft silk with temple-style border and contrast pallu. Lightweight and easy to drape for long festival days.", fabric: "Soft Silk", origin: "Elampillai", zari: "Tested zari", price: 2299, mrp: 3499, isNew: true, colors: [{ name: "Mustard", hex: "#C9A227" }, { name: "Green", hex: "#3F6B4A" }] },
+    49→    { title: "Lakshmi Soft Silk Saree", desc: "Rose-pink soft silk with subtle silver zari butis all over and a richly woven pallu. A versatile pick for poojas and family gatherings.", fabric: "Soft Silk", origin: "Arani", zari: "Half-fine zari", price: 2799, mrp: 4200, colors: [{ name: "Rose Pink", hex: "#C2587A" }, { name: "Ivory", hex: "#F3EDE2" }] },
+    50→    { title: "Padma Soft Silk Saree", desc: "Deep teal soft silk with a contrasting maroon border and traditional kuttu join. Lightweight and breathable.", fabric: "Soft Silk", origin: "Kanchipuram", zari: "Tested zari", price: 3199, mrp: 4800, isBestseller: true, colors: [{ name: "Teal", hex: "#0F5F5C" }, { name: "Maroon", hex: "#7A1F2B" }] },
+    51→    { title: "Sundari Soft Silk Saree", desc: "Classic maroon soft silk with gold zari border and peacock motifs. A timeless wardrobe essential.", fabric: "Soft Silk", origin: "Elampillai", zari: "Real zari", price: 2999, mrp: 4500, colors: [{ name: "Maroon", hex: "#7A1F2B" }, { name: "Purple", hex: "#5B2A6B" }] },
+    52→    { title: "Thamarai Soft Silk Saree", desc: "Lotus-pink soft silk with woven lotus motifs on the pallu and a thin gold border. Feminine and festive.", fabric: "Soft Silk", origin: "Arani", zari: "Tested zari", price: 2599, mrp: 3900, isNew: true, colors: [{ name: "Lotus Pink", hex: "#D67BA0" }] },
+    53→  ],
+    54→  "kanchipuram-silk": [
+    55→    { title: "Brihadamba Kanchipuram Silk Saree", desc: "A majestic pure mulberry silk Kanchipuram saree in deep maroon with a 5-inch gold temple border, kuttu-joined contrast pallu, and woven peacock-and-yali motifs. The heirloom piece every bride dreams of.", fabric: "Pure Mulberry Silk", origin: "Kanchipuram", zari: "Pure gold zari", price: 18999, mrp: 24000, isBestseller: true, isFeatured: true, colors: [{ name: "Maroon", hex: "#7A1F2B" }, { name: "Red", hex: "#B3261E" }] },
+    56→    { title: "Kamakshi Kanchipuram Silk Saree", desc: "Royal blue Kanchipuram with a gold zari border featuring rudraksha motifs and a richly woven pallu of paisleys and elephants.", fabric: "Pure Mulberry Silk", origin: "Kanchipuram", zari: "Pure gold zari", price: 16500, mrp: 21000, colors: [{ name: "Royal Blue", hex: "#1E3A6B" }, { name: "Green", hex: "#1B5E20" }] },
+    57→    { title: "Akilandeshwari Kanchipuram Silk Saree", desc: "Grand green Kanchipuram with a broad gold border of temple gopuram motifs and a contrast red pallu. Pure silk, pure zari, pure heritage.", fabric: "Pure Mulberry Silk", origin: "Kanchipuram", zari: "Pure gold zari", price: 22000, mrp: 28000, isFeatured: true, colors: [{ name: "Emerald Green", hex: "#0F5F2E" }, { name: "Red", hex: "#B3261E" }] },
+    58→    { title: "Meenakshi Kanchipuram Silk Saree", desc: "Muted gold Kanchipuram with a maroon border and delicate butis. Understated luxury for the connoisseur.", fabric: "Pure Mulberry Silk", origin: "Kanchipuram", zari: "Pure gold zari", price: 14500, mrp: 19000, colors: [{ name: "Antique Gold", hex: "#A07E16" }, { name: "Maroon", hex: "#7A1F2B" }] },
+    59→    { title: "Andal Kanchipuram Silk Saree", desc: "Vibrant orange Kanchipuram with a contrast purple pallu and gold zari parrot motifs. A showstopper for receptions.", fabric: "Pure Mulberry Silk", origin: "Kanchipuram", zari: "Pure gold zari", price: 17500, mrp: 22500, isNew: true, colors: [{ name: "Orange", hex: "#E65100" }, { name: "Purple", hex: "#5B2A6B" }] },
+    60→  ],
+    61→  "cotton": [
+    62→    { title: "Karpagam Cotton Saree", desc: "Breathable handloom cotton in earthy brown with a woven koorai border. Ideal for office and daily wear.", fabric: "Handloom Cotton", origin: "Kanchipuram", zari: "Cotton thread", price: 1299, mrp: 1999, isBestseller: true, colors: [{ name: "Earth Brown", hex: "#6B4226" }, { name: "Olive", hex: "#5C6B3B" }] },
+    63→    { title: "Saraswathi Cotton Saree", desc: "Crisp white cotton with a maroon koorai border and gold thread accents. Classic and comfortable.", fabric: "Handloom Cotton", origin: "Kanchipuram", zari: "Half-fine zari", price: 1499, mrp: 2299, colors: [{ name: "Ivory", hex: "#F3EDE2" }, { name: "Maroon", hex: "#7A1F2B" }] },
+    64→    { title: "Gowri Cotton Saree", desc: "Sunshine-yellow cotton with a green border and woven checks. Cheerful and light for summer.", fabric: "Handloom Cotton", origin: "Elampillai", zari: "Cotton thread", price: 999, mrp: 1599, isNew: true, colors: [{ name: "Yellow", hex: "#E0BE4A" }, { name: "Green", hex: "#3F6B4A" }] },
+    65→    { title: "Sita Cotton Saree", desc: "Indigo blue cotton with a woven ikat-inspired border. Earthy and elegant for everyday.", fabric: "Handloom Cotton", origin: "Arani", zari: "Cotton thread", price: 1199, mrp: 1799, colors: [{ name: "Indigo", hex: "#26415E" }] },
+    66→    { title: "Durgai Cotton Saree", desc: "Rich maroon cotton with a gold-thread koorai border. Festive cotton for poojas and functions.", fabric: "Handloom Cotton", origin: "Kanchipuram", zari: "Half-fine zari", price: 1399, mrp: 2199, colors: [{ name: "Maroon", hex: "#7A1F2B" }, { name: "Green", hex: "#1B5E20" }] },
+    67→    { title: "Vijaya Cotton Saree", desc: "Muted grey cotton with a mustard border — minimalist and modern for the working woman.", fabric: "Handloom Cotton", origin: "Elampillai", zari: "Cotton thread", price: 1099, mrp: 1699, colors: [{ name: "Slate Grey", hex: "#5A6470" }] },
+    68→  ],
+    69→  "bridal": [
+    70→    { title: "Mahalakshmi Bridal Silk Saree", desc: "The grandest of them all — deep red pure Kanchipuram silk with a 7-inch gold zari border, murali-and-peacock pallu, and real gold zari throughout. The bridal heirloom.", fabric: "Pure Mulberry Silk", origin: "Kanchipuram", zari: "Pure gold zari", price: 35000, mrp: 42000, isFeatured: true, isBestseller: true, colors: [{ name: "Bridal Red", hex: "#B3261E" }] },
+    71→    { title: "Raja Rajeshwari Bridal Silk Saree", desc: "Maroon bridal silk with a contrast gold-green pallu, woven anna-pakshi motifs and a rich kuttu join. Woven over 21 days.", fabric: "Pure Mulberry Silk", origin: "Kanchipuram", zari: "Pure gold zari", price: 28000, mrp: 34000, isFeatured: true, colors: [{ name: "Maroon", hex: "#7A1F2B" }] },
+    72→    { title: "Sivagami Bridal Silk Saree", desc: "Royal purple bridal silk with a broad gold border of temple motifs and a contrast magenta pallu. A regal statement.", fabric: "Pure Mulberry Silk", origin: "Kanchipuram", zari: "Pure gold zari", price: 24500, mrp: 30000, colors: [{ name: "Royal Purple", hex: "#5B2A6B" }] },
+    73→    { title: "Padmavathi Bridal Silk Saree", desc: "Peacock green bridal silk with a maroon-gold contrast border and woven floral pallu. Striking and timeless.", fabric: "Pure Mulberry Silk", origin: "Kanchipuram", zari: "Pure gold zari", price: 26000, mrp: 32000, isNew: true, colors: [{ name: "Peacock Green", hex: "#0F5F5C" }] },
+    74→  ],
+    75→  "designer": [
+    76→    { title: "Nyla Designer Saree", desc: "Contemporary designer saree in dusty rose with modern geometric zari work and a statement tassel pallu. For the new-age bride.", fabric: "Art Silk", origin: "Elampillai", zari: "Tested zari", price: 4999, mrp: 7500, isNew: true, isFeatured: true, colors: [{ name: "Dusty Rose", hex: "#C79BA8" }] },
+    77→    { title: "Zara Designer Saree", desc: "Midnight blue designer saree with silver embroidery and a sheer pallu. Evening-ready elegance.", fabric: "Art Silk", origin: "Chennai", zari: "Silver zari", price: 5499, mrp: 8200, colors: [{ name: "Midnight Blue", hex: "#13294B" }] },
+    78→    { title: "Inara Designer Saree", desc: "Blush-pink designer saree with sequin work and a ruffled pallu. Modern minimalism meets tradition.", fabric: "Art Silk", origin: "Chennai", zari: "Tested zari", price: 4799, mrp: 7200, isBestseller: true, colors: [{ name: "Blush Pink", hex: "#E8B7C4" }] },
+    79→    { title: "Dia Designer Saree", desc: "Charcoal-grey designer saree with gold foil prints and a contrast neon border. Bold and stylish.", fabric: "Art Silk", origin: "Elampillai", zari: "Tested zari", price: 5299, mrp: 7900, colors: [{ name: "Charcoal", hex: "#3A3A3A" }] },
+    80→  ],
+    81→  "offer-sarees": [
+    82→    { title: "Daily Delight Cotton Saree", desc: "Soft cotton saree in sea-green with a printed border. Unbeatable value for everyday wear.", fabric: "Cotton Blend", origin: "Elampillai", zari: "Printed", price: 499, mrp: 899, colors: [{ name: "Sea Green", hex: "#3F8E8C" }, { name: "Yellow", hex: "#E0BE4A" }] },
+    83→    { title: "Festive Print Saree", desc: "Festive printed saree in maroon with gold-foil motifs. Light on the pocket, bright on the day.", fabric: "Poly-Cotton", origin: "Elampillai", zari: "Gold print", price: 249, mrp: 599, isBestseller: true, colors: [{ name: "Maroon", hex: "#7A1F2B" }] },
+    84→    { title: "Kasavu Style Saree", desc: "Kerala-style kasavu saree in off-white with a gold border. Classic and cool for summers.", fabric: "Cotton", origin: "Elampillai", zari: "Gold print", price: 749, mrp: 1299, colors: [{ name: "Off-White", hex: "#F3EDE2" }] },
+    85→    { title: "Offer Silk Saree", desc: "Soft art-silk saree in royal blue with a printed gold border. Festive look at an offer price.", fabric: "Art Silk", origin: "Arani", zari: "Printed", price: 999, mrp: 1999, colors: [{ name: "Royal Blue", hex: "#1E3A6B" }] },
+    86→  ],
+    87→  "dhotis": [
+    88→    { title: "Silk Dhoti — Royal", desc: "Pure silk dhoti in cream-gold with a maroon silk border. The perfect partner for the wedding ensemble.", fabric: "Silk", origin: "Kanchipuram", zari: "Real zari", price: 3499, mrp: 4999, isBestseller: true, colors: [{ name: "Cream", hex: "#F3EDE2" }], sizes: ["36", "38", "40", "42", "44"] },
+    89→    { title: "Cotton Dhoti — Classic", desc: "Comfortable cotton dhoti in white with a woven gold border. Daily festive and pooja wear.", fabric: "Cotton", origin: "Elampillai", zari: "Half-fine zari", price: 899, mrp: 1499, colors: [{ name: "White", hex: "#FFFFFF" }], sizes: ["36", "38", "40", "42"] },
+    90→    { title: "Silk Dhoti — Maroon", desc: "Rich maroon silk dhoti with a gold zari border. Statement piece for receptions.", fabric: "Silk", origin: "Kanchipuram", zari: "Real zari", price: 3999, mrp: 5500, isNew: true, colors: [{ name: "Maroon", hex: "#7A1F2B" }], sizes: ["38", "40", "42", "44"] },
+    91→    { title: "Veshti — Mundu Style", desc: "Traditional Kerala-style veshti in off-white with a gold kasavu border. Cool and classic.", fabric: "Cotton", origin: "Elampillai", zari: "Cotton thread", price: 699, mrp: 1199, colors: [{ name: "Off-White", hex: "#F3EDE2" }], sizes: ["36", "38", "40", "42"] },
+    92→  ],
+    93→  "shirts": [
+    94→    { title: "Silk Kurta — Gold", desc: "Silk kurta in antique gold with a mandarin collar and subtle weaving. Pair with a dhoti for a complete look.", fabric: "Silk", origin: "Elampillai", zari: "Tested zari", price: 2499, mrp: 3999, isBestseller: true, colors: [{ name: "Antique Gold", hex: "#A07E16" }], sizes: ["38", "40", "42", "44"] },
+    95→    { title: "Cotton Kurta — Ivory", desc: "Breathable cotton kurta in ivory with contrast buttons. Comfortable ethnic wear for any occasion.", fabric: "Cotton", origin: "Elampillai", zari: "—", price: 1299, mrp: 1999, colors: [{ name: "Ivory", hex: "#F3EDE2" }], sizes: ["38", "40", "42", "44"] },
+    96→    { title: "Silk Shirt — Maroon", desc: "Rich maroon silk shirt with a subtle sheen and woven motifs. Wedding-ready.", fabric: "Silk", origin: "Kanchipuram", zari: "Tested zari", price: 2199, mrp: 3499, isNew: true, colors: [{ name: "Maroon", hex: "#7A1F2B" }], sizes: ["38", "40", "42"] },
+    97→    { title: "Cotton Kurta — Teal", desc: "Modern teal cotton kurta with a placket and wooden buttons. Smart-casual ethnic.", fabric: "Cotton", origin: "Elampillai", zari: "—", price: 1499, mrp: 2299, colors: [{ name: "Teal", hex: "#0F5F5C" }], sizes: ["38", "40", "42", "44"] },
+    98→  ],
+    99→  "couple-combo": [
+   100→    { title: "Wedding Combo — Red & Cream", desc: "Coordinated bridal-red silk saree with matching cream silk dhoti. The perfect couple set for weddings and receptions.", fabric: "Silk", origin: "Kanchipuram", zari: "Real zari", price: 22000, mrp: 28000, isFeatured: true, isBestseller: true, colors: [{ name: "Red & Cream", hex: "#B3261E" }] },
+   101→    { title: "Engagement Combo — Blue & Gold", desc: "Royal blue silk saree with a gold-bordered cream dhoti. Elegant pairing for engagements and muhurtham.", fabric: "Silk", origin: "Kanchipuram", zari: "Real zari", price: 18000, mrp: 23000, colors: [{ name: "Blue & Gold", hex: "#1E3A6B" }] },
+   102→    { title: "Reception Combo — Maroon & Mustard", desc: "Maroon silk saree with a mustard silk dhoti. A striking contrast combo for receptions.", fabric: "Silk", origin: "Elampillai", zari: "Tested zari", price: 15500, mrp: 20000, isNew: true, colors: [{ name: "Maroon & Mustard", hex: "#7A1F2B" }] },
+   103→  ],
+   104→};
+   105→
+   106→function slugify(s: string): string {
+   107→  return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+   108→}
+   109→
+   110→function discountPct(price: number, mrp: number): number {
+   111→  if (mrp <= 0 || price >= mrp) return 0;
+   112→  return Math.round(((mrp - price) / mrp) * 100);
+   113→}
+   114→
+   115→const reviewSeeds = [
+   116→  { author: "Priya Ramanathan", city: "Chennai", rating: 5, title: "Stunning weave and colour", body: "The saree exceeded my expectations. The zari work is gorgeous and it draped beautifully for my sister's wedding. Received so many compliments!", verified: true, featured: true },
+   117→  { author: "Lakshmi Narayanan", city: "Bengaluru", rating: 5, title: "Authentic Kanchipuram quality", body: "You can feel the quality of pure silk. The blouse piece matched perfectly. Will definitely buy again for my daughter's wedding.", verified: true, featured: true },
+   118→  { author: "Sneha Krishnan", city: "Coimbatore", rating: 4, title: "Lovely saree, fast delivery", body: "Beautiful colour and the fabric is soft. Delivery was quick and packaging was elegant. Took off one star only because I wished for more colour options.", verified: true, featured: false },
+   119→  { author: "Deepa Senthil", city: "Madurai", rating: 5, title: "Perfect bridal saree", body: "This was my wedding saree and it was everything I dreamed of. The gold zari shimmered beautifully in every photo. Thank you Nandhini Tex!", verified: true, featured: true },
+   120→  { author: "Anitha Ram", city: "Salem", rating: 5, title: "Great value for soft silk", body: "For the price, the quality is excellent. Wore it for a family function and it was comfortable all day. Highly recommend.", verified: true, featured: false },
+   121→  { author: "Kavitha Murthy", city: "Trichy", rating: 4, title: "Beautiful, slight colour variation", body: "The saree is lovely and well-woven. The shade was a touch different from the photo but still beautiful. Blouse piece was included as promised.", verified: true, featured: false },
+   122→  { author: "Revathi Subramaniam", city: "Erode", rating: 5, title: "Heirloom quality", body: "This is a saree I will pass down to my daughter. The craftsmanship is evident in every motif. Worth every rupee.", verified: true, featured: true },
+   123→  { author: "Divya Anand", city: "Vellore", rating: 5, title: "Exactly as shown", body: "Colour, border, zari — all exactly as in the photos. COD option made it stress-free to order. Very happy!", verified: true, featured: false },
+   124→];
+   125→
+   126→const testimonials = [
+   127→  { name: "Meenakshi Iyer", city: "Chennai", quote: "Nandhini Tex sarees are my go-to for every family function. The weaves are authentic and the colours are exactly as shown.", rating: 5, featured: true },
+   128→  { name: "Saravanan & Kavitha", city: "Salem", quote: "Bought our entire wedding set from Nandhini Tex — bridal saree, dhoti, and combo. Quality and service were outstanding.", rating: 5, featured: true },
+   129→  { name: "Geetha Ramesh", city: "Coimbatore", quote: "I've been their customer for 3 years. Never disappointed. The COD option and 7-day returns give so much peace of mind.", rating: 5, featured: true },
+   130→  { name: "Vijaya Lakshmi", city: "Madurai", quote: "The Kanchipuram saree I bought for my daughter's wedding was the talk of the function. Thank you for the heirloom piece!", rating: 5, featured: true },
+   131→  { name: "Sundaram Pillai", city: "Trichy", quote: "Bought silk dhotis and shirts for my son's wedding. Excellent fit and finish. Will recommend to everyone.", rating: 5, featured: false },
+   132→  { name: "Rajalakshmi", city: "Erode", quote: "Beautiful soft silk sarees at honest prices. The blouse piece was included and matched perfectly.", rating: 5, featured: false },
+   133→];
+   134→
+   135→const faqs = [
+   136→  { question: "Do you ship across India?", answer: "Yes! We ship pan-India via Delhivery, DTDC, and India Post. Free shipping on orders above ₹999. Most pincodes are serviceable for both prepaid and COD.", category: "Shipping", order: 1 },
+   137→  { question: "Is Cash on Delivery (COD) available?", answer: "Yes, COD is available across most serviceable pincodes. A nominal ₹40 surcharge applies on COD orders to cover handling. You can check COD availability for your pincode on the product page.", category: "COD", order: 2 },
+   138→  { question: "What is your return & exchange policy?", answer: "We offer 7-day returns on unused sarees with original tags and packaging intact. Bridal and offer sarees are eligible for exchange only. Initiate a return from your account or by calling our support line.", category: "Returns", order: 3 },
+   139→  { question: "What payment methods do you accept?", answer: "We accept UPI (GPay, PhonePe, Paytm), all major credit/debit cards, net banking, and Cash on Delivery. All prepaid payments are secured via our payment gateway.", category: "Payments", order: 4 },
+   140→  { question: "Does every saree come with a blouse piece?", answer: "Yes — every saree ships with an approximately 0.8 metre matching running blouse piece, unless explicitly mentioned otherwise. This is included at no extra cost.", category: "Sarees", order: 5 },
+   141→  { question: "How do I know the saree is authentic silk?", answer: "All our Kanchipuram and soft silk sarees are handwoven on traditional looms in Elampillai, Kanchipuram, and Arani. Pure silk sarees come with a Silk Mark assurance. Fabric and zari details are listed on each product page.", category: "Sarees", order: 6 },
+   142→  { question: "How should I care for my silk saree?", answer: "Dry clean only for the first wash. Store wrapped in a muslin cloth in a cool, dry place. Avoid direct sunlight and perfumes. Air the saree every few months and refold to prevent zari from snapping.", category: "Care", order: 7 },
+   143→  { question: "How long does weaving and delivery take?", answer: "In-stock sarees ship within 24–48 hours. Made-to-order and bridal sarees take 3–7 weaving days. Delivery typically takes 3–6 business days post-dispatch depending on your location.", category: "Shipping", order: 8 },
+   144→];
+   145→
+   146→const coupons = [
+   147→  { code: "WELCOME10", description: "10% off on your first order", type: "percent", value: 10, minCartValue: 1500, usageLimit: 1000, perUserLimit: 1, active: true, expiresAt: new Date("2026-12-31") },
+   148→  { code: "FESTIVE15", description: "15% off on festive collection", type: "percent", value: 15, minCartValue: 3000, usageLimit: 500, perUserLimit: 2, active: true, expiresAt: new Date("2026-03-31") },
+   149→  { code: "FLAT500", description: "Flat ₹500 off on orders above ₹5000", type: "flat", value: 500, minCartValue: 5000, usageLimit: 300, perUserLimit: 1, active: true, expiresAt: new Date("2026-06-30") },
+   150→  { code: "BRIDAL25", description: "25% off on bridal collection", type: "percent", value: 25, minCartValue: 20000, usageLimit: 100, perUserLimit: 1, active: true, expiresAt: new Date("2026-12-31") },
+   151→];
+   152→
+   153→const cities = ["Chennai", "Bengaluru", "Coimbatore", "Madurai", "Salem", "Trichy", "Erode", "Vellore", "Pondicherry", "Tirunelveli"];
+   154→const customerNames = ["Priya Ramanathan", "Lakshmi Narayanan", "Sneha Krishnan", "Deepa Senthil", "Anitha Ram", "Kavitha Murthy", "Revathi Subramaniam", "Divya Anand", "Saravanan Pillai", "Geetha Ramesh", "Vijaya Lakshmi", "Sundaram Pillai", "Rajalakshmi", "Meenakshi Iyer"];
+   155→
+   156→function randPhone(): string {
+   157→  let p = "+91 9";
+   158→  for (let i = 0; i < 9; i++) p += Math.floor(Math.random() * 10);
+   159→  return p;
+   160→}
+   161→
+   162→async function main() {
+   163→  console.log("Clearing existing data...");
+   164→  await db.review.deleteMany();
+   165→  await db.variant.deleteMany();
+   166→  await db.product.deleteMany();
+   167→  await db.category.deleteMany();
+   168→  await db.testimonial.deleteMany();
+   169→  await db.faq.deleteMany();
+   170→  await db.coupon.deleteMany();
+   171→  await db.order.deleteMany();
+   172→  await db.customer.deleteMany();
+   173→  await db.newsletterSubscriber.deleteMany();
+   174→
+   175→  console.log("Creating categories...");
+   176→  const catMap: Record<string, string> = {};
+   177→  for (const cat of categories) {
+   178→    const created = await db.category.create({
+   179→      data: {
+   180→        name: cat.name,
+   181→        slug: cat.slug,
+   182→        description: cat.desc,
+   183→        bannerImage: pick(IMG[cat.imgKey], 0),
+   184→        sortOrder: categories.indexOf(cat),
+   185→        productCount: 0,
+   186→      },
+   187→    });
+   188→    catMap[cat.slug] = created.id;
+   189→  }
+   190→
+   191→  console.log("Creating products...");
+   192→  let productIndex = 0;
+   193→  for (const [catSlug, set] of Object.entries(productSets)) {
+   194→    const categoryId = catMap[catSlug];
+   195→    const cat = categories.find((c) => c.slug === catSlug)!;
+   196→    const imgArr = IMG[cat.imgKey];
+   197→
+   198→    for (let i = 0; i < set.length; i++) {
+   199→      const p = set[i];
+   200→      productIndex++;
+   201→      const slug = slugify(p.title);
+   202→      const images = twoImages(imgArr, i);
+   203→      const disc = discountPct(p.price, p.mrp);
+   204→
+   205→      const product = await db.product.create({
+   206→        data: {
+   207→          slug,
+   208→          title: p.title,
+   209→          description: p.desc,
+   210→          shortDescription: p.desc.split(". ")[0] + ".",
+   211→          categoryId,
+   212→          status: "published",
+   213→          basePrice: p.price,
+   214→          mrp: p.mrp,
+   215→          discountPct: disc,
+   216→          fabricType: p.fabric,
+   217→          weaveOrigin: p.origin,
+   218→          weaveDays: cat.slug.includes("bridal") || cat.slug.includes("kanchipuram") ? 7 : cat.slug.includes("cotton") ? 3 : 5,
+   219→          zariType: p.zari,
+   220→          careInstructions: "Dry clean only. Store wrapped in muslin cloth in a cool, dry place. Avoid direct sunlight and perfumes.",
+   221→          blouseIncluded: cat.slug.includes("dhoti") || cat.slug.includes("shirt") ? false : true,
+   222→          blouseLengthM: 0.8,
+   223→          images: JSON.stringify(images),
+   224→          tags: JSON.stringify([cat.name, p.isNew ? "New Arrival" : "", p.isBestseller ? "Bestseller" : ""].filter(Boolean)),
+   225→          isBestseller: !!p.isBestseller,
+   226→          isNew: !!p.isNew,
+   227→          isFeatured: !!p.isFeatured,
+   228→          rating: 4.3 + Math.random() * 0.6,
+   229→          reviewCount: Math.floor(Math.random() * 120) + 15,
+   230→          metaTitle: `${p.title} — Nandhini Tex`,
+   231→          metaDescription: p.desc.slice(0, 150),
+   232→        },
+   233→      });
+   234→
+   235→      // Variants — one per color (+ sizes for menswear)
+   236→      for (const color of p.colors) {
+   237→        if (p.sizes && p.sizes.length > 0) {
+   238→          for (const size of p.sizes) {
+   239→            await db.variant.create({
+   240→              data: {
+   241→                productId: product.id,
+   242→                color: color.name,
+   243→                colorHex: color.hex,
+   244→                size,
+   245→                sku: `${slug.toUpperCase().replace(/-/g, "")}-${color.name.toUpperCase().replace(/\s/g, "")}-${size}`,
+   246→                stockQty: Math.floor(Math.random() * 30) + 5,
+   247→              },
+   248→            });
+   249→          }
+   250→        } else {
+   251→          await db.variant.create({
+   252→            data: {
+   253→              productId: product.id,
+   254→              color: color.name,
+   255→              colorHex: color.hex,
+   256→              sku: `${slug.toUpperCase().replace(/-/g, "")}-${color.name.toUpperCase().replace(/\s/g, "")}`,
+   257→              stockQty: Math.floor(Math.random() * 40) + 8,
+   258→            },
+   259→          });
+   260→        }
+   261→      }
+   262→
+   263→      // Reviews (2-4 per product)
+   264→      const reviewCount = 2 + Math.floor(Math.random() * 3);
+   265→      for (let r = 0; r < reviewCount; r++) {
+   266→        const rv = reviewSeeds[(productIndex + r) % reviewSeeds.length];
+   267→        await db.review.create({
+   268→          data: {
+   269→            productId: product.id,
+   270→            authorName: rv.author,
+   271→            authorCity: rv.city,
+   272→            rating: rv.rating,
+   273→            title: rv.title,
+   274→            body: rv.body,
+   275→            status: "approved",
+   276→            verified: rv.verified,
+   277→            featured: rv.featured && r === 0,
+   278→            helpfulCount: Math.floor(Math.random() * 30),
+   279→          },
+   280→        });
+   281→      }
+   282→
+   283→      // Update category count
+   284→      await db.category.update({ where: { id: categoryId }, data: { productCount: { increment: 1 } } });
+   285→    }
+   286→  }
+   287→
+   288→  console.log("Creating testimonials...");
+   289→  for (const t of testimonials) {
+   290→    await db.testimonial.create({ data: t });
+   291→  }
+   292→
+   293→  console.log("Creating FAQs...");
+   294→  for (const f of faqs) {
+   295→    await db.faq.create({ data: { question: f.question, answer: f.answer, category: f.category, sortOrder: f.order } });
+   296→  }
+   297→
+   298→  console.log("Creating coupons...");
+   299→  for (const c of coupons) {
+   300→    await db.coupon.create({ data: c });
+   301→  }
+   302→
+   303→  console.log("Creating sample customers...");
+   304→  const customerIds: string[] = [];
+   305→  for (const name of customerNames) {
+   306→    const c = await db.customer.create({
+   307→      data: {
+   308→        name,
+   309→        phone: randPhone(),
+   310→        email: name.toLowerCase().replace(/\s+/g, ".") + "@gmail.com",
+   311→        city: cities[Math.floor(Math.random() * cities.length)],
+   312→        totalOrders: 1 + Math.floor(Math.random() * 8),
+   313→        totalSpent: 2000 + Math.floor(Math.random() * 45000),
+   314→        segment: Math.random() > 0.7 ? "vip" : Math.random() > 0.85 ? "bridal_lead" : "regular",
+   315→      },
+   316→    });
+   317→    customerIds.push(c.id);
+   318→  }
+   319→
+   320→  console.log("Creating sample orders...");
+   321→  const orderStatuses = ["delivered", "delivered", "delivered", "shipped", "confirmed", "pending", "out_for_delivery", "cancelled"];
+   322→  const paymentMethods = ["cod", "upi", "card", "upi"];
+   323→  for (let i = 0; i < 24; i++) {
+   324→    const custName = customerNames[i % customerNames.length];
+   325→    const city = cities[i % cities.length];
+   326→    const status = orderStatuses[i % orderStatuses.length];
+   327→    const pay = paymentMethods[i % paymentMethods.length];
+   328→    const subtotal = 1500 + Math.floor(Math.random() * 30000);
+   329→    const discount = Math.random() > 0.6 ? Math.floor(subtotal * 0.1) : 0;
+   330→    const shipping = subtotal > 999 ? 0 : 60;
+   331→    const cod = pay === "cod" ? 40 : 0;
+   332→    const grand = subtotal - discount + shipping + cod;
+   333→    const daysAgo = Math.floor(Math.random() * 30);
+   334→    const created = new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000);
+   335→    const orderNum = `NTX${created.getFullYear()}${String(1000 + i).padStart(4, "0")}`;
+   336→
+   337→    await db.order.create({
+   338→      data: {
+   339→        orderNumber: orderNum,
+   340→        customerName: custName,
+   341→        customerPhone: randPhone(),
+   342→        customerEmail: custName.toLowerCase().replace(/\s+/g, ".") + "@gmail.com",
+   343→        shippingAddress: JSON.stringify({ name: custName, line1: `${10 + i} ${city === "Chennai" ? "T Nagar" : "Gandhi Road"}`, city, state: "Tamil Nadu", pincode: `6000${10 + i}`, phone: randPhone() }),
+   344→        items: JSON.stringify([{ title: "Soft Silk Saree", variant: "Peacock Blue", qty: 1, price: subtotal, image: IMG.softSilk[0] }]),
+   345→        status,
+   346→        paymentStatus: status === "delivered" ? "paid" : status === "cancelled" ? "failed" : "pending",
+   347→        paymentMethod: pay,
+   348→        subtotal,
+   349→        discount,
+   350→        shippingFee: shipping,
+   351→        codSurcharge: cod,
+   352→        tax: 0,
+   353→        grandTotal: grand,
+   354→        couponCode: discount > 0 ? "WELCOME10" : null,
+   355→        courier: JSON.stringify(status === "delivered" || status === "shipped" || status === "out_for_delivery" ? { name: "Delhivery", awb: `DLV${Date.now()}${i}`, trackingUrl: "https://delhivery.com/track" } : {}),
+   356→        timeline: JSON.stringify([{ status: "pending", timestamp: created.toISOString(), note: "Order placed" }, ...(status !== "pending" ? [{ status: "confirmed", timestamp: new Date(created.getTime() + 3600000).toISOString(), note: "Order confirmed" }] : []), ...(status === "delivered" || status === "shipped" || status === "out_for_delivery" ? [{ status: "shipped", timestamp: new Date(created.getTime() + 86400000).toISOString(), note: "Dispatched via Delhivery" }] : []), ...(status === "delivered" ? [{ status: "delivered", timestamp: new Date(created.getTime() + 259200000).toISOString(), note: "Delivered" }] : [])]),
+   357→        createdAt: created,
+   358→      },
+   359→    });
+   360→  }
+   361→
+   362→  console.log("Creating newsletter subscribers...");
+   363→  for (const name of ["anitha.r", "meena.k", "deepa.s", "kavi.m"]) {
+   364→    await db.newsletterSubscriber.create({ data: { email: name + "@gmail.com" } });
+   365→  }
+   366→
+   367→  console.log("Seed complete!");
+   368→  const counts = {
+   369→    categories: await db.category.count(),
+   370→    products: await db.product.count(),
+   371→    variants: await db.variant.count(),
+   372→    reviews: await db.review.count(),
+   373→    testimonials: await db.testimonial.count(),
+   374→    faqs: await db.faq.count(),
+   375→    coupons: await db.coupon.count(),
+   376→    orders: await db.order.count(),
+   377→    customers: await db.customer.count(),
+   378→  };
+   379→  console.log(counts);
+   380→}
+   381→
+   382→main()
+   383→  .catch((e) => {
+   384→    console.error(e);
+   385→    process.exit(1);
+   386→  })
+   387→  .finally(async () => {
+   388→    await db.$disconnect();
+   389→  });
+   390→
