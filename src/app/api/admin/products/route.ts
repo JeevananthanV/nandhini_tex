@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { toProductDetail } from "@/lib/format";
+import { normalizeVariants, safeMrp, teaserFrom, uniqueSlug } from "@/lib/product-utils";
 
 export const dynamic = "force-dynamic";
 
@@ -34,46 +35,77 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const body = await req.json();
-  const { title, description, categoryId, basePrice, mrp, fabricType, weaveOrigin, zariType, blouseIncluded, images, status, isBestseller, isNew, isFeatured, variants } = body;
+  try {
+    const body = await req.json();
 
-  const slug = body.slug || title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-  const discountPct = mrp > basePrice ? Math.round(((mrp - basePrice) / mrp) * 100) : 0;
+    const title = String(body.title ?? "").trim();
+    const categoryId = String(body.categoryId ?? "").trim();
+    const description = String(body.description ?? "").trim();
+    const basePriceNum = parseFloat(body.basePrice);
 
-  const product = await db.product.create({
-    data: {
-      slug,
-      title,
-      description: description || "",
-      shortDescription: description?.split(". ")[0] + ".",
-      categoryId,
-      status: status || "draft",
-      basePrice: parseFloat(basePrice),
-      mrp: parseFloat(mrp),
-      discountPct,
-      fabricType: fabricType || null,
-      weaveOrigin: weaveOrigin || null,
-      zariType: zariType || null,
-      blouseIncluded: blouseIncluded !== false,
-      images: JSON.stringify(images || []),
-      tags: JSON.stringify([]),
-      isBestseller: !!isBestseller,
-      isNew: !!isNew,
-      isFeatured: !!isFeatured,
-      careInstructions: "Dry clean only. Store wrapped in muslin cloth.",
-      variants: {
-        create: (variants || []).map((v: { color: string; colorHex?: string; size?: string; sku: string; stockQty: number }) => ({
-          color: v.color,
-          colorHex: v.colorHex || null,
-          size: v.size || null,
-          sku: v.sku,
-          stockQty: parseInt(v.stockQty) || 0,
-        })),
+    if (!title) {
+      return NextResponse.json({ error: "Title is required." }, { status: 400 });
+    }
+    if (!categoryId) {
+      return NextResponse.json({ error: "Please choose a category." }, { status: 400 });
+    }
+    if (!Number.isFinite(basePriceNum) || basePriceNum <= 0) {
+      return NextResponse.json(
+        { error: "Base price must be a positive number." },
+        { status: 400 }
+      );
+    }
+
+    const category = await db.category.findUnique({ where: { id: categoryId } });
+    if (!category) {
+      return NextResponse.json({ error: "Selected category does not exist." }, { status: 400 });
+    }
+
+    const mrpNum = safeMrp(body.mrp, basePriceNum);
+    const discountPct = mrpNum > basePriceNum ? Math.round(((mrpNum - basePriceNum) / mrpNum) * 100) : 0;
+    const slug = await uniqueSlug(String(body.slug ?? "") || title);
+    const images = Array.isArray(body.images)
+      ? body.images.map((s: unknown) => String(s).trim()).filter(Boolean)
+      : [];
+    const variants = normalizeVariants(body.variants, slug);
+
+    const product = await db.product.create({
+      data: {
+        slug,
+        title,
+        description,
+        shortDescription: teaserFrom(description, title),
+        categoryId,
+        status: ["draft", "published", "archived"].includes(body.status) ? body.status : "published",
+        basePrice: basePriceNum,
+        mrp: mrpNum,
+        discountPct,
+        fabricType: body.fabricType ? String(body.fabricType).trim() || null : null,
+        weaveOrigin: body.weaveOrigin ? String(body.weaveOrigin).trim() || null : null,
+        zariType: body.zariType ? String(body.zariType).trim() || null : null,
+        blouseIncluded: body.blouseIncluded !== false,
+        images: JSON.stringify(images),
+        tags: JSON.stringify([]),
+        isBestseller: !!body.isBestseller,
+        isNew: !!body.isNew,
+        isFeatured: !!body.isFeatured,
+        careInstructions: "Dry clean only. Store wrapped in muslin cloth.",
+        variants: { create: variants },
       },
-    },
-    include: { variants: true },
-  });
+      include: { variants: true },
+    });
 
-  await db.category.update({ where: { id: categoryId }, data: { productCount: { increment: 1 } } });
-  return NextResponse.json({ product });
+    await db.category.update({
+      where: { id: categoryId },
+      data: { productCount: { increment: 1 } },
+    });
+
+    return NextResponse.json({ product }, { status: 201 });
+  } catch (err) {
+    console.error("POST /api/admin/products failed:", err);
+    return NextResponse.json(
+      { error: "Could not create the product. Please try again." },
+      { status: 500 }
+    );
+  }
 }

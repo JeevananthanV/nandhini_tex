@@ -1116,14 +1116,15 @@ function ProductsView() {
           body: JSON.stringify(payload),
         }
       );
-      if (!res.ok) throw new Error("Save failed");
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Save failed");
       toast.success(isEdit ? "Product updated" : "Product added");
       bumpToast();
       setDialogOpen(false);
       setAdminProductEditing(null);
       fetchProducts();
-    } catch {
-      toast.error("Could not save product");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Could not save product");
     } finally {
       setSaving(false);
     }
@@ -1133,13 +1134,14 @@ function ProductsView() {
     if (!deleteId) return;
     try {
       const res = await fetch(`/api/admin/products/${deleteId}`, { method: "DELETE" });
-      if (!res.ok) throw new Error("Delete failed");
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Delete failed");
       toast.success("Product deleted");
       bumpToast();
       setDeleteId(null);
       fetchProducts();
-    } catch {
-      toast.error("Could not delete product");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Could not delete product");
     }
   };
 
@@ -1462,6 +1464,7 @@ function ProductForm({
         <div className="space-y-1.5">
           <Label htmlFor="p-mrp">MRP (INR)</Label>
           <Input id="p-mrp" type="number" value={mrp} onChange={(e) => setMrp(e.target.value)} />
+          <p className="text-xs text-muted-foreground">Optional — defaults to base price if left blank.</p>
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="p-fabric">Fabric Type</Label>
