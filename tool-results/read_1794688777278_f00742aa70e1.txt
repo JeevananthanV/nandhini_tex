@@ -1,0 +1,671 @@
+     1→"use client";
+     2→
+     3→import { useEffect, useState } from "react";
+     4→import Image from "next/image";
+     5→import { motion, AnimatePresence } from "framer-motion";
+     6→import {
+     7→  Heart, ShoppingBag, Truck, RefreshCw, ShieldCheck, Hand, ChevronRight,
+     8→  Check, Minus, Plus, Star, MapPin, ZoomIn, X,
+     9→  MessageCircle, Flame, PackageCheck, Award, Camera,
+    10→} from "lucide-react";
+    11→import { useStore } from "@/lib/store";
+    12→import { ProductCard } from "./product-card";
+    13→import { StarRating, Price, DiscountBadge, NewBadge, BestsellerBadge } from "./primitives";
+    14→import { Viewer360, DeepZoom } from "./viewers";
+    15→import { addRecentlyViewed } from "./premium-features";
+    16→import { SectionReveal } from "./premium";
+    17→import { PdpSkeleton } from "./skeletons";
+    18→import { getProductWhatsAppUrl, getBulkWhatsAppUrl } from "@/lib/whatsapp";
+    19→import type { ProductDetail, ReviewOut } from "@/lib/format";
+    20→
+    21→export function ProductPage() {
+    22→  const slug = useStore((s) => s.selectedProductSlug);
+    23→  const goHome = useStore((s) => s.goHome);
+    24→  const goCategory = useStore((s) => s.goCategory);
+    25→  const goProduct = useStore((s) => s.goProduct);
+    26→  const addToCart = useStore((s) => s.addToCart);
+    27→  const toggleWishlist = useStore((s) => s.toggleWishlist);
+    28→  const isWishlisted = useStore((s) => s.wishlist.some((w) => w.productId === (data?.product.id || "")));
+    29→  const openCart = useStore((s) => s.openCart);
+    30→
+    31→  const [data, setData] = useState<{ product: ProductDetail; reviews: ReviewOut[]; related: ProductDetail[] } | null>(null);
+    32→  const [loading, setLoading] = useState(true);
+    33→  const [activeImg, setActiveImg] = useState(0);
+    34→  const [selectedVariant, setSelectedVariant] = useState<string>("");
+    35→  const [selectedColor, setSelectedColor] = useState(0);
+    36→  const [selectedSize, setSelectedSize] = useState<string>("");
+    37→  const [qty, setQty] = useState(1);
+    38→  const [pincode, setPincode] = useState("");
+    39→  const [pincodeResult, setPincodeResult] = useState<{ ok: boolean; msg: string } | null>(null);
+    40→  const [lightboxOpen, setLightboxOpen] = useState(false);
+    41→  const [showReviewForm, setShowReviewForm] = useState(false);
+    42→  const [galleryMode, setGalleryMode] = useState<"gallery" | "360" | "zoom">("gallery");
+    43→
+    44→  useEffect(() => {
+    45→    if (!slug) return;
+    46→    let cancelled = false;
+    47→    fetch(`/api/products/${slug}`)
+    48→      .then((r) => r.json())
+    49→      .then((d) => {
+    50→        if (cancelled) return;
+    51→        setData(d);
+    52→        setLoading(false);
+    53→        if (d.product?.id) addRecentlyViewed(d.product.id);
+    54→        if (d.product?.variants?.length) {
+    55→          setSelectedVariant(d.product.variants[0].id);
+    56→          const sizes = [...new Set(d.product.variants.map((v: { size: string | null }) => v.size).filter(Boolean))] as string[];
+    57→          if (sizes.length > 0) setSelectedSize(sizes[0]);
+    58→        }
+    59→      });
+    60→    return () => { cancelled = true; };
+    61→  }, [slug]);
+    62→
+    63→  const checkPincode = () => {
+    64→    if (pincode.length !== 6) {
+    65→      setPincodeResult({ ok: false, msg: "Please enter a valid 6-digit pincode" });
+    66→      return;
+    67→    }
+    68→    const serviceable = parseInt(pincode) % 3 !== 0; // mock logic
+    69→    setPincodeResult({
+    70→      ok: serviceable,
+    71→      msg: serviceable ? "Delivers in 3–6 days · COD available" : "Sorry, not serviceable at this pincode",
+    72→    });
+    73→  };
+    74→
+    75→  const handleAddToCart = (buyNow = false) => {
+    76→    if (!data) return;
+    77→    const variant = data.product.variants.find((v) => v.id === selectedVariant) || data.product.variants[0];
+    78→    if (!variant) return;
+    79→    addToCart({
+    80→      productId: data.product.id,
+    81→      slug: data.product.slug,
+    82→      variantId: variant.id,
+    83→      title: data.product.title,
+    84→      image: data.product.images[0] || "",
+    85→      color: variant.color,
+    86→      size: variant.size,
+    87→      price: variant.priceOverride || data.product.basePrice,
+    88→      mrp: data.product.mrp,
+    89→      qty,
+    90→    });
+    91→    if (buyNow) {
+    92→      openCart();
+    93→    }
+    94→  };
+    95→
+    96→  if (loading || !data) {
+    97→    return <PdpSkeleton />;
+    98→  }
+    99→
+   100→  const { product, reviews, related } = data;
+   101→  const colors = [...new Map(product.variants.map((v) => [v.color, v])).values()];
+   102→  const sizes = [...new Set(product.variants.map((v) => v.size).filter(Boolean))] as string[];
+   103→  const currentVariant = product.variants.find((v) => v.id === selectedVariant) || product.variants[0];
+   104→  const inStock = currentVariant?.stockQty > 0;
+   105→  const ratingDist = [5, 4, 3, 2, 1].map((star) => ({
+   106→    star,
+   107→    count: reviews.filter((r) => r.rating === star).length,
+   108→  }));
+   109→
+   110→  return (
+   111→    <div className="min-h-screen pt-16">
+   112→      <div className="mx-auto max-w-7xl px-4 py-6 md:px-8 md:py-10">
+   113→        {/* breadcrumb */}
+   114→        <nav className="mb-6 flex items-center gap-1.5 text-xs text-muted-foreground">
+   115→          <button onClick={goHome} className="hover:text-navy">Home</button>
+   116→          <ChevronRight className="h-3 w-3" />
+   117→          <button onClick={() => goCategory(product.categorySlug)} className="hover:text-navy">{product.categoryName}</button>
+   118→          <ChevronRight className="h-3 w-3" />
+   119→          <span className="truncate text-foreground">{product.title}</span>
+   120→        </nav>
+   121→
+   122→        <div className="grid gap-8 md:gap-12 lg:grid-cols-2">
+   123→          {/* Gallery with 360° + Deep Zoom modes */}
+   124→          <div className="flex min-w-0 flex-col gap-3">
+   125→            {/* Mode toggle */}
+   126→            <div className="flex gap-2">
+   127→              {[
+   128→                { id: "gallery", label: "Gallery" },
+   129→                { id: "360", label: "View 360°" },
+   130→                { id: "zoom", label: "Deep Zoom" },
+   131→              ].map((m) => (
+   132→                <button
+   133→                  key={m.id}
+   134→                  onClick={() => setGalleryMode(m.id as typeof galleryMode)}
+   135→                  className={`rounded-full border px-3 py-1 text-xs font-semibold transition-colors ${galleryMode === m.id ? "border-navy bg-navy text-ivory" : "border-border text-muted-foreground hover:border-navy"}`}
+   136→                >
+   137→                  {m.label}
+   138→                </button>
+   139→              ))}
+   140→            </div>
+   141→
+   142→            {galleryMode === "360" ? (
+   143→              <Viewer360 images={product.images} alt={product.title} className="w-full" />
+   144→            ) : galleryMode === "zoom" ? (
+   145→              <DeepZoom src={product.images[activeImg] || product.images[0]} alt={product.title} className="w-full" />
+   146→            ) : (
+   147→              <div className="flex flex-col gap-3 md:flex-row-reverse">
+   148→                <div className="relative aspect-[3/4] flex-1 overflow-hidden rounded-lg bg-muted">
+   149→                  <Image
+   150→                    src={product.images[activeImg] || product.images[0]}
+   151→                    alt={product.title}
+   152→                    fill
+   153→                    sizes="(max-width: 768px) 100vw, 50vw"
+   154→                    className="cursor-zoom-in object-cover"
+   155→                    onClick={() => setLightboxOpen(true)}
+   156→                  />
+   157→                  <button
+   158→                    onClick={() => setLightboxOpen(true)}
+   159→                    className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full bg-background/90 px-3 py-1.5 text-xs font-medium text-navy backdrop-blur hover:bg-background"
+   160→                  >
+   161→                    <ZoomIn className="h-3.5 w-3.5" /> Zoom
+   162→                  </button>
+   163→                </div>
+   164→                {product.images.length > 1 && (
+   165→                  <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-elegant md:flex-col md:overflow-visible md:pb-0">
+   166→                    {product.images.map((img, i) => (
+   167→                      <button
+   168→                        key={i}
+   169→                        onClick={() => setActiveImg(i)}
+   170→                        className={`relative h-20 w-16 shrink-0 overflow-hidden rounded-md border-2 transition-colors md:h-24 md:w-20 ${activeImg === i ? "border-gold" : "border-transparent opacity-60 hover:opacity-100"}`}
+   171→                      >
+   172→                        <Image src={img} alt={`${product.title} view ${i + 1}`} fill sizes="80px" className="object-cover" />
+   173→                      </button>
+   174→                    ))}
+   175→                  </div>
+   176→                )}
+   177→              </div>
+   178→            )}
+   179→          </div>
+   180→
+   181→          {/* Info */}
+   182→          <div className="flex min-w-0 flex-col">
+   183→            <div className="flex flex-wrap items-center gap-2">
+   184→              <span className="text-[11px] font-semibold uppercase tracking-[0.1em] text-gold-dark">{product.categoryName}</span>
+   185→              {product.isNew && <NewBadge />}
+   186→              {product.isBestseller && <BestsellerBadge />}
+   187→              {product.discountPct > 0 && <DiscountBadge pct={product.discountPct} />}
+   188→            </div>
+   189→            <h1 className="mt-2 font-serif text-2xl font-semibold leading-tight text-foreground md:text-3xl">{product.title}</h1>
+   190→
+   191→            <div className="mt-3 flex items-center gap-3">
+   192→              <StarRating rating={product.rating} size={16} />
+   193→              <span className="text-sm font-medium text-foreground">{product.rating.toFixed(1)}</span>
+   194→              <button className="text-sm text-muted-foreground hover:text-navy">({product.reviewCount} reviews)</button>
+   195→            </div>
+   196→
+   197→            <div className="mt-4 flex items-end gap-3">
+   198→              <Price price={currentVariant?.priceOverride || product.basePrice} mrp={product.mrp} size="lg" />
+   199→              {product.discountPct > 0 && (
+   200→                <span className="mb-1 text-sm font-semibold text-green-700">You save {product.discountPct}%</span>
+   201→              )}
+   202→            </div>
+   203→            <p className="mt-1 text-xs text-muted-foreground">Inclusive of all taxes</p>
+   204→
+   205→            {/* Color selection */}
+   206→            {colors.length > 0 && (
+   207→              <div className="mt-6">
+   208→                <div className="mb-2 flex items-center justify-between">
+   209→                  <span className="text-xs font-semibold uppercase tracking-wider text-navy">Color: <span className="text-foreground normal-case">{colors[selectedColor]?.color}</span></span>
+   210→                </div>
+   211→                <div className="flex flex-wrap gap-2">
+   212→                  {colors.map((c, i) => (
+   213→                    <button
+   214→                      key={c.id}
+   215→                      onClick={() => { setSelectedColor(i); setSelectedVariant(c.id); }}
+   216→                      className={`relative h-9 w-9 rounded-full border-2 transition-all ${selectedColor === i ? "border-gold ring-2 ring-gold/30" : "border-border hover:border-navy"}`}
+   217→                      title={c.color}
+   218→                    >
+   219→                      <span className="absolute inset-1 rounded-full" style={{ backgroundColor: c.colorHex || "#ccc" }} />
+   220→                      {selectedColor === i && <Check className="absolute inset-0 m-auto h-4 w-4 text-ivory mix-blend-difference" />}
+   221→                    </button>
+   222→                  ))}
+   223→                </div>
+   224→              </div>
+   225→            )}
+   226→
+   227→            {/* Size selection */}
+   228→            {sizes.length > 0 && (
+   229→              <div className="mt-5">
+   230→                <div className="mb-2 flex items-center justify-between">
+   231→                  <span className="text-xs font-semibold uppercase tracking-wider text-navy">Size</span>
+   232→                  <button className="text-xs text-muted-foreground underline hover:text-navy">Size Guide</button>
+   233→                </div>
+   234→                <div className="flex flex-wrap gap-2">
+   235→                  {sizes.map((s) => (
+   236→                    <button
+   237→                      key={s}
+   238→                      onClick={() => setSelectedSize(s)}
+   239→                      className={`min-w-[3rem] rounded-sm border px-3 py-2 text-sm font-medium transition-colors ${selectedSize === s ? "border-navy bg-navy text-ivory" : "border-border text-foreground hover:border-navy"}`}
+   240→                    >
+   241→                      {s}
+   242→                    </button>
+   243→                  ))}
+   244→                </div>
+   245→              </div>
+   246→            )}
+   247→
+   248→            {/* Stock status */}
+   249→            <div className="mt-5 flex items-center gap-2 text-sm">
+   250→              {inStock ? (
+   251→                <>
+   252→                  <span className="flex h-2 w-2 rounded-full bg-green-600" />
+   253→                  <span className="font-medium text-green-700">In Stock</span>
+   254→                  <span className="text-muted-foreground">· {currentVariant?.stockQty} left</span>
+   255→                </>
+   256→              ) : (
+   257→                <>
+   258→                  <span className="flex h-2 w-2 rounded-full bg-destructive" />
+   259→                  <span className="font-medium text-destructive">Out of Stock</span>
+   260→                </>
+   261→              )}
+   262→            </div>
+   263→
+   264→            {/* Blouse included */}
+   265→            {product.blouseIncluded && (
+   266→              <div className="mt-4 flex items-center gap-2 rounded-md bg-gold/10 px-3 py-2">
+   267→                <Check className="h-4 w-4 text-gold-dark" />
+   268→                <span className="text-xs text-navy">Includes {product.blouseLengthM}m matching running blouse piece</span>
+   269→              </div>
+   270→            )}
+   271→
+   272→            {/* Qty + actions */}
+   273→            <div className="mt-6 flex items-center gap-3">
+   274→              <div className="flex items-center rounded-full border border-border">
+   275→                <button onClick={() => setQty(Math.max(1, qty - 1))} className="flex h-10 w-10 items-center justify-center text-muted-foreground hover:text-navy" aria-label="Decrease quantity">
+   276→                  <Minus className="h-4 w-4" />
+   277→                </button>
+   278→                <span className="w-10 text-center text-sm font-semibold">{qty}</span>
+   279→                <button onClick={() => setQty(qty + 1)} className="flex h-10 w-10 items-center justify-center text-muted-foreground hover:text-navy" aria-label="Increase quantity">
+   280→                  <Plus className="h-4 w-4" />
+   281→                </button>
+   282→              </div>
+   283→              <button
+   284→                onClick={() => handleAddToCart(false)}
+   285→                disabled={!inStock}
+   286→                className="flex flex-1 items-center justify-center gap-2 rounded-sm bg-navy px-6 py-3 text-sm font-semibold text-ivory transition-transform hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-50"
+   287→              >
+   288→                <ShoppingBag className="h-4 w-4" /> Add to Bag
+   289→              </button>
+   290→              <button
+   291→                onClick={() => handleAddToCart(true)}
+   292→                disabled={!inStock}
+   293→                className="rounded-sm bg-gold-gradient px-6 py-3 text-sm font-semibold text-navy transition-transform hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-50"
+   294→              >
+   295→                Buy Now
+   296→              </button>
+   297→              <button
+   298→                onClick={() => toggleWishlist({ productId: product.id, slug: product.slug, title: product.title, image: product.images[0] || "", price: product.basePrice })}
+   299→                className={`flex h-12 w-12 items-center justify-center rounded-sm border transition-colors ${isWishlisted ? "border-navy bg-navy/5 text-navy" : "border-border text-muted-foreground hover:border-navy"}`}
+   300→                aria-label="Add to wishlist"
+   301→              >
+   302→                <Heart className={`h-5 w-5 ${isWishlisted ? "fill-navy" : ""}`} />
+   303→              </button>
+   304→            </div>
+   305→
+   306→            {/* WhatsApp Order Button */}
+   307→            <a
+   308→              href={getProductWhatsAppUrl({
+   309→                title: product.title,
+   310→                sku: currentVariant?.sku,
+   311→                price: currentVariant?.priceOverride || product.basePrice,
+   312→                color: currentVariant?.color,
+   313→                size: currentVariant?.size,
+   314→                qty,
+   315→              })}
+   316→              target="_blank"
+   317→              rel="noopener noreferrer"
+   318→              className="mt-3 flex items-center justify-center gap-2 rounded-sm border border-green-600 bg-green-50 px-6 py-3 text-sm font-semibold text-green-700 transition-colors hover:bg-green-600 hover:text-white"
+   319→            >
+   320→              <MessageCircle className="h-4 w-4" />
+   321→              Order on WhatsApp
+   322→              <span className="ml-1 text-[10px] font-normal text-green-600/70">Auto-fills saree details</span>
+   323→            </a>
+   324→
+   325→            {/* Stock urgency indicator */}
+   326→            {inStock && currentVariant && currentVariant.stockQty <= 5 && currentVariant.stockQty > 0 && (
+   327→              <div className="mt-4 flex items-center gap-2 rounded-md bg-amber-50 px-3 py-2 text-amber-800">
+   328→                <Flame className="h-4 w-4 shrink-0 animate-pulse text-amber-600" />
+   329→                <span className="text-xs font-semibold">
+   330→                  Only {currentVariant.stockQty} {currentVariant.stockQty === 1 ? "piece" : "pieces"} left! Selling fast — order now.
+   331→                </span>
+   332→              </div>
+   333→            )}
+   334→
+   335→            {/* Trust & Social Proof Strip */}
+   336→            <div className="mt-5 rounded-lg border border-gold/20 bg-gradient-to-b from-gold/5 to-transparent p-4">
+   337→              <div className="grid grid-cols-2 gap-3">
+   338→                <div className="flex items-start gap-2">
+   339→                  <Hand className="mt-0.5 h-4 w-4 shrink-0 text-gold-dark" />
+   340→                  <div>
+   341→                    <p className="text-xs font-semibold text-navy">Direct Elampillai Weaver Pricing</p>
+   342→                    <p className="text-[10px] text-muted-foreground">No middleman markup</p>
+   343→                  </div>
+   344→                </div>
+   345→                <div className="flex items-start gap-2">
+   346→                  <Star className="mt-0.5 h-4 w-4 shrink-0 fill-gold text-gold" />
+   347→                  <div>
+   348→                    <p className="text-xs font-semibold text-navy">4.8★ Google Rating</p>
+   349→                    <p className="text-[10px] text-muted-foreground">2,450+ verified reviews</p>
+   350→                  </div>
+   351→                </div>
+   352→                <div className="flex items-start gap-2">
+   353→                  <Truck className="mt-0.5 h-4 w-4 shrink-0 text-gold-dark" />
+   354→                  <div>
+   355→                    <p className="text-xs font-semibold text-navy">Pan-India Courier</p>
+   356→                    <p className="text-[10px] text-muted-foreground">Delhivery · DTDC · India Post</p>
+   357→                  </div>
+   358→                </div>
+   359→                <div className="flex items-start gap-2">
+   360→                  <Camera className="mt-0.5 h-4 w-4 shrink-0 text-gold-dark" />
+   361→                  <div>
+   362→                    <p className="text-xs font-semibold text-navy">Dispatch Proof Gallery</p>
+   363→                    <p className="text-[10px] text-muted-foreground">Photo on WhatsApp before shipping</p>
+   364→                  </div>
+   365→                </div>
+   366→              </div>
+   367→            </div>
+   368→
+   369→            {/* Bulk & Uniform Inquiry Module */}
+   370→            <div className="mt-4 rounded-lg border border-navy/20 bg-navy/5 p-4">
+   371→              <div className="flex items-center gap-2">
+   372→                <PackageCheck className="h-4 w-4 text-navy" />
+   373→                <h4 className="text-sm font-semibold text-navy">Bulk & Uniform Orders</h4>
+   374→              </div>
+   375→              <p className="mt-1.5 text-xs text-muted-foreground">
+   376→                Planning a wedding or event? Get tiered pricing on 10+ pieces for this saree.
+   377→              </p>
+   378→              <div className="mt-3 flex flex-wrap gap-2">
+   379→                {[
+   380→                  { qty: 10, label: "10+ pieces" },
+   381→                  { qty: 25, label: "25+ pieces" },
+   382→                  { qty: 50, label: "50+ pieces" },
+   383→                ].map((b) => (
+   384→                  <a
+   385→                    key={b.qty}
+   386→                    href={getBulkWhatsAppUrl(product.title, b.qty)}
+   387→                    target="_blank"
+   388→                    rel="noopener noreferrer"
+   389→                    className="rounded-full border border-navy/30 bg-card px-3 py-1.5 text-xs font-medium text-navy transition-colors hover:bg-navy hover:text-ivory"
+   390→                  >
+   391→                    {b.label} →
+   392→                  </a>
+   393→                ))}
+   394→              </div>
+   395→            </div>
+   396→
+   397→            {/* Pincode check */}
+   398→            <div className="mt-6 rounded-lg border border-border bg-ivory p-4">
+   399→              <div className="flex items-center gap-2">
+   400→                <MapPin className="h-4 w-4 text-navy" />
+   401→                <span className="text-sm font-medium text-navy">Check Delivery</span>
+   402→              </div>
+   403→              <div className="mt-2 flex gap-2">
+   404→                <input
+   405→                  value={pincode}
+   406→                  onChange={(e) => setPincode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+   407→                  placeholder="Enter 6-digit pincode"
+   408→                  className="h-10 flex-1 rounded-sm border border-border bg-background px-3 text-sm outline-none focus:border-gold"
+   409→                />
+   410→                <button onClick={checkPincode} className="rounded-sm bg-navy px-4 text-sm font-semibold text-ivory hover:bg-navy-light">
+   411→                  Check
+   412→                </button>
+   413→              </div>
+   414→              {pincodeResult && (
+   415→                <p className={`mt-2 flex items-center gap-1.5 text-xs ${pincodeResult.ok ? "text-green-700" : "text-destructive"}`}>
+   416→                  {pincodeResult.ok ? <Check className="h-3.5 w-3.5" /> : <X className="h-3.5 w-3.5" />}
+   417→                  {pincodeResult.msg}
+   418→                </p>
+   419→              )}
+   420→            </div>
+   421→
+   422→            {/* Fabric / weave details */}
+   423→            <div className="mt-6 grid grid-cols-2 gap-3 rounded-lg border border-border bg-card p-4 text-sm">
+   424→              {product.fabricType && <Detail label="Fabric" value={product.fabricType} />}
+   425→              {product.weaveOrigin && <Detail label="Weave Origin" value={product.weaveOrigin} />}
+   426→              {product.weaveDays && <Detail label="Weave Time" value={`${product.weaveDays} days`} />}
+   427→              {product.zariType && <Detail label="Zari Type" value={product.zariType} />}
+   428→              <Detail label="Saree Length" value="6.3 m (5.5m + 0.8m blouse)" />
+   429→              <Detail label="SKU" value={currentVariant?.sku || product.slug.toUpperCase().slice(0, 12)} />
+   430→            </div>
+   431→
+   432→            {/* Zari detail gallery */}
+   433→            {product.images.length > 1 && (
+   434→              <div className="mt-6">
+   435→                <h3 className="font-heading text-base font-semibold text-navy">Zari & Weave Details</h3>
+   436→                <p className="mt-1 text-xs text-muted-foreground">High-resolution close-ups of border, pallu, and weaving</p>
+   437→                <div className="mt-3 grid grid-cols-3 gap-2">
+   438→                  {product.images.slice(0, 3).map((img, i) => (
+   439→                    <button
+   440→                      key={i}
+   441→                      onClick={() => { setGalleryMode("zoom"); setActiveImg(i); }}
+   442→                      className="group relative aspect-square overflow-hidden rounded-md border border-border"
+   443→                    >
+   444→                      <img src={img} alt={`${product.title} zari detail ${i + 1}`} className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110" />
+   445→                      <div className="absolute inset-0 flex items-end bg-gradient-to-t from-navy/70 to-transparent p-2 opacity-0 transition-opacity group-hover:opacity-100">
+   446→                        <span className="text-[10px] font-medium text-ivory">{["Border", "Pallu", "Weave"][i] || "Detail"}</span>
+   447→                      </div>
+   448→                    </button>
+   449→                  ))}
+   450→                </div>
+   451→              </div>
+   452→            )}
+   453→
+   454→            {/* Blouse matching guide */}
+   455→            {product.blouseIncluded && (
+   456→              <div className="mt-6 rounded-lg border border-gold/30 bg-gold/5 p-4">
+   457→                <h3 className="font-heading text-base font-semibold text-navy">Blouse Matching Guide</h3>
+   458→                <div className="mt-3 flex items-center gap-3">
+   459→                  <div className="flex h-12 w-12 items-center justify-center rounded-md bg-navy-gradient ring-1 ring-gold/40">
+   460→                    <span className="font-display text-xs text-gold">0.8m</span>
+   461→                  </div>
+   462→                  <div className="flex-1">
+   463→                    <p className="text-sm font-medium text-foreground">{product.blouseLengthM}m matching running blouse piece included</p>
+   464→                    <p className="text-xs text-muted-foreground">Unstitched · matches saree colour · ready for tailoring</p>
+   465→                  </div>
+   466→                </div>
+   467→              </div>
+   468→            )}
+   469→
+   470→            {/* Trust strip */}
+   471→            <div className="mt-5 grid grid-cols-2 gap-3 text-xs text-muted-foreground">
+   472→              <div className="flex items-center gap-2"><Hand className="h-4 w-4 text-gold-dark" /> 100% Handwoven</div>
+   473→              <div className="flex items-center gap-2"><Truck className="h-4 w-4 text-gold-dark" /> Pan-India Shipping</div>
+   474→              <div className="flex items-center gap-2"><RefreshCw className="h-4 w-4 text-gold-dark" /> 7-Day Returns</div>
+   475→              <div className="flex items-center gap-2"><ShieldCheck className="h-4 w-4 text-gold-dark" /> Secure Checkout</div>
+   476→            </div>
+   477→
+   478→            {/* Description */}
+   479→            <div className="mt-6 border-t border-border pt-6">
+   480→              <h3 className="font-serif text-lg font-semibold text-navy">About this saree</h3>
+   481→              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{product.description}</p>
+   482→              {product.careInstructions && (
+   483→                <div className="mt-4 rounded-md bg-muted p-3">
+   484→                  <h4 className="text-xs font-semibold uppercase tracking-wider text-navy">Care Instructions</h4>
+   485→                  <p className="mt-1 text-xs text-muted-foreground">{product.careInstructions}</p>
+   486→                </div>
+   487→              )}
+   488→            </div>
+   489→          </div>
+   490→        </div>
+   491→
+   492→        {/* Reviews */}
+   493→        <section className="mt-16 border-t border-border pt-12">
+   494→          <div className="flex flex-col gap-8 md:flex-row">
+   495→            <div className="md:w-1/3">
+   496→              <h2 className="font-serif text-2xl font-semibold text-navy">Customer Reviews</h2>
+   497→              <div className="mt-4 flex items-center gap-3">
+   498→                <span className="font-serif text-5xl font-bold text-navy">{product.rating.toFixed(1)}</span>
+   499→                <div>
+   500→                  <StarRating rating={product.rating} size={18} />
+   501→                  <p className="mt-1 text-xs text-muted-foreground">Based on {product.reviewCount} reviews</p>
+   502→                </div>
+   503→              </div>
+   504→              <div className="mt-5 space-y-1.5">
+   505→                {ratingDist.map((r) => (
+   506→                  <div key={r.star} className="flex items-center gap-2 text-xs">
+   507→                    <span className="w-3 text-muted-foreground">{r.star}</span>
+   508→                    <Star className="h-3 w-3 fill-gold text-gold" />
+   509→                    <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted">
+   510→                      <div className="h-full rounded-full bg-gold" style={{ width: `${reviews.length > 0 ? (r.count / reviews.length) * 100 : 0}%` }} />
+   511→                    </div>
+   512→                    <span className="w-6 text-right text-muted-foreground">{r.count}</span>
+   513→                  </div>
+   514→                ))}
+   515→              </div>
+   516→              <button
+   517→                onClick={() => setShowReviewForm(!showReviewForm)}
+   518→                className="mt-6 w-full rounded-sm border border-navy px-4 py-2.5 text-sm font-semibold text-navy hover:bg-navy hover:text-ivory"
+   519→              >
+   520→                Write a Review
+   521→              </button>
+   522→              <AnimatePresence>
+   523→                {showReviewForm && (
+   524→                  <ReviewForm productId={product.id} onClose={() => setShowReviewForm(false)} />
+   525→                )}
+   526→              </AnimatePresence>
+   527→            </div>
+   528→            <div className="flex-1 space-y-5">
+   529→              {reviews.length === 0 ? (
+   530→                <p className="text-sm text-muted-foreground">No reviews yet. Be the first to share your experience!</p>
+   531→              ) : (
+   532→                reviews.map((r) => (
+   533→                  <div key={r.id} className="border-b border-border pb-5">
+   534→                    <div className="flex items-start justify-between">
+   535→                      <div>
+   536→                        <div className="flex items-center gap-2">
+   537→                          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-navy-gradient font-serif text-xs font-semibold text-gold">
+   538→                            {r.authorName.charAt(0)}
+   539→                          </div>
+   540→                          <div>
+   541→                            <p className="text-sm font-semibold text-foreground">{r.authorName}</p>
+   542→                            {r.authorCity && <p className="text-xs text-muted-foreground">{r.authorCity}</p>}
+   543→                          </div>
+   544→                        </div>
+   545→                      </div>
+   546→                      {r.verified && (
+   547→                        <span className="flex items-center gap-1 rounded-full bg-green-50 px-2 py-0.5 text-[10px] font-medium text-green-700">
+   548→                          <Check className="h-3 w-3" /> Verified
+   549→                        </span>
+   550→                      )}
+   551→                    </div>
+   552→                    <div className="mt-2 flex items-center gap-2">
+   553→                      <StarRating rating={r.rating} size={12} />
+   554→                      <span className="text-xs text-muted-foreground">{new Date(r.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</span>
+   555→                    </div>
+   556→                    <h4 className="mt-2 font-serif text-sm font-semibold text-foreground">{r.title}</h4>
+   557→                    <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{r.body}</p>
+   558→                  </div>
+   559→                ))
+   560→              )}
+   561→            </div>
+   562→          </div>
+   563→        </section>
+   564→
+   565→        {/* Related */}
+   566→        {related.length > 0 && (
+   567→          <section className="mt-16 border-t border-border pt-12">
+   568→            <h2 className="font-serif text-2xl font-semibold text-navy">You May Also Like</h2>
+   569→            <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
+   570→              {related.map((p, i) => (
+   571→                <ProductCard
+   572→                  key={p.id}
+   573→                  product={p as any}
+   574→                  index={i}
+   575→                />
+   576→              ))}
+   577→            </div>
+   578→          </section>
+   579→        )}
+   580→      </div>
+   581→
+   582→      {/* Lightbox */}
+   583→      <AnimatePresence>
+   584→        {lightboxOpen && (
+   585→          <motion.div
+   586→            initial={{ opacity: 0 }}
+   587→            animate={{ opacity: 1 }}
+   588→            exit={{ opacity: 0 }}
+   589→            onClick={() => setLightboxOpen(false)}
+   590→            className="fixed inset-0 z-[100] flex items-center justify-center bg-navy-dark/90 p-4 backdrop-blur"
+   591→          >
+   592→            <button className="absolute right-5 top-5 text-ivory" aria-label="Close">
+   593→              <X className="h-7 w-7" />
+   594→            </button>
+   595→            <div className="relative aspect-[3/4] h-[85vh]">
+   596→              <Image src={product.images[activeImg]} alt={product.title} fill sizes="80vw" className="object-contain" onClick={(e) => e.stopPropagation()} />
+   597→            </div>
+   598→          </motion.div>
+   599→        )}
+   600→      </AnimatePresence>
+   601→    </div>
+   602→  );
+   603→}
+   604→
+   605→function Detail({ label, value }: { label: string; value: string }) {
+   606→  return (
+   607→    <div>
+   608→      <dt className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{label}</dt>
+   609→      <dd className="mt-0.5 font-medium text-foreground">{value}</dd>
+   610→    </div>
+   611→  );
+   612→}
+   613→
+   614→function ReviewForm({ productId, onClose }: { productId: string; onClose: () => void }) {
+   615→  const [rating, setRating] = useState(5);
+   616→  const [title, setTitle] = useState("");
+   617→  const [body, setBody] = useState("");
+   618→  const [name, setName] = useState("");
+   619→  const [city, setCity] = useState("");
+   620→  const [done, setDone] = useState(false);
+   621→  const [loading, setLoading] = useState(false);
+   622→
+   623→  const submit = async (e: React.FormEvent) => {
+   624→    e.preventDefault();
+   625→    setLoading(true);
+   626→    await fetch("/api/reviews", {
+   627→      method: "POST",
+   628→      headers: { "Content-Type": "application/json" },
+   629→      body: JSON.stringify({ productId, authorName: name, authorCity: city, rating, title, body: body }),
+   630→    });
+   631→    setLoading(false);
+   632→    setDone(true);
+   633→    setTimeout(onClose, 2500);
+   634→  };
+   635→
+   636→  if (done) {
+   637→    return (
+   638→      <div className="mt-4 rounded-md border border-gold/40 bg-gold/10 p-4 text-sm text-navy">
+   639→        Thank you! Your review has been submitted and will appear once approved.
+   640→      </div>
+   641→    );
+   642→  }
+   643→
+   644→  return (
+   645→    <motion.form
+   646→      initial={{ opacity: 0, height: 0 }}
+   647→      animate={{ opacity: 1, height: "auto" }}
+   648→      onSubmit={submit}
+   649→      className="mt-4 space-y-3 overflow-hidden rounded-md border border-border bg-card p-4"
+   650→    >
+   651→      <div>
+   652→        <label className="text-xs font-semibold uppercase tracking-wider text-navy">Your Rating</label>
+   653→        <div className="mt-1.5 flex gap-1">
+   654→          {[1, 2, 3, 4, 5].map((i) => (
+   655→            <button key={i} type="button" onClick={() => setRating(i)} aria-label={`${i} stars`}>
+   656→              <Star className={`h-6 w-6 ${i <= rating ? "fill-gold text-gold" : "fill-transparent text-muted-foreground/40"}`} />
+   657→            </button>
+   658→          ))}
+   659→        </div>
+   660→      </div>
+   661→      <input required value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" className="h-10 w-full rounded-sm border border-border px-3 text-sm outline-none focus:border-gold" />
+   662→      <input value={city} onChange={(e) => setCity(e.target.value)} placeholder="City (optional)" className="h-10 w-full rounded-sm border border-border px-3 text-sm outline-none focus:border-gold" />
+   663→      <input required value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Review title" className="h-10 w-full rounded-sm border border-border px-3 text-sm outline-none focus:border-gold" />
+   664→      <textarea required value={body} onChange={(e) => setBody(e.target.value)} placeholder="Share your experience..." rows={3} className="w-full rounded-sm border border-border p-3 text-sm outline-none focus:border-gold" />
+   665→      <button type="submit" disabled={loading} className="rounded-sm bg-navy px-4 py-2 text-sm font-semibold text-ivory hover:bg-navy-light disabled:opacity-50">
+   666→        {loading ? "Submitting..." : "Submit Review"}
+   667→      </button>
+   668→    </motion.form>
+   669→  );
+   670→}
+   671→

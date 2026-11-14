@@ -418,7 +418,7 @@ export function FestiveBanner({
       </Marquee>
       <button
         onClick={() => { setClosed(true); onClose?.(); }}
-        className="absolute right-3 top-1/2 -translate-y-1/2 text-ivory/60 hover:text-gold"
+        className="absolute right-1 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-sm text-ivory/60 transition-colors hover:bg-ivory/10 hover:text-gold md:right-3"
         aria-label="Dismiss banner"
       >
         <X className="h-3.5 w-3.5" />
@@ -492,7 +492,7 @@ export function LiveChatWidget() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.9 }}
             transition={{ duration: DUR.base, ease: EASE_SILK }}
-            className="fixed bottom-36 left-6 z-[95] w-[300px] overflow-hidden rounded-xl border border-border bg-card shadow-navy md:bottom-24"
+            className="fixed bottom-36 left-4 right-4 z-[95] w-[min(340px,calc(100vw-2rem))] overflow-hidden rounded-xl border border-border bg-card shadow-navy md:bottom-24 md:left-6 md:right-auto"
           >
             <div className="bg-navy-gradient p-4 text-ivory">
               <div className="flex items-center justify-between">

@@ -278,11 +278,11 @@ export function AllProductsPage({ categories }: { categories: Category[] }) {
 
       {/* Category chip rail */}
       <div className="sticky top-16 z-30 border-b border-border bg-background/95 backdrop-blur md:top-20">
-        <div className="mx-auto flex max-w-7xl items-center gap-2 overflow-x-auto px-6 py-3 scrollbar-elegant md:px-8">
+        <div className="mx-auto flex max-w-7xl items-center gap-2 overflow-x-auto px-4 py-3 scrollbar-elegant md:px-8">
           <button
             onClick={() => setCategorySlug("")}
             className={cn(
-              "shrink-0 rounded-full border px-4 py-1.5 text-xs font-semibold transition-colors",
+              "flex h-9 shrink-0 items-center rounded-full border px-4 text-xs font-semibold transition-colors",
               categorySlug === "" ? "border-navy bg-navy text-ivory" : "border-border bg-card text-muted-foreground hover:border-navy hover:text-navy"
             )}
           >
@@ -293,7 +293,7 @@ export function AllProductsPage({ categories }: { categories: Category[] }) {
               key={c.id}
               onClick={() => (categorySlug === c.slug ? goCategory(c.slug) : setCategorySlug(c.slug))}
               className={cn(
-                "shrink-0 rounded-full border px-4 py-1.5 text-xs font-semibold transition-colors",
+                "flex h-9 shrink-0 items-center rounded-full border px-4 text-xs font-semibold transition-colors",
                 categorySlug === c.slug ? "border-navy bg-navy text-ivory" : "border-border bg-card text-muted-foreground hover:border-navy hover:text-navy"
               )}
             >

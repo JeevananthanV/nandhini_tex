@@ -566,7 +566,7 @@ function Topbar({ onMenu }: { onMenu: () => void }) {
     <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-border bg-ivory/95 px-4 backdrop-blur md:px-6">
       <button
         onClick={onMenu}
-        className="flex h-9 w-9 items-center justify-center rounded-md text-foreground hover:bg-muted lg:hidden"
+        className="flex h-10 w-10 items-center justify-center rounded-md text-foreground transition-colors hover:bg-muted lg:hidden"
         aria-label="Open menu"
       >
         <Menu className="h-5 w-5" />
@@ -779,7 +779,7 @@ function DashboardView() {
       {/* System Health Widget */}
       {health && (
         <Card className="border-l-4 border-l-emerald-500">
-          <CardContent className="flex items-center justify-between p-4">
+          <CardContent className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
               <div className={cn(
                 "flex h-10 w-10 items-center justify-center rounded-full",
@@ -790,7 +790,7 @@ function DashboardView() {
                   health.status === "healthy" ? "text-emerald-600" : health.status === "degraded" ? "text-amber-600" : "text-red-600"
                 )} />
               </div>
-              <div>
+              <div className="min-w-0">
                 <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">System Health</p>
                 <p className="font-serif text-lg font-bold capitalize text-navy">
                   {health.status}
@@ -800,7 +800,7 @@ function DashboardView() {
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-4 text-right">
+            <div className="flex flex-wrap items-center gap-4 sm:gap-6">
               <div>
                 <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Uptime</p>
                 <p className="text-sm font-semibold text-navy">{formatUptimeShort(health.uptime)}</p>
@@ -813,7 +813,7 @@ function DashboardView() {
                 href="/api/docs"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-full border border-border px-3 py-1.5 text-xs font-semibold text-navy hover:bg-muted"
+                className="flex h-8 items-center rounded-full border border-border px-3 text-xs font-semibold text-navy transition-colors hover:bg-muted"
               >
                 API Docs
               </a>

@@ -163,15 +163,15 @@ export function CartPage() {
                     <div className="flex flex-1 flex-col">
                       <button onClick={() => goProduct(item.slug)} className="text-left font-serif text-base font-medium text-foreground hover:text-navy">{item.title}</button>
                       <p className="text-xs text-muted-foreground">{item.color}{item.size ? ` · Size ${item.size}` : ""}</p>
-                      <div className="mt-auto flex items-center justify-between">
+                      <div className="mt-auto flex items-center justify-between gap-2">
                         <div className="flex items-center rounded-full border border-border">
-                          <button onClick={() => updateQty(item.key, item.qty - 1)} className="flex h-8 w-8 items-center justify-center text-muted-foreground hover:text-navy" aria-label="Decrease"><Minus className="h-3 w-3" /></button>
+                          <button onClick={() => updateQty(item.key, item.qty - 1)} className="flex h-9 w-9 items-center justify-center text-muted-foreground transition-colors hover:text-navy" aria-label="Decrease"><Minus className="h-3 w-3" /></button>
                           <span className="w-8 text-center text-sm font-semibold">{item.qty}</span>
-                          <button onClick={() => updateQty(item.key, item.qty + 1)} className="flex h-8 w-8 items-center justify-center text-muted-foreground hover:text-navy" aria-label="Increase"><Plus className="h-3 w-3" /></button>
+                          <button onClick={() => updateQty(item.key, item.qty + 1)} className="flex h-9 w-9 items-center justify-center text-muted-foreground transition-colors hover:text-navy" aria-label="Increase"><Plus className="h-3 w-3" /></button>
                         </div>
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2">
                           <span className="font-semibold">₹{(item.price * item.qty).toLocaleString("en-IN")}</span>
-                          <button onClick={() => removeFromCart(item.key)} className="text-muted-foreground hover:text-destructive" aria-label="Remove"><Trash2 className="h-4 w-4" /></button>
+                          <button onClick={() => removeFromCart(item.key)} className="flex h-9 w-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive" aria-label="Remove"><Trash2 className="h-4 w-4" /></button>
                         </div>
                       </div>
                     </div>

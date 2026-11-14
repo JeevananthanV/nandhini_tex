@@ -55,15 +55,15 @@ export function Header({ categories }: { categories: { id: string; name: string;
       >
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 md:h-20 md:px-8">
           {/* Left: mobile menu + logo */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <button
               onClick={toggleMobileMenu}
-              className="md:hidden"
+              className="flex h-10 w-10 items-center justify-center rounded-md transition-colors hover:bg-muted/60 md:hidden"
               aria-label="Open menu"
             >
               <Menu className={cn("h-5 w-5", onHome && !scrolled ? "text-ivory" : "text-foreground")} />
             </button>
-            <button onClick={goHome} className="flex items-center gap-2" aria-label="Nandhini Tex home">
+            <button onClick={goHome} className="flex min-h-10 items-center gap-2 py-1" aria-label="Nandhini Tex home">
               <div className="flex h-9 w-9 items-center justify-center rounded-sm bg-navy-gradient ring-1 ring-gold/50">
                 <span className="font-display text-lg font-bold text-gold-gradient">N</span>
               </div>

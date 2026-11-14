@@ -1,0 +1,670 @@
+     1→"use client";
+     2→
+     3→import { useEffect, useState } from "react";
+     4→import Image from "next/image";
+     5→import { motion } from "framer-motion";
+     6→import {
+     7→  ShieldCheck, Truck, RefreshCw, Hand, Star, ChevronRight,
+     8→  Sparkles, Award, Heart, Phone, Mail, MapPin, MessageCircle
+     9→} from "lucide-react";
+    10→import {
+    11→  Accordion, AccordionContent, AccordionItem, AccordionTrigger,
+    12→} from "@/components/ui/accordion";
+    13→import { Skeleton } from "@/components/ui/skeleton";
+    14→import { useStore } from "@/lib/store";
+    15→import { ProductCard } from "./product-card";
+    16→import { StarRating } from "./primitives";
+    17→import { AnimatedCounter, Marquee, TextReveal, MagneticButton, SectionReveal, StaggerGrid, StaggerItem } from "./premium";
+    18→import { CountdownTimer } from "./premium-features";
+    19→import { ProductRailSkeleton, ProductGridSkeleton } from "./skeletons";
+    20→import type { ProductCard as ProductCardType } from "@/lib/format";
+    21→
+    22→type Category = { id: string; name: string; slug: string; description: string | null; bannerImage: string | null; productCount: number };
+    23→type Testimonial = { id: string; name: string; city: string | null; quote: string; rating: number };
+    24→type Faq = { id: string; question: string; answer: string; category: string };
+    25→
+    26→export function HomePage({ categories }: { categories: Category[] }) {
+    27→  const goCategory = useStore((s) => s.goCategory);
+    28→  const goAllProducts = useStore((s) => s.goAllProducts);
+    29→  const goProduct = useStore((s) => s.goProduct);
+    30→  const [newArrivals, setNewArrivals] = useState<ProductCardType[]>([]);
+    31→  const [bestsellers, setBestsellers] = useState<ProductCardType[]>([]);
+    32→  const [bridal, setBridal] = useState<ProductCardType[]>([]);
+    33→  const [offers, setOffers] = useState<ProductCardType[]>([]);
+    34→  const [menswear, setMenswear] = useState<ProductCardType[]>([]);
+    35→  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+    36→  const [faqs, setFaqs] = useState<Faq[]>([]);
+    37→  const [newsletterEmail, setNewsletterEmail] = useState("");
+    38→  const [newsletterDone, setNewsletterDone] = useState(false);
+    39→  const [loading, setLoading] = useState(true);
+    40→
+    41→  useEffect(() => {
+    42→    let cancelled = false;
+    43→    Promise.all([
+    44→      fetch("/api/products?isNew=true&limit=4").then((r) => r.json()),
+    45→      fetch("/api/products?isBestseller=true&limit=4").then((r) => r.json()),
+    46→      fetch("/api/products?category=bridal&limit=4").then((r) => r.json()),
+    47→      fetch("/api/products?category=offer-sarees&limit=4").then((r) => r.json()),
+    48→      fetch("/api/products?category=dhotis&limit=4").then((r) => r.json()),
+    49→      fetch("/api/testimonials").then((r) => r.json()),
+    50→      fetch("/api/faqs").then((r) => r.json()),
+    51→    ])
+    52→      .then(([na, bs, br, of, mw, ts, fq]) => {
+    53→        if (cancelled) return;
+    54→        setNewArrivals(na.products || []);
+    55→        setBestsellers(bs.products || []);
+    56→        setBridal(br.products || []);
+    57→        setOffers(of.products || []);
+    58→        setMenswear(mw.products || []);
+    59→        setTestimonials(ts.testimonials || []);
+    60→        setFaqs(fq.faqs || []);
+    61→      })
+    62→      .catch(() => {})
+    63→      .finally(() => {
+    64→        if (!cancelled) setLoading(false);
+    65→      });
+    66→    return () => {
+    67→      cancelled = true;
+    68→    };
+    69→  }, []);
+    70→
+    71→  const subscribe = async (e: React.FormEvent) => {
+    72→    e.preventDefault();
+    73→    if (!newsletterEmail) return;
+    74→    await fetch("/api/newsletter", {
+    75→      method: "POST",
+    76→      headers: { "Content-Type": "application/json" },
+    77→      body: JSON.stringify({ email: newsletterEmail }),
+    78→    });
+    79→    setNewsletterDone(true);
+    80→    setNewsletterEmail("");
+    81→  };
+    82→
+    83→  return (
+    84→    <div className="flex flex-col">
+    85→      {/* ===== HERO ===== */}
+    86→      <section className="relative h-[88vh] min-h-[560px] w-full overflow-hidden" aria-label="Hero — Handwoven silk sarees from Tamil Nadu">
+    87→        <div className="absolute inset-0">
+    88→          <Image
+    89→            src="https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/504fe6faa6dc.jpg"
+    90→            alt="Bride wearing a handwoven red Kanchipuram silk saree with gold zari border from Nandhini Tex"
+    91→            fill
+    92→            priority
+    93→            loading="eager"
+    94→            sizes="100vw"
+    95→            className="object-cover object-center"
+    96→          />
+    97→          <div className="absolute inset-0 bg-gradient-to-r from-navy-dark/85 via-navy-dark/55 to-transparent" />
+    98→          <div className="absolute inset-0 bg-gradient-to-t from-navy-dark/70 via-transparent to-transparent" />
+    99→        </div>
+   100→
+   101→        <div className="relative z-10 mx-auto flex h-full max-w-7xl flex-col justify-center px-6 md:px-8">
+   102→          <motion.div
+   103→            initial={{ opacity: 0, y: 24 }}
+   104→            animate={{ opacity: 1, y: 0 }}
+   105→            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+   106→            className="max-w-xl"
+   107→          >
+   108→            <span className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-navy/30 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.2em] text-gold backdrop-blur font-display">
+   109→              <Sparkles className="h-3 w-3" /> The Royal Silk Collection
+   110→            </span>
+   111→            <h1 className="mt-5 font-serif text-4xl font-bold leading-[1.05] text-ivory md:text-6xl">
+   112→              Elegance Woven
+   113→              <span className="block text-gold-gradient">Through Generations</span>
+   114→            </h1>
+   115→            <p className="mt-5 max-w-md text-base text-ivory/80 md:text-lg font-light">
+   116→              Discover the beauty of traditional Indian sarees, crafted with timeless artistry by master weavers of Elampillai, Kanchipuram & Arani.
+   117→            </p>
+   118→            <div className="mt-7 flex flex-wrap gap-3">
+   119→              <MagneticButton
+   120→                onClick={() => goCategory("bridal")}
+   121→                className="rounded-sm bg-gold-gradient px-7 py-3 text-sm font-semibold text-navy shadow-gold uppercase tracking-wider"
+   122→              >
+   123→                Explore Collection
+   124→              </MagneticButton>
+   125→              <MagneticButton
+   126→                onClick={() => goCategory("soft-silk")}
+   127→                className="rounded-sm border border-ivory/40 px-7 py-3 text-sm font-semibold text-ivory backdrop-blur"
+   128→                strength={0.2}
+   129→              >
+   130→                Shop All Sarees
+   131→              </MagneticButton>
+   132→            </div>
+   133→            <div className="mt-9 flex items-center gap-6 text-ivory/70">
+   134→              <div className="flex items-center gap-1.5">
+   135→                <StarRating rating={4.8} size={14} />
+   136→                <span className="text-sm font-medium text-ivory">4.8</span>
+   137→                <span className="text-xs">/ 2,450+ reviews</span>
+   138→              </div>
+   139→              <div className="h-4 w-px bg-ivory/20" />
+   140→              <span className="text-xs">2,400+ happy customers</span>
+   141→            </div>
+   142→          </motion.div>
+   143→        </div>
+   144→      </section>
+   145→
+   146→      {/* ===== TRUST STRIP ===== */}
+   147→      <section className="border-y border-border bg-navy text-ivory">
+   148→        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-4 px-6 py-5 md:grid-cols-4 md:px-8">
+   149→          {[
+   150→            { icon: Hand, label: "100% Handwoven" },
+   151→            { icon: Truck, label: "Pan-India Shipping" },
+   152→            { icon: RefreshCw, label: "7-Day Returns" },
+   153→            { icon: ShieldCheck, label: "Secure Payments" },
+   154→          ].map((t, i) => (
+   155→            <div key={i} className="flex items-center justify-center gap-2.5 text-center md:justify-start">
+   156→              <t.icon className="h-5 w-5 shrink-0 text-gold" strokeWidth={1.5} />
+   157→              <span className="text-xs font-medium uppercase tracking-wider md:text-sm">{t.label}</span>
+   158→            </div>
+   159→          ))}
+   160→        </div>
+   161→      </section>
+   162→
+   163→      {/* ===== CATEGORY RAIL ===== */}
+   164→      <section className="mx-auto max-w-7xl px-6 py-16 md:px-8 md:py-24">
+   165→        <SectionHeading eyebrow="Shop by Collection" title="The Collections" />
+   166→        <div className="mt-10 grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-5 lg:grid-cols-4">
+   167→          {categories.slice(0, 8).map((c, i) => (
+   168→            <motion.button
+   169→              key={c.id}
+   170→              initial={{ opacity: 0, y: 16 }}
+   171→              whileInView={{ opacity: 1, y: 0 }}
+   172→              viewport={{ once: true, margin: "-5%" }}
+   173→              transition={{ duration: 0.4, delay: (i % 4) * 0.06, ease: [0.22, 1, 0.36, 1] }}
+   174→              onClick={() => goCategory(c.slug)}
+   175→              className="group relative aspect-[4/5] overflow-hidden rounded-md bg-muted"
+   176→            >
+   177→              {c.bannerImage && (
+   178→                <Image src={c.bannerImage} alt={c.name} fill sizes="(max-width: 768px) 50vw, 25vw" className="object-cover transition-transform duration-500 group-hover:scale-110" />
+   179→              )}
+   180→              <div className="absolute inset-0 bg-gradient-to-t from-navy-dark/85 via-navy-dark/20 to-transparent" />
+   181→              <div className="absolute inset-x-0 bottom-0 p-4 text-left">
+   182→                <span className="font-serif text-lg font-semibold text-ivory md:text-xl">{c.name}</span>
+   183→                <span className="mt-0.5 block text-[11px] uppercase tracking-wider text-gold/90">{c.productCount} pieces</span>
+   184→              </div>
+   185→              <div className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-ivory/20 text-ivory backdrop-blur transition-all group-hover:bg-gold group-hover:text-navy">
+   186→                <ChevronRight className="h-4 w-4" />
+   187→              </div>
+   188→            </motion.button>
+   189→          ))}
+   190→        </div>
+   191→      </section>
+   192→
+   193→      {/* ===== NEW ARRIVALS ===== */}
+   194→      {loading ? (
+   195→        <ProductRailSkeleton />
+   196→      ) : (
+   197→        newArrivals.length > 0 && (
+   198→          <ProductRail eyebrow="Just In" title="New Arrivals" products={newArrivals} />
+   199→        )
+   200→      )}
+   201→
+   202→      {/* ===== BESTSELLERS ===== */}
+   203→      {loading ? (
+   204→        <ProductRailSkeleton bg="bg-ivory" />
+   205→      ) : (
+   206→        bestsellers.length > 0 && (
+   207→          <ProductRail eyebrow="Customer Favourites" title="Bestsellers" products={bestsellers} bg="bg-ivory" />
+   208→        )
+   209→      )}
+   210→
+   211→      {/* ===== BRIDAL BANNER ===== */}
+   212→      <section className="relative overflow-hidden">
+   213→        <div className="relative h-[420px] w-full md:h-[480px]">
+   214→          <Image src="https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/57427ea841a4.png" alt="Bridal silk saree collection" fill sizes="100vw" className="object-cover" />
+   215→          <div className="absolute inset-0 bg-gradient-to-r from-navy-dark/90 via-navy-dark/50 to-transparent" />
+   216→        </div>
+   217→        <div className="absolute inset-0 flex items-center">
+   218→          <div className="mx-auto w-full max-w-7xl px-6 md:px-8">
+   219→            <motion.div
+   220→              initial={{ opacity: 0, y: 20 }}
+   221→              whileInView={{ opacity: 1, y: 0 }}
+   222→              viewport={{ once: true }}
+   223→              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+   224→              className="max-w-lg"
+   225→            >
+   226→              <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/50 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.15em] text-gold">
+   227→                <Award className="h-3 w-3" /> The Bridal Edit
+   228→              </span>
+   229→              <h2 className="mt-4 font-serif text-3xl font-semibold text-ivory md:text-5xl">For Your Big Day</h2>
+   230→              <p className="mt-4 text-ivory/80">Grand Kanchipuram bridal silks in rich reds, maroons and gold — woven over 7 days with pure zari. The heirloom your daughter will cherish.</p>
+   231→              <button
+   232→                onClick={() => goCategory("bridal")}
+   233→                className="mt-6 rounded-sm bg-gold-gradient px-7 py-3 text-sm font-semibold text-navy shadow-gold"
+   234→              >
+   235→                Shop Bridal Collection
+   236→              </button>
+   237→            </motion.div>
+   238→          </div>
+   239→        </div>
+   240→      </section>
+   241→
+   242→      {/* ===== BRIDAL PRODUCTS ===== */}
+   243→      {loading ? <ProductRailSkeleton /> : bridal.length > 0 && <ProductRail eyebrow="Heirloom Weaves" title="Bridal Collection" products={bridal} />}
+   244→
+   245→      {/* ===== STORY / ABOUT ===== */}
+   246→      <section className="bg-navy-gradient text-ivory">
+   247→        <div className="mx-auto grid max-w-7xl items-center gap-10 px-6 py-16 md:grid-cols-2 md:px-8 md:py-24">
+   248→          <motion.div
+   249→            initial={{ opacity: 0, x: -20 }}
+   250→            whileInView={{ opacity: 1, x: 0 }}
+   251→            viewport={{ once: true }}
+   252→            transition={{ duration: 0.6 }}
+   253→          >
+   254→            <span className="text-[11px] font-medium uppercase tracking-[0.15em] text-gold">Our Story</span>
+   255→            <h2 className="mt-3 font-serif text-3xl font-semibold md:text-4xl">Threads of Heritage from Elampillai</h2>
+   256→            <p className="mt-5 text-ivory/80">
+   257→              For generations, the weavers of Elampillai and Kanchipuram have created sarees that tell stories — of temple festivals, of weddings, of devotion. At Nandhini Tex, we work directly with these master artisans, bringing you handwoven silk that carries the warmth of the loom and the pride of its maker.
+   258→            </p>
+   259→            <p className="mt-3 text-ivory/80">
+   260→              Every saree ships with a matching blouse piece and the assurance of authentic handloom — no power looms, no shortcuts.
+   261→            </p>
+   262→            <div className="mt-6 flex gap-8">
+   263→              <div>
+   264→                <div className="font-serif text-3xl font-bold text-gold"><AnimatedCounter value={70} suffix="+" /></div>
+   265→                <div className="text-xs uppercase tracking-wider text-ivory/60">Unique Weaves</div>
+   266→              </div>
+   267→              <div>
+   268→                <div className="font-serif text-3xl font-bold text-gold"><AnimatedCounter value={2400} suffix="+" /></div>
+   269→                <div className="text-xs uppercase tracking-wider text-ivory/60">Happy Customers</div>
+   270→              </div>
+   271→              <div>
+   272→                <div className="font-serif text-3xl font-bold text-gold"><AnimatedCounter value={4.8} decimals={1} suffix="★" /></div>
+   273→                <div className="text-xs uppercase tracking-wider text-ivory/60">Avg. Rating</div>
+   274→              </div>
+   275→            </div>
+   276→          </motion.div>
+   277→          <motion.div
+   278→            initial={{ opacity: 0, scale: 0.96 }}
+   279→            whileInView={{ opacity: 1, scale: 1 }}
+   280→            viewport={{ once: true }}
+   281→            transition={{ duration: 0.6 }}
+   282→            className="relative aspect-[4/3] overflow-hidden rounded-lg shadow-navy"
+   283→          >
+   284→            <Image src="https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/a7699e04fe3b.png" alt="Handloom silk weaving" fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" />
+   285→          </motion.div>
+   286→        </div>
+   287→      </section>
+   288→
+   289→      {/* ===== OFFERS ===== */}
+   290→      {loading ? (
+   291→        <section className="bg-ivory">
+   292→          <div className="mx-auto max-w-7xl px-6 py-16 md:px-8 md:py-24">
+   293→            <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
+   294→              <div>
+   295→                <Skeleton className="h-3 w-24" />
+   296→                <Skeleton className="mt-3 h-9 w-44" />
+   297→              </div>
+   298→              <Skeleton className="h-11 w-40 rounded-lg" />
+   299→            </div>
+   300→            <ProductGridSkeleton count={4} className="mt-10 md:grid-cols-4" />
+   301→          </div>
+   302→        </section>
+   303→      ) : (
+   304→        offers.length > 0 && (
+   305→          <section className="bg-ivory">
+   306→            <div className="mx-auto max-w-7xl px-6 py-16 md:px-8 md:py-24">
+   307→              <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
+   308→                <SectionHeading eyebrow="Limited Time" title="Offer Sarees" />
+   309→                <CountdownTimer targetDate={new Date(Date.now() + 3 * 24 * 60 * 60 * 1000)} className="rounded-lg border border-gold/30 bg-gold/5 px-4 py-2" />
+   310→              </div>
+   311→              <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
+   312→                {offers.map((p, i) => (
+   313→                  <ProductCard key={p.id} product={p} index={i} />
+   314→                ))}
+   315→              </div>
+   316→            </div>
+   317→          </section>
+   318→        )
+   319→      )}
+   320→
+   321→      {/* ===== MENSWEAR ===== */}
+   322→      {loading ? (
+   323→        <ProductRailSkeleton bg="bg-ivory" />
+   324→      ) : (
+   325→        menswear.length > 0 && (
+   326→          <ProductRail eyebrow="For Him" title="Menswear" products={menswear} bg="bg-ivory" />
+   327→        )
+   328→      )}
+   329→
+   330→      {/* ===== ENTIRE COLLECTION CTA ===== */}
+   331→      <section aria-label="Browse the entire collection">
+   332→        <div className="mx-auto max-w-7xl px-6 py-10 md:px-8 md:py-14">
+   333→          <motion.div
+   334→            initial={{ opacity: 0, y: 20 }}
+   335→            whileInView={{ opacity: 1, y: 0 }}
+   336→            viewport={{ once: true, margin: "-10%" }}
+   337→            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+   338→            className="relative overflow-hidden rounded-xl bg-navy-gradient px-6 py-10 text-center md:px-12 md:py-14"
+   339→          >
+   340→            <div
+   341→              className="pointer-events-none absolute inset-0 opacity-[0.06]"
+   342→              style={{ backgroundImage: "url(/patterns/heritage-motif.svg)", backgroundSize: "180px" }}
+   343→            />
+   344→            <div className="absolute -left-16 -top-16 h-56 w-56 rounded-full bg-gold/10 blur-3xl" />
+   345→            <div className="absolute -bottom-20 -right-12 h-56 w-56 rounded-full bg-gold/10 blur-3xl" />
+   346→            <div className="relative">
+   347→              <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-gold">One Loom, Every Weave</p>
+   348→              <h2 className="mt-2 font-serif text-2xl font-semibold text-ivory md:text-4xl">Browse the Entire Collection</h2>
+   349→              <p className="mx-auto mt-3 max-w-lg text-sm text-ivory/70">
+   350→                Every silk, cotton, bridal and everyday weave from our Elampillai looms — filter by price, fabric and occasion to find yours.
+   351→              </p>
+   352→              <button
+   353→                onClick={goAllProducts}
+   354→                className="mt-6 inline-flex items-center gap-2 rounded-full bg-gold px-7 py-3 text-sm font-bold text-navy shadow-lg transition-all hover:bg-ivory hover:shadow-xl"
+   355→              >
+   356→                Shop All Products <ChevronRight className="h-4 w-4" />
+   357→              </button>
+   358→            </div>
+   359→          </motion.div>
+   360→        </div>
+   361→      </section>
+   362→
+   363→      {/* ===== FESTIVAL COLLECTION ===== */}
+   364→      <section className="bg-navy-gradient text-ivory">
+   365→        <div className="mx-auto max-w-7xl px-6 py-16 md:px-8 md:py-24">
+   366→          <SectionHeading eyebrow="Seasonal Edits" title="Festival Collection" />
+   367→          <p className="mt-4 max-w-2xl text-ivory/70">Celebrate Pongal, Diwali, and wedding seasons with our curated festive sarees — rich colours, pure zari, and heirloom weaves for every auspicious occasion.</p>
+   368→          <div className="mt-10 grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-5 lg:grid-cols-4">
+   369→            {[
+   370→              { name: "Pongal Edit", desc: "Vibrant silks for the harvest festival", img: "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/c5af66d51871.jpg", color: "#D4AF37" },
+   371→              { name: "Diwali Collection", desc: "Luminous zari weaves for the festival of lights", img: "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/dc4814dd8745.jpeg", color: "#B3261E" },
+   372→              { name: "Wedding Season", desc: "Grand bridal and reception sarees", img: "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/34b61bbedff3.jpg", color: "#7A1F2B" },
+   373→              { name: "Navratri Specials", desc: "Festive nine-night celebration weaves", img: "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/b0c231bcd321.jpg", color: "#5B2A6B" },
+   374→            ].map((f, i) => (
+   375→              <motion.button
+   376→                key={f.name}
+   377→                initial={{ opacity: 0, y: 16 }}
+   378→                whileInView={{ opacity: 1, y: 0 }}
+   379→                viewport={{ once: true, margin: "-5%" }}
+   380→                transition={{ duration: 0.4, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
+   381→                onClick={() => goCategory("bridal")}
+   382→                className="group relative aspect-[4/5] overflow-hidden rounded-lg"
+   383→              >
+   384→                <Image src={f.img} alt={f.name} fill sizes="(max-width: 768px) 50vw, 25vw" className="object-cover transition-transform duration-500 group-hover:scale-110" />
+   385→                <div className="absolute inset-0 bg-gradient-to-t from-navy-dark/90 via-navy-dark/30 to-transparent" />
+   386→                <div className="absolute inset-x-0 bottom-0 p-4 text-left">
+   387→                  <span className="font-serif text-lg font-semibold text-ivory md:text-xl">{f.name}</span>
+   388→                  <span className="mt-1 block text-xs text-ivory/70">{f.desc}</span>
+   389→                </div>
+   390→                <div className="absolute right-3 top-3 h-2 w-2 rounded-full ring-2 ring-white/30" style={{ backgroundColor: f.color }} />
+   391→              </motion.button>
+   392→            ))}
+   393→          </div>
+   394→        </div>
+   395→      </section>
+   396→
+   397→      {/* ===== INSTAGRAM GALLERY ===== */}
+   398→      <section className="bg-ivory">
+   399→        <div className="mx-auto max-w-7xl px-6 py-16 md:px-8 md:py-24">
+   400→          <SectionHeading eyebrow="#NandhiniTex" title="Saree Styling Inspiration" center />
+   401→          <p className="mx-auto mt-4 max-w-lg text-center text-sm text-muted-foreground">Follow us on Instagram for saree draping styles, blouse pairing ideas, and behind-the-scenes weaving stories.</p>
+   402→          <div className="mt-10 grid grid-cols-3 gap-2 md:grid-cols-6 md:gap-3">
+   403→            {[
+   404→              "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/f2d2d11dfedb.jpg",
+   405→              "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/e57893896ef2.webp",
+   406→              "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/8c5dcb89a6fe.jpg",
+   407→              "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/fbb5a4b85795.jpg",
+   408→              "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/34b61bbedff3.jpg",
+   409→              "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/da6a6323db3d.jpg",
+   410→            ].map((img, i) => (
+   411→              <motion.a
+   412→                key={i}
+   413→                href="https://instagram.com"
+   414→                target="_blank"
+   415→                rel="noopener noreferrer"
+   416→                initial={{ opacity: 0, scale: 0.9 }}
+   417→                whileInView={{ opacity: 1, scale: 1 }}
+   418→                viewport={{ once: true }}
+   419→                transition={{ duration: 0.3, delay: i * 0.05 }}
+   420→                className="group relative aspect-square overflow-hidden rounded-md bg-muted"
+   421→              >
+   422→                <Image src={img} alt={`Instagram post ${i + 1}`} fill sizes="(max-width: 768px) 33vw, 16vw" className="object-cover transition-transform duration-500 group-hover:scale-110" />
+   423→                <div className="absolute inset-0 flex items-center justify-center bg-navy/0 opacity-0 transition-all duration-300 group-hover:bg-navy/40 group-hover:opacity-100">
+   424→                  <svg className="h-6 w-6 text-ivory" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+   425→                    <rect x="2" y="2" width="20" height="20" rx="5" />
+   426→                    <circle cx="12" cy="12" r="4" />
+   427→                    <line x1="17.5" y1="6.5" x2="17.5" y2="6.5" />
+   428→                  </svg>
+   429→                </div>
+   430→              </motion.a>
+   431→            ))}
+   432→          </div>
+   433→          <div className="mt-8 text-center">
+   434→            <a
+   435→              href="https://instagram.com"
+   436→              target="_blank"
+   437→              rel="noopener noreferrer"
+   438→              className="inline-flex items-center gap-2 rounded-sm border border-navy px-6 py-2.5 text-sm font-semibold text-navy transition-colors hover:bg-navy hover:text-ivory"
+   439→            >
+   440→              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+   441→                <rect x="2" y="2" width="20" height="20" rx="5" />
+   442→                <circle cx="12" cy="12" r="4" />
+   443→                <line x1="17.5" y1="6.5" x2="17.5" y2="6.5" />
+   444→              </svg>
+   445→              Follow @nandhinitex
+   446→            </a>
+   447→          </div>
+   448→        </div>
+   449→      </section>
+   450→
+   451→      {/* ===== TESTIMONIALS ===== */}
+   452→      {testimonials.length > 0 && (
+   453→        <section className="mx-auto max-w-7xl px-6 py-16 md:px-8 md:py-24">
+   454→          <SectionHeading eyebrow="Loved by Thousands" title="What Our Customers Say" />
+   455→          <div className="mt-10 grid gap-5 md:grid-cols-3">
+   456→            {testimonials.map((t, i) => (
+   457→              <motion.div
+   458→                key={t.id}
+   459→                initial={{ opacity: 0, y: 16 }}
+   460→                whileInView={{ opacity: 1, y: 0 }}
+   461→                viewport={{ once: true }}
+   462→                transition={{ duration: 0.4, delay: (i % 3) * 0.08 }}
+   463→                className="relative rounded-lg border border-border bg-card p-6 shadow-sm"
+   464→              >
+   465→                <Star className="absolute right-5 top-5 h-8 w-8 fill-gold/10 text-gold/30" />
+   466→                <StarRating rating={t.rating} size={16} />
+   467→                <p className="mt-4 font-serif text-lg leading-relaxed text-foreground">&ldquo;{t.quote}&rdquo;</p>
+   468→                <div className="mt-5 flex items-center gap-3">
+   469→                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-navy-gradient font-serif text-sm font-semibold text-gold">
+   470→                    {t.name.charAt(0)}
+   471→                  </div>
+   472→                  <div>
+   473→                    <div className="text-sm font-semibold text-foreground">{t.name}</div>
+   474→                    {t.city && <div className="text-xs text-muted-foreground">{t.city}</div>}
+   475→                  </div>
+   476→                </div>
+   477→              </motion.div>
+   478→            ))}
+   479→          </div>
+   480→        </section>
+   481→      )}
+   482→
+   483→      {/* ===== FAQ ===== */}
+   484→      {faqs.length > 0 && (
+   485→        <section id="faq" className="bg-ivory">
+   486→          <div className="mx-auto max-w-3xl px-6 py-16 md:px-8 md:py-24">
+   487→            <SectionHeading eyebrow="Good to Know" title="Frequently Asked Questions" center />
+   488→            <Accordion type="single" collapsible className="mt-10">
+   489→              {faqs.map((f) => (
+   490→                <AccordionItem key={f.id} value={f.id} className="border-b border-border">
+   491→                  <AccordionTrigger className="py-5 text-left font-serif text-base font-medium text-foreground hover:text-navy hover:no-underline">
+   492→                    {f.question}
+   493→                  </AccordionTrigger>
+   494→                  <AccordionContent className="pb-5 text-sm leading-relaxed text-muted-foreground">
+   495→                    {f.answer}
+   496→                  </AccordionContent>
+   497→                </AccordionItem>
+   498→              ))}
+   499→            </Accordion>
+   500→          </div>
+   501→        </section>
+   502→      )}
+   503→
+   504→      {/* ===== NEWSLETTER ===== */}
+   505→      <section className="bg-navy-gradient text-ivory">
+   506→        <div className="mx-auto max-w-2xl px-6 py-16 text-center md:px-8 md:py-20">
+   507→          <span className="text-[11px] font-medium uppercase tracking-[0.15em] text-gold">Stay in the weave</span>
+   508→          <h2 className="mt-3 font-serif text-3xl font-semibold md:text-4xl">Join the Nandhini Tex Family</h2>
+   509→          <p className="mt-3 text-ivory/80">Be the first to know about new arrivals, festive offers, and weaving stories. Get 10% off your first order.</p>
+   510→          {newsletterDone ? (
+   511→            <div className="mt-7 rounded-md border border-gold/40 bg-gold/10 px-6 py-4">
+   512→              <p className="text-sm font-medium text-gold">Thank you for subscribing! Check your inbox for the welcome code.</p>
+   513→            </div>
+   514→          ) : (
+   515→            <form onSubmit={subscribe} className="mx-auto mt-7 flex max-w-md gap-2">
+   516→              <input
+   517→                type="email"
+   518→                required
+   519→                value={newsletterEmail}
+   520→                onChange={(e) => setNewsletterEmail(e.target.value)}
+   521→                placeholder="Your email address"
+   522→                className="h-12 min-w-0 flex-1 rounded-sm border border-ivory/30 bg-navy-dark/40 px-4 text-sm text-ivory placeholder:text-ivory/50 focus:border-gold focus:outline-none"
+   523→              />
+   524→              <button type="submit" className="rounded-sm bg-gold-gradient px-6 text-sm font-semibold text-navy hover:opacity-90">
+   525→                Subscribe
+   526→              </button>
+   527→            </form>
+   528→          )}
+   529→        </div>
+   530→      </section>
+   531→
+   532→      {/* ===== CONTACT STRIP ===== */}
+   533→      <section className="border-t border-border bg-background">
+   534→        <div className="mx-auto grid max-w-7xl gap-6 px-6 py-12 md:grid-cols-3 md:px-8">
+   535→          <ContactCard icon={Phone} title="Call Us" lines={["+91 76048 11838", "Mon–Sat, 10am–7pm IST"]} />
+   536→          <ContactCard icon={MessageCircle} title="WhatsApp" lines={["Quick replies & order updates", "Chat with our team"]} />
+   537→          <ContactCard icon={MapPin} title="Visit Us" lines={["Elampillai, Salem", "Tamil Nadu 637502, India"]} />
+   538→        </div>
+   539→      </section>
+   540→
+   541→      {/* ===== SEO / GEO CONTENT — keyword-rich, location-targeted ===== */}
+   542→      <section className="border-t border-border bg-ivory" aria-label="About our handwoven sarees">
+   543→        <div className="mx-auto max-w-4xl px-6 py-16 md:px-8 md:py-20">
+   544→          <SectionHeading eyebrow="Our Heritage" title="Handwoven Sarees from the Heart of Tamil Nadu" center />
+   545→          <div className="mt-8 space-y-5 text-[15px] leading-relaxed text-muted-foreground">
+   546→            <p>
+   547→              <strong className="text-foreground">Nandhini Tex</strong> brings you authentic{" "}
+   548→              <strong className="text-foreground">handwoven silk and cotton sarees</strong> direct from the
+   549→              weaving looms of <strong className="text-foreground">Elampillai, Kanchipuram, and Arani</strong> —
+   550→              the historic handloom centres of Tamil Nadu, India. For generations, master weavers in these
+   551→              towns have created sarees that tell stories of temple festivals, weddings, and devotion.
+   552→            </p>
+   553→            <p>
+   554→              Our collection spans pure{" "}
+   555→              <strong className="text-foreground">Kanchipuram mulberry silk sarees</strong> with real gold zari
+   556→              borders, lightweight <strong className="text-foreground">soft silk sarees</strong> for everyday
+   557→              elegance, breathable <strong className="text-foreground">handloom cotton sarees</strong> for daily
+   558→              wear, and grand <strong className="text-foreground">bridal silk sarees</strong> woven over seven
+   559→              days for your wedding day. Every saree is 100% handwoven — no power looms, no shortcuts — and
+   560→              ships with a matching running blouse piece included at no extra cost.
+   561→            </p>
+   562→            <p>
+   563→              Whether you&apos;re searching for a{" "}
+   564→              <strong className="text-foreground">Kanchipuram bridal saree</strong>, a{" "}
+   565→              <strong className="text-foreground">soft silk saree for a festival</strong>, a{" "}
+   566→              <strong className="text-foreground">cotton saree for daily wear</strong>, or a{" "}
+   567→              <strong className="text-foreground">silk dhoti and kurta set</strong> for the groom, we have a
+   568→              handwoven piece for every occasion. We also offer{" "}
+   569→              <strong className="text-foreground">couple combo sets</strong> (coordinated saree + dhoti) for
+   570→              engagements and receptions.
+   571→            </p>
+   572→          </div>
+   573→
+   574→          <div className="mt-10 grid gap-6 sm:grid-cols-2">
+   575→            <div className="rounded-lg border border-border bg-card p-6">
+   576→              <h3 className="font-serif text-lg font-semibold text-navy">Shop by Saree Type</h3>
+   577→              <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+   578→                <li>Kanchipuram Silk Sarees — pure mulberry silk with gold zari</li>
+   579→                <li>Soft Silk Sarees — lightweight and elegant</li>
+   580→                <li>Cotton Sarees — breathable handloom cotton</li>
+   581→                <li>Bridal Silk Sarees — grand weaves for weddings</li>
+   582→                <li>Designer Sarees — contemporary motifs and styles</li>
+   583→                <li>Offer Sarees — best-value handloom sarees</li>
+   584→              </ul>
+   585→            </div>
+   586→            <div className="rounded-lg border border-border bg-card p-6">
+   587→              <h3 className="font-serif text-lg font-semibold text-navy">Why Choose Nandhini Tex?</h3>
+   588→              <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+   589→                <li>100% handwoven on traditional looms</li>
+   590→                <li>Silk Mark assurance on pure silk sarees</li>
+   591→                <li>Real gold zari borders and pallus</li>
+   592→                <li>COD available across India</li>
+   593→                <li>Free shipping above ₹999</li>
+   594→                <li>7-day easy returns</li>
+   595→                <li>4.8-star rating from 2,450+ reviews</li>
+   596→              </ul>
+   597→            </div>
+   598→          </div>
+   599→
+   600→          <div className="mt-10 rounded-lg bg-navy-gradient p-6 text-center text-ivory md:p-8">
+   601→            <h3 className="font-serif text-xl font-semibold md:text-2xl">
+   602→              Saree Shop in Elampillai, Salem, Tamil Nadu
+   603→            </h3>
+   604→            <p className="mt-3 text-sm text-ivory/80">
+   605→              Visit our store in Elampillai, Salem, Tamil Nadu 637502, India, or shop online with COD,
+   606→              UPI, card, or net banking. We ship sarees across India — Chennai, Bengaluru, Coimbatore,
+   607→              Madurai, Trichy, Salem, Erode, Vellore, Pondicherry, Tirunelveli, Mumbai, Delhi, Hyderabad,
+   608→              and all serviceable pincodes. Call <a href="tel:+917604811838" className="font-semibold text-gold underline">+91 76048 11838</a>{" "}
+   609→              for saree enquiries, bulk orders, or bridal consultations.
+   610→            </p>
+   611→          </div>
+   612→        </div>
+   613→      </section>
+   614→    </div>
+   615→  );
+   616→}
+   617→
+   618→function SectionHeading({ eyebrow, title, center }: { eyebrow: string; title: string; center?: boolean }) {
+   619→  return (
+   620→    <motion.div
+   621→      initial={{ opacity: 0, y: 12 }}
+   622→      whileInView={{ opacity: 1, y: 0 }}
+   623→      viewport={{ once: true }}
+   624→      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+   625→      className={center ? "text-center" : ""}
+   626→    >
+   627→      <span className="text-[11px] font-semibold uppercase tracking-[0.15em] text-gold-dark">{eyebrow}</span>
+   628→      <h2 className="mt-2 font-serif text-2xl font-semibold text-foreground md:text-4xl">{title}</h2>
+   629→      <div className={`mt-3 h-px w-16 bg-gold-gradient ${center ? "mx-auto" : ""}`} />
+   630→    </motion.div>
+   631→  );
+   632→}
+   633→
+   634→function ProductRail({ eyebrow, title, products, bg }: { eyebrow: string; title: string; products: ProductCardType[]; bg?: string }) {
+   635→  const goCategory = useStore((s) => s.goCategory);
+   636→  return (
+   637→    <section className={bg ? `bg-ivory ${bg}` : ""}>
+   638→      <div className="mx-auto max-w-7xl px-6 py-16 md:px-8 md:py-24">
+   639→        <div className="flex items-end justify-between">
+   640→          <SectionHeading eyebrow={eyebrow} title={title} />
+   641→          <button onClick={() => goCategory(products[0]?.categorySlug || "soft-silk")} className="hidden items-center gap-1 text-sm font-medium text-navy hover:text-gold md:flex">
+   642→            View All <ChevronRight className="h-4 w-4" />
+   643→          </button>
+   644→        </div>
+   645→        <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
+   646→          {products.map((p, i) => (
+   647→            <ProductCard key={p.id} product={p} index={i} />
+   648→          ))}
+   649→        </div>
+   650→      </div>
+   651→    </section>
+   652→  );
+   653→}
+   654→
+   655→function ContactCard({ icon: Icon, title, lines }: { icon: typeof Phone; title: string; lines: string[] }) {
+   656→  return (
+   657→    <div className="flex items-start gap-4">
+   658→      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-navy-gradient">
+   659→        <Icon className="h-5 w-5 text-gold" strokeWidth={1.5} />
+   660→      </div>
+   661→      <div>
+   662→        <h3 className="font-serif text-base font-semibold text-foreground">{title}</h3>
+   663→        {lines.map((l, i) => (
+   664→          <p key={i} className="text-sm text-muted-foreground">{l}</p>
+   665→        ))}
+   666→      </div>
+   667→    </div>
+   668→  );
+   669→}
+   670→

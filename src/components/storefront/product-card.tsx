@@ -125,7 +125,7 @@ export function ProductCard({ product, index = 0 }: { product: ProductCard; inde
           })
         }
         className={cn(
-          "absolute right-2 top-2 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-background/80 backdrop-blur transition-all hover:bg-background",
+          "absolute right-2 top-2 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-background/80 backdrop-blur transition-all hover:bg-background",
           isWishlisted ? "text-navy" : "text-muted-foreground"
         )}
         aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}

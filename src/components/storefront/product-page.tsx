@@ -270,27 +270,27 @@ export function ProductPage() {
             )}
 
             {/* Qty + actions */}
-            <div className="mt-6 flex items-center gap-3">
+            <div className="mt-6 flex flex-wrap items-center gap-3">
               <div className="flex items-center rounded-full border border-border">
-                <button onClick={() => setQty(Math.max(1, qty - 1))} className="flex h-10 w-10 items-center justify-center text-muted-foreground hover:text-navy" aria-label="Decrease quantity">
+                <button onClick={() => setQty(Math.max(1, qty - 1))} className="flex h-10 w-10 items-center justify-center text-muted-foreground transition-colors hover:text-navy" aria-label="Decrease quantity">
                   <Minus className="h-4 w-4" />
                 </button>
                 <span className="w-10 text-center text-sm font-semibold">{qty}</span>
-                <button onClick={() => setQty(qty + 1)} className="flex h-10 w-10 items-center justify-center text-muted-foreground hover:text-navy" aria-label="Increase quantity">
+                <button onClick={() => setQty(qty + 1)} className="flex h-10 w-10 items-center justify-center text-muted-foreground transition-colors hover:text-navy" aria-label="Increase quantity">
                   <Plus className="h-4 w-4" />
                 </button>
               </div>
               <button
                 onClick={() => handleAddToCart(false)}
                 disabled={!inStock}
-                className="flex flex-1 items-center justify-center gap-2 rounded-sm bg-navy px-6 py-3 text-sm font-semibold text-ivory transition-transform hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex flex-1 min-w-[140px] items-center justify-center gap-2 rounded-sm bg-navy px-6 py-3 text-sm font-semibold text-ivory transition-transform hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <ShoppingBag className="h-4 w-4" /> Add to Bag
               </button>
               <button
                 onClick={() => handleAddToCart(true)}
                 disabled={!inStock}
-                className="rounded-sm bg-gold-gradient px-6 py-3 text-sm font-semibold text-navy transition-transform hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex-1 min-w-[120px] rounded-sm bg-gold-gradient px-6 py-3 text-sm font-semibold text-navy transition-transform hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Buy Now
               </button>
@@ -578,6 +578,44 @@ export function ProductPage() {
           </section>
         )}
       </div>
+
+      {/* Sticky mobile add-to-cart bar — keeps the primary actions reachable without scrolling back up */}
+      <div
+        className="fixed inset-x-0 bottom-0 z-40 border-t border-gold/20 bg-background/95 px-4 py-3 backdrop-blur md:hidden"
+        style={{ paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom))" }}
+      >
+        <div className="flex items-center gap-3">
+          <div className="flex min-w-0 flex-col">
+            <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">Price</span>
+            <span className="font-serif text-base font-bold leading-tight text-navy">
+              ₹{(currentVariant?.priceOverride || product.basePrice).toLocaleString("en-IN")}
+            </span>
+          </div>
+          <button
+            onClick={() => handleAddToCart(false)}
+            disabled={!inStock}
+            className="flex h-11 flex-1 items-center justify-center gap-2 rounded-sm bg-navy px-4 text-sm font-semibold text-ivory transition-transform active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <ShoppingBag className="h-4 w-4" /> Add to Bag
+          </button>
+          <button
+            onClick={() => handleAddToCart(true)}
+            disabled={!inStock}
+            className="flex h-11 flex-1 items-center justify-center rounded-sm bg-gold-gradient px-4 text-sm font-semibold text-navy transition-transform active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Buy Now
+          </button>
+          <button
+            onClick={() => toggleWishlist({ productId: product.id, slug: product.slug, title: product.title, image: product.images[0] || "", price: product.basePrice })}
+            className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-sm border transition-colors ${isWishlisted ? "border-navy bg-navy/5 text-navy" : "border-border text-muted-foreground"}`}
+            aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+          >
+            <Heart className={`h-5 w-5 ${isWishlisted ? "fill-navy" : ""}`} />
+          </button>
+        </div>
+      </div>
+      {/* Spacer to prevent sticky bar from covering the related-products section */}
+      <div className="h-24 md:hidden" aria-hidden="true" />
 
       {/* Lightbox */}
       <AnimatePresence>
