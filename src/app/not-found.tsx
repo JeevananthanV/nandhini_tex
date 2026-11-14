@@ -1,21 +1,18 @@
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { Home, Search, PackageSearch } from "lucide-react";
+import { Home, Search } from "lucide-react";
 
 /**
  * 404 page — shown when a route doesn't exist.
  * Since this app only exposes `/`, this mainly catches typos like `/admin` or
  * `/products/some-slug` (which are handled client-side via Zustand, not routes).
+ *
+ * Note: NO Framer Motion here — this page is statically prerendered at build
+ * time, and motion components are client-only.
  */
 export default function NotFound() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-ivory px-6 text-center">
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="w-full max-w-md"
-      >
+      <div className="w-full max-w-md">
         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-navy-gradient ring-1 ring-gold/40">
           <span className="font-display text-2xl font-bold text-gold-gradient">N</span>
         </div>
@@ -49,7 +46,7 @@ export default function NotFound() {
             (Mon–Sat, 10am–7pm IST)
           </p>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }

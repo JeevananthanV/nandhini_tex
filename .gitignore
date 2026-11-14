@@ -32,6 +32,8 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
+!.env.production.example
 
 # vercel
 .vercel
@@ -52,3 +54,9 @@ prompt
 server.log
 # Skills directory
 /skills/
+
+# SQLite database (dev only — never commit binary db files)
+db/*.db
+db/*.db-journal
+db/*.db-wal
+db/*.db-shm
