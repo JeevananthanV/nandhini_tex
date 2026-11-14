@@ -44,10 +44,14 @@ export async function GET(req: NextRequest) {
         status.services.database.status = "slow";
       }
     } catch (err) {
+      // Don't leak raw DB error messages — they can contain file paths or
+      // connection-string fragments. Log server-side only.
+      console.error("[health] database check failed:", err);
       status.status = "unhealthy";
       status.services.database = {
         status: "disconnected",
-        error: err instanceof Error ? err.message : "Unknown database error",
+        // Generic message only — no internal details
+        error: "Database connection failed",
       };
     }
   } else {

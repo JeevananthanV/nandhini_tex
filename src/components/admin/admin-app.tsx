@@ -40,6 +40,7 @@ import {
   CreditCard,
   Truck,
   Activity,
+  ArrowLeft,
 } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -558,9 +559,19 @@ function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
 // ----------------------------------------------------------------------------
 // Shell: Topbar
 // ----------------------------------------------------------------------------
-function Topbar({ onMenu }: { onMenu: () => void }) {
+function Topbar({ onMenu, onLogout }: { onMenu: () => void; onLogout?: () => void }) {
   const adminView = useStore((s) => s.adminView);
   const { title, subtitle } = VIEW_TITLES[adminView];
+
+  const handleExit = async () => {
+    try {
+      await fetch("/api/admin/logout", { method: "POST", credentials: "include" });
+    } catch {
+      // Even if the logout call fails, clear the local state
+    }
+    onLogout?.();
+    useStore.getState().setMode("store");
+  };
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-border bg-ivory/95 px-4 backdrop-blur md:px-6">
@@ -604,7 +615,7 @@ function Topbar({ onMenu }: { onMenu: () => void }) {
             <DropdownMenuItem onClick={() => useStore.getState().setAdminView("settings")}>
               <Settings className="h-4 w-4" /> Settings
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => useStore.getState().setMode("store")}>
+            <DropdownMenuItem onClick={handleExit}>
               <LogOut className="h-4 w-4" /> Exit to Store
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -622,7 +633,48 @@ export function AdminApp() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const isClient = useIsClient();
 
+  // Auth state — null = unknown (checking), false = not logged in, true = logged in
+  const [authed, setAuthed] = useState<boolean | null>(null);
+
+  // Check session by calling any admin endpoint (we use /api/admin/login's
+  // OPTIONS or a lightweight GET — but since login is POST-only, we ping
+  // /api/dashboard which requires auth → 401 means not logged in)
+  useEffect(() => {
+    if (!isClient || mode !== "admin") return;
+    let alive = true;
+    fetch("/api/dashboard", { credentials: "include" })
+      .then((r) => {
+        if (!alive) return;
+        setAuthed(r.ok);
+      })
+      .catch(() => {
+        if (alive) setAuthed(false);
+      });
+    return () => {
+      alive = false;
+    };
+  }, [isClient, mode]);
+
   if (!isClient || mode !== "admin") return null;
+
+  // Show login screen if not authenticated (or while checking)
+  if (authed === null) {
+    return (
+      <div className="fixed inset-0 z-[100] flex items-center justify-center bg-ivory">
+        <div className="flex flex-col items-center gap-3">
+          <div className="flex h-12 w-12 items-center justify-center rounded-sm bg-navy-gradient ring-1 ring-gold/50">
+            <span className="font-display text-lg font-bold text-gold-gradient">N</span>
+          </div>
+          <div className="h-6 w-6 animate-spin rounded-full border-2 border-gold border-t-transparent" />
+          <p className="text-xs text-muted-foreground">Verifying admin session…</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!authed) {
+    return <AdminLogin onLogin={() => setAuthed(true)} />;
+  }
 
   return (
     <motion.div
@@ -648,12 +700,116 @@ export function AdminApp() {
 
       {/* Main column */}
       <div className="flex min-w-0 flex-1 flex-col">
-        <Topbar onMenu={() => setMobileOpen(true)} />
+        <Topbar onMenu={() => setMobileOpen(true)} onLogout={() => setAuthed(false)} />
         <main className="scrollbar-elegant flex-1 overflow-y-auto p-4 md:p-6">
           <AdminViewRouter />
         </main>
       </div>
     </motion.div>
+  );
+}
+
+// ----------------------------------------------------------------------------
+// Admin login screen
+// ----------------------------------------------------------------------------
+function AdminLogin({ onLogin }: { onLogin: () => void }) {
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!password) return;
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ password }),
+      });
+      const data = await res.json();
+      if (res.ok && data.ok) {
+        onLogin();
+      } else {
+        setError(data.error || "Login failed");
+      }
+    } catch {
+      setError("Network error — please try again");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const setMode = useStore((s) => s.setMode);
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-ivory p-4">
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+        className="w-full max-w-sm rounded-xl border border-border bg-card p-8 shadow-navy"
+      >
+        <div className="mb-6 flex flex-col items-center gap-3">
+          <div className="flex h-14 w-14 items-center justify-center rounded-sm bg-navy-gradient ring-1 ring-gold/50">
+            <span className="font-display text-2xl font-bold text-gold-gradient">N</span>
+          </div>
+          <div className="text-center">
+            <h1 className="font-serif text-xl font-semibold text-navy">Admin Access</h1>
+            <p className="mt-1 text-xs text-muted-foreground">Nandhini Tex — Royal Heritage</p>
+          </div>
+        </div>
+
+        <form onSubmit={submit} className="space-y-4">
+          <div>
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-navy">
+              Password
+            </label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoFocus
+              required
+              minLength={1}
+              maxLength={200}
+              placeholder="Enter admin password"
+              className="h-11 w-full rounded-md border border-border bg-background px-3 text-sm outline-none focus:border-gold"
+              disabled={loading}
+            />
+          </div>
+
+          {error && (
+            <div className="rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-xs font-medium text-destructive">
+              {error}
+            </div>
+          )}
+
+          <Button
+            type="submit"
+            disabled={loading || !password}
+            className="h-11 w-full bg-navy text-ivory hover:bg-navy-light"
+          >
+            {loading ? "Signing in…" : "Sign In"}
+          </Button>
+        </form>
+
+        <div className="mt-6 border-t border-border pt-4">
+          <button
+            onClick={() => setMode("store")}
+            className="flex w-full items-center justify-center gap-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-navy"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" /> Back to Store
+          </button>
+        </div>
+
+        <p className="mt-4 text-center text-[10px] text-muted-foreground/70">
+          Protected by HMAC-signed session cookie · 8h expiry
+        </p>
+      </motion.div>
+    </div>
   );
 }
 

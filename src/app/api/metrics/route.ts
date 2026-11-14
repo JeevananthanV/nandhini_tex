@@ -1,10 +1,21 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { getAdminSession } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
-// GET /api/metrics — Business and operational metrics
+// GET /api/metrics — Business and operational metrics (admin-only)
+// SECURITY: exposes revenue, order counts, customer counts — must NOT be public.
 export async function GET() {
+  // Require admin session — this endpoint exposes business KPIs that are
+  // useful intelligence for competitors and attackers.
+  const session = await getAdminSession();
+  if (!session) {
+    return NextResponse.json(
+      { error: "Unauthorized — admin session required", code: "UNAUTHORIZED" },
+      { status: 401 }
+    );
+  }
   const startTime = Date.now();
 
   const [

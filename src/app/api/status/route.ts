@@ -2,7 +2,14 @@ import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
-// GET /api/status — API status, version, environment, and feature flags
+/**
+ * GET /api/status — public API status, version, and feature flags.
+ *
+ * SECURITY: does NOT expose server fingerprint (OS, arch, Node version) —
+ * that information is useful for crafting version-specific exploits.
+ * If you need server info for debugging, use /api/health (which is also
+ * suitable for monitoring tools).
+ */
 export async function GET() {
   const status = {
     service: "nandhini-tex-api",
@@ -13,12 +20,6 @@ export async function GET() {
     uptime: {
       seconds: Math.floor(process.uptime()),
       human: formatUptime(process.uptime()),
-    },
-    server: {
-      runtime: "node",
-      platform: process.platform,
-      arch: process.arch,
-      nodeVersion: process.version,
     },
     features: {
       storefront: true,
@@ -45,21 +46,12 @@ export async function GET() {
     limits: {
       maxProductsPerRequest: 200,
       maxCartItems: 50,
-      rateLimit: "60 requests per minute",
-      otpThrottle: "3 attempts per 10 minutes",
     },
     currency: "INR",
     locale: "en-IN",
     timezone: "Asia/Kolkata",
-    contact: {
-      phone: "+91 76048 11838",
-      email: "hello@nandhinitex.com",
-      hours: "Mon–Sat, 10am–7pm IST",
-    },
     endpoints: {
       health: "/api/health",
-      status: "/api/status",
-      metrics: "/api/metrics",
       docs: "/api/docs",
     },
   };

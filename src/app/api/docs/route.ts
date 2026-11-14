@@ -1,9 +1,19 @@
 import { NextResponse } from "next/server";
+import { getAdminSession } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
 // GET /api/docs — API documentation (OpenAPI-style JSON listing all routes)
+// SECURITY: full API surface (including admin endpoints) is gated behind admin auth
+// to prevent attackers from enumerating the attack surface.
 export async function GET() {
+  const session = await getAdminSession();
+  if (!session) {
+    return NextResponse.json(
+      { error: "Unauthorized — admin session required", code: "UNAUTHORIZED" },
+      { status: 401 }
+    );
+  }
   const docs = {
     openapi: "3.0.0",
     info: {
