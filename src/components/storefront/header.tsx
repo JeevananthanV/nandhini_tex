@@ -106,7 +106,7 @@ export function Header({ categories }: { categories: { id: string; name: string;
           {/* Right: actions */}
           <div className="flex items-center gap-1 md:gap-2">
             <button
-              onClick={goTrack}
+              onClick={() => goTrack()}
               className={cn("hidden h-9 items-center gap-1.5 rounded-full px-3 text-xs font-semibold transition-colors hover:bg-muted sm:flex", onHome && !scrolled ? "text-ivory/90 hover:bg-ivory/10" : "text-navy hover:bg-muted")}
               title="Track your order — delivered via Delhivery / DTDC / India Post"
             >

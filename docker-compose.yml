@@ -1,0 +1,41 @@
+# ============================================================================
+# docker-compose.yml — Nandhini Tex production deployment
+# ============================================================================
+# Usage:
+#   docker compose up -d         # start
+#   docker compose logs -f       # tail logs
+#   docker compose down           # stop
+#
+# Before first start:
+#   1. Copy .env.production to .env and fill in real secrets
+#   2. docker compose run --rm web bun run db:push
+#   3. docker compose run --rm web bun run db:seed-full
+# ============================================================================
+
+services:
+  web:
+    build: .
+    container_name: nandhini-tex
+    ports:
+      - "3000:3000"
+    volumes:
+      # Persist SQLite DB across container restarts
+      - ./db:/app/db
+      # Mount .env so secrets aren't baked into the image
+      - ./.env:/app/.env:ro
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health?check=liveness"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"

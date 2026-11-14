@@ -62,7 +62,7 @@ export function MagneticButton({
       ref={ref}
       onMouseMove={handleMove}
       onMouseLeave={reset}
-      style={{ x: sx, y: sy, type: "button" as const }}
+      style={{ x: sx, y: sy }}
       whileTap={reduce ? undefined : { scale: 0.97 }}
       onClick={onClick}
       disabled={disabled}
@@ -260,7 +260,6 @@ export function ParallaxImage({
   className,
   imgClassName,
   strength = 40,
-  priority,
 }: {
   src: string;
   alt: string;
@@ -280,7 +279,6 @@ export function ParallaxImage({
         src={src}
         alt={alt}
         style={{ y }}
-        priority={priority as any}
         className={cn("h-full w-full object-cover", imgClassName)}
       />
     </div>

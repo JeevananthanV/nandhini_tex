@@ -43,7 +43,11 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  let orders: Awaited<ReturnType<typeof db.order.findMany>> = [];
+  // Use `any[]` so we can assign both full-row results (order-number lookup)
+  // and partial-select results (phone lookup) without TS complaining about
+  // missing columns. The response builder below uses `(o as any)` for fields
+  // that may not be present in the partial shape.
+  let orders: any[] = [];
 
   try {
     if (isPhone) {

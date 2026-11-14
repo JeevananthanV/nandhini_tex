@@ -1,0 +1,43 @@
+# Build artifacts
+node_modules
+.next
+out
+
+# Dev artifacts
+dev.log
+server.log
+screenshots
+tool-results
+tests
+
+# Environment files (secrets — never bake into image)
+.env
+.env.local
+.env.production
+
+# Version control
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose.yml
+
+# Misc
+upload
+download
+examples
+skills
+mini-services
+seed-images.json
+start-dev.sh
+start-production.sh

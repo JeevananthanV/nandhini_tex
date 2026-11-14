@@ -67,7 +67,7 @@ export function Footer({ categories }: { categories: { id: string; name: string;
               {["FAQs", "Shipping Policy", "Returns & Exchange", "Saree Care Guide", "Size Guide", "Track Order"].map((l) => (
                 <li key={l}>
                   <button
-                    onClick={l === "Track Order" ? goTrack : l === "FAQs" ? goFaq : undefined}
+                    onClick={l === "Track Order" ? () => goTrack() : l === "FAQs" ? () => goFaq() : undefined}
                     className={l === "FAQs" || l === "Track Order" ? "text-ivory/70 transition-colors hover:text-gold" : "cursor-default text-ivory/70"}
                   >
                     {l}
