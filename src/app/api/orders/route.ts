@@ -181,5 +181,51 @@ export async function POST(req: NextRequest) {
     });
   }
 
+  // Send confirmation email + SMS (async, non-blocking — don't fail the order
+  // if notifications fail). These gracefully no-op if not configured.
+  try {
+    const { sendEmail, renderOrderConfirmationEmail } = await import("@/lib/integrations/resend");
+    const { sendOrderConfirmationSMS } = await import("@/lib/integrations/msg91");
+    const { trackPlausibleEvent } = await import("@/lib/integrations/plausible");
+
+    if (data.customerEmail) {
+      sendEmail({
+        to: data.customerEmail,
+        subject: `Order Confirmed — ${orderNumber}`,
+        html: renderOrderConfirmationEmail({
+          orderId: orderNumber,
+          customerName: data.customerName,
+          customerEmail: data.customerEmail,
+          items: totals.items,
+          subtotal: totals.subtotal,
+          discount: totals.discount,
+          shippingFee: totals.shippingFee,
+          codSurcharge: totals.codSurcharge,
+          grandTotal: totals.grandTotal,
+          paymentMethod,
+          shippingAddress: data.shippingAddress,
+          estimatedDelivery: "3–6 business days",
+        }),
+      }).catch(() => {/* non-blocking */});
+    }
+
+    sendOrderConfirmationSMS(
+      data.customerName,
+      data.customerPhone,
+      orderNumber,
+      totals.grandTotal,
+      `${process.env.NEXT_PUBLIC_SITE_URL || ""}/?view=track&q=${orderNumber}`,
+    ).catch(() => {/* non-blocking */});
+
+    // Track conversion in analytics
+    trackPlausibleEvent("Order Placed", {
+      revenue: totals.grandTotal,
+      paymentMethod,
+      itemCount: data.items.length,
+    }).catch(() => {/* non-blocking */});
+  } catch {
+    // Integration imports failed — non-critical, order still succeeds
+  }
+
   return NextResponse.json({ order, success: true });
 }

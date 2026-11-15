@@ -147,6 +147,15 @@ export default function RootLayout({
         <link rel="preconnect" href="https://z-cdn.chatglm.cn" />
         <link rel="dns-prefetch" href="https://z-cdn.chatglm.cn" />
         <meta name="format-detection" content="telephone=yes, address=yes, email=yes" />
+        {/* Plausible Analytics — privacy-friendly, cookie-free.
+            Automatically loaded only when NEXT_PUBLIC_PLAUSIBLE_DOMAIN is set. */}
+        {process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN && (
+          <script
+            defer
+            data-domain={process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN}
+            src={process.env.NEXT_PUBLIC_PLAUSIBLE_SRC || "https://plausible.io/js/script.js"}
+          />
+        )}
       </head>
       <body
         className={`${inter.variable} ${playfair.variable} ${cormorant.variable} ${cinzel.variable} font-sans antialiased bg-background text-foreground`}

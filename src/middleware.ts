@@ -17,12 +17,18 @@ import { verifyToken, SESSION_COOKIE_NAME } from "@/lib/auth";
 const PROTECTED_PREFIXES = [
   "/api/admin",
   "/api/dashboard",
+  "/api/integrations",
+  "/api/payments",
 ];
 
 // Public admin paths (login + logout themselves must be reachable without a session).
+// Payment creation (create-order) must be reachable by customers, but verify is
+// protected because it modifies order status.
 const PUBLIC_ADMIN_PATHS = new Set([
   "/api/admin/login",
   "/api/admin/logout",
+  "/api/payments/razorpay/create-order",
+  "/api/payments/razorpay/verify",
 ]);
 
 export async function middleware(req: NextRequest) {
@@ -78,6 +84,11 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  // Run on all admin + dashboard API routes
-  matcher: ["/api/admin/:path*", "/api/dashboard/:path*"],
+  // Run on all admin + dashboard + integrations + payments API routes
+  matcher: [
+    "/api/admin/:path*",
+    "/api/dashboard/:path*",
+    "/api/integrations/:path*",
+    "/api/payments/:path*",
+  ],
 };

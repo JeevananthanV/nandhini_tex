@@ -1,6 +1,10 @@
 // WhatsApp commerce utilities — bridges Instagram-to-WhatsApp buying model
 
-const WHATSAPP_NUMBER = "917604811838"; // +91 76048 11838
+/**
+ * WhatsApp business number (international format, no +, no spaces).
+ * Read from env var with a fallback to the default Nandhini Tex line.
+ */
+const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "917604811838";
 
 export type WhatsAppOrderItem = {
   title: string;
