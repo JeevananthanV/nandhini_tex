@@ -1,38 +1,25 @@
-# Build artifacts
+# ============================================================================
+# .dockerignore — files excluded from the Docker build context
+# ============================================================================
+# Reduces the build context size + prevents secrets from being baked into
+# the image. Anything not listed here WILL be copied by `COPY . .` in the
+# builder stage.
+# ============================================================================
+
+# ---- Build artifacts ----
 node_modules
 .next
 out
+dist
+build
 
-# Dev artifacts
+# ---- Dev artifacts ----
 dev.log
 server.log
+*.log
 screenshots
 tool-results
 tests
-
-# Environment files (secrets — never bake into image)
-.env
-.env.local
-.env.production
-
-# Version control
-.git
-.gitignore
-
-# IDE
-.vscode
-.idea
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Docker
-Dockerfile
-.dockerignore
-docker-compose.yml
-
-# Misc
 upload
 download
 examples
@@ -41,3 +28,49 @@ mini-services
 seed-images.json
 start-dev.sh
 start-production.sh
+
+# ---- Environment files (secrets — NEVER bake into image) ----
+# Secrets must be provided at runtime via -e flags or env_file.
+.env
+.env.local
+.env.production
+.env.development
+
+# ---- Version control ----
+.git
+.gitignore
+.gitattributes
+
+# ---- IDE / editor ----
+.vscode
+.idea
+*.swp
+*.swo
+
+# ---- OS ----
+.DS_Store
+Thumbs.db
+
+# ---- Docker ----
+Dockerfile
+.dockerignore
+docker-compose.yml
+.docker/
+
+# ---- Docs (not needed at runtime) ----
+README.md
+DEPLOYMENT.md
+CHANGELOG.md
+CONTRIBUTING.md
+API.md
+LICENSE
+
+# ---- TypeScript cache ----
+*.tsbuildinfo
+next-env.d.ts
+
+# ---- Misc ----
+.claude
+.z-ai-config
+local-*
+prompt

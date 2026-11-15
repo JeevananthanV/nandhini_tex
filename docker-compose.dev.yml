@@ -1,0 +1,60 @@
+# ============================================================================
+# docker-compose.dev.yml — Development environment with hot reload
+# ============================================================================
+# Usage:
+#   docker compose -f docker-compose.dev.yml up
+#
+# This runs the dev server (not the production build) with:
+# - Hot module replacement (HMR) via bun run dev
+# - Source code mounted as a volume (changes reflect instantly)
+# - node_modules cached in a named volume (fast rebuilds)
+# - SQLite db persisted in a named volume
+#
+# For production, use docker-compose.yml instead.
+# ============================================================================
+
+services:
+  web:
+    image: oven/bun:1.1
+    container_name: nandhini-tex-dev
+    working_dir: /app
+    command: sh -c "bun install --frozen-lockfile && bun run db:generate && bun run db:push && bun run dev"
+    ports:
+      - "3000:3000"
+    volumes:
+      # Mount the source code for hot reload
+      - .:/app
+      # Persist node_modules separately (don't overwrite with host's)
+      - node_modules:/app/node_modules
+      # Persist the SQLite db across restarts
+      - db_data:/app/db
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+      # Dev defaults — override in .env
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin123}
+      - DATABASE_URL=file:/app/db/custom.db
+      - NEXT_PUBLIC_SITE_URL=http://localhost:3000
+      - NEXT_PUBLIC_WHATSAPP_NUMBER=917604811838
+      - CHOKIDAR_USEPOLLING=true  # needed for HMR on Docker Desktop / WSL2
+    # Watch for file changes (Compose Watch — Docker Desktop 4.15+)
+    # Syncs source changes without restarting the container
+    watch:
+      - action: sync
+        path: ./src
+        target: /app/src
+      - action: sync
+        path: ./prisma
+        target: /app/prisma
+      - action: sync+restart
+        path: ./package.json
+        target: /app/package.json
+      - action: sync+restart
+        path: ./next.config.ts
+        target: /app/next.config.ts
+    restart: unless-stopped
+
+volumes:
+  node_modules:
+  db_data:

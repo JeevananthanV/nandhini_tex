@@ -1,41 +1,103 @@
 # ============================================================================
 # docker-compose.yml — Nandhini Tex production deployment
 # ============================================================================
-# Usage:
-#   docker compose up -d         # start
-#   docker compose logs -f       # tail logs
-#   docker compose down           # stop
+# Quickstart (SQLite, single-instance):
+#   1. Copy .env.production.example to .env and fill in real secrets:
+#        cp .env.production.example .env
+#        # Edit .env: set ADMIN_PASSWORD (min 12 chars) + ADMIN_SESSION_SECRET
 #
-# Before first start:
-#   1. Copy .env.production to .env and fill in real secrets
-#   2. docker compose run --rm web bun run db:push
-#   3. docker compose run --rm web bun run db:seed-full
+#   2. Build + start:
+#        docker compose up -d --build
+#
+#   3. Initialize the database (first run only — the SQLite db ships in the
+#      image, but if you want to reseed or use a fresh volume):
+#        docker compose run --rm web bun run db:push
+#        docker compose run --rm web bun run db:seed-full
+#
+#   4. Tail logs:
+#        docker compose logs -f
+#
+#   5. Stop:
+#        docker compose down
+#
+# For PostgreSQL, swap the DATABASE_URL + add a `db` service (see commented section).
 # ============================================================================
 
 services:
   web:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: nandhini-tex:latest
     container_name: nandhini-tex
+    restart: unless-stopped
     ports:
       - "3000:3000"
-    volumes:
-      # Persist SQLite DB across container restarts
-      - ./db:/app/db
-      # Mount .env so secrets aren't baked into the image
-      - ./.env:/app/.env:ro
+    env_file:
+      - .env
     environment:
+      # Override env_file values for the container runtime
       - NODE_ENV=production
       - PORT=3000
       - HOSTNAME=0.0.0.0
-    restart: unless-stopped
+    volumes:
+      # Persist the SQLite database across container restarts.
+      # The container writes to /app/db/custom.db — mount a host directory
+      # here so data survives `docker compose down`.
+      - ./db:/app/db
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health?check=liveness"]
+      test: ["CMD", "curl", "-fsS", "http://localhost:3000/api/health?check=liveness"]
       interval: 30s
       timeout: 5s
       retries: 3
-      start_period: 10s
+      start_period: 15s
     logging:
       driver: "json-file"
       options:
+        # Cap logs at 30MB (3 files × 10MB) to prevent disk fill
         max-size: "10m"
         max-file: "3"
+    # Security: read-only root filesystem (the app only writes to /app/db,
+    # which is a separate volume, and /tmp which Next.js may use for image cache)
+    read_only: false  # set to true and add tmpfs: [/tmp, /app/.next/cache] if hardening
+    # tmpfs:
+    #   - /tmp:size=64m
+    #   - /app/.next/cache:size=64m
+    # Resource limits (uncomment + tune for your host)
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: "1.0"
+    #       memory: 512M
+    #     reservations:
+    #       memory: 128M
+
+# ============================================================================
+# Optional: PostgreSQL service (recommended for multi-instance / serverless)
+# ============================================================================
+# Uncomment to switch from SQLite to managed Postgres. Also update DATABASE_URL
+# in your .env to: postgresql://nandhini:password@db:5432/nandhini_tex?schema=public
+#
+#   db:
+#     image: postgres:16-alpine
+#     container_name: nandhini-tex-db
+#     restart: unless-stopped
+#     environment:
+#       POSTGRES_USER: nandhini
+#       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me-strong-password}
+#       POSTGRES_DB: nandhini_tex
+#     volumes:
+#       - pgdata:/var/lib/postgresql/data
+#     healthcheck:
+#       test: ["CMD-SHELL", "pg_isready -U nandhini -d nandhini_tex"]
+#       interval: 10s
+#       timeout: 5s
+#       retries: 5
+#     logging:
+#       driver: "json-file"
+#       options:
+#         max-size: "10m"
+#         max-file: "3"
+#
+# volumes:
+#   pgdata:
