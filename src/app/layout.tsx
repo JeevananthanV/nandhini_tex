@@ -144,8 +144,6 @@ export default function RootLayout({
   return (
     <html lang="en-IN" dir="ltr" suppressHydrationWarning>
       <head>
-        <link rel="preconnect" href="https://z-cdn.chatglm.cn" />
-        <link rel="dns-prefetch" href="https://z-cdn.chatglm.cn" />
         <meta name="format-detection" content="telephone=yes, address=yes, email=yes" />
         {/* Plausible Analytics — privacy-friendly, cookie-free.
             Automatically loaded only when NEXT_PUBLIC_PLAUSIBLE_DOMAIN is set. */}

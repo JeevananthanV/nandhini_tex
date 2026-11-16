@@ -66,7 +66,7 @@ export const INTEGRATIONS: IntegrationStatus[] = [
     category: "auth",
     isConfigured: !!process.env.ADMIN_PASSWORD,
     requiredEnvVars: ["ADMIN_PASSWORD", "ADMIN_SESSION_SECRET"],
-    docsUrl: "https://github.com/z-ai/nandhini-tex/blob/main/DOCKER.md#security",
+    docsUrl: "/docs/architecture.md",
     description: "HMAC-signed cookie session for the admin panel",
     isRequired: true,
   },
@@ -148,16 +148,7 @@ export const INTEGRATIONS: IntegrationStatus[] = [
     description: "Privacy-friendly CAPTCHA. Free, unlimited. Replaces Google reCAPTCHA. No cookie banner.",
   },
 
-  // ---- AI (installed but not wired up) ----
-  {
-    id: "zai-sdk",
-    name: "Z.AI Web Dev SDK (AI Chatbot)",
-    category: "ai",
-    isConfigured: !!process.env.ZAI_API_KEY,
-    requiredEnvVars: ["ZAI_API_KEY"],
-    docsUrl: "https://chatglm.cn",
-    description: "LLM chatbot, image generation, vision understanding. Backend-only — never client-side.",
-  },
+
 ];
 
 /** Get a summary of configured vs total integrations by category. */
