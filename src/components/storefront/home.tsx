@@ -17,7 +17,7 @@ import { StarRating } from "./primitives";
 import { AnimatedCounter, Marquee, TextReveal, MagneticButton, SectionReveal, StaggerGrid, StaggerItem } from "./premium";
 import { CountdownTimer } from "./premium-features";
 import { ProductRailSkeleton, ProductGridSkeleton } from "./skeletons";
-import { AuroraBackground, CursorSpotlight, GradientText, ScrollIndicator, FloatingElements } from "./effects";
+import { AuroraBackground, CursorSpotlight, GradientText, ScrollIndicator, FloatingElements, NumberFlip } from "./effects";
 import type { ProductCard as ProductCardType } from "@/lib/format";
 
 type Category = { id: string; name: string; slug: string; description: string | null; bannerImage: string | null; productCount: number };
@@ -141,15 +141,17 @@ export function HomePage({ categories }: { categories: Category[] }) {
               transition={{ duration: 0.6, delay: 0.55 }}
               className="mt-7 flex flex-wrap gap-3"
             >
-              <MagneticButton
-                onClick={() => goCategory("bridal")}
-                className="rounded-sm bg-gold-gradient px-7 py-3 text-sm font-semibold text-navy shadow-gold uppercase tracking-wider"
-              >
-                Explore Collection
-              </MagneticButton>
+              <div className="relative overflow-hidden rounded-sm">
+                <MagneticButton
+                  onClick={() => goCategory("bridal")}
+                  className="relative rounded-sm bg-gold-gradient px-7 py-3 text-sm font-semibold text-navy shadow-gold uppercase tracking-wider shimmer-sweep"
+                >
+                  Explore Collection
+                </MagneticButton>
+              </div>
               <MagneticButton
                 onClick={() => goCategory("soft-silk")}
-                className="rounded-sm border border-ivory/40 px-7 py-3 text-sm font-semibold text-ivory backdrop-blur"
+                className="rounded-sm border border-ivory/40 px-7 py-3 text-sm font-semibold text-ivory backdrop-blur transition-colors hover:bg-ivory/10"
                 strength={0.2}
               >
                 Shop All Sarees
@@ -309,15 +311,15 @@ export function HomePage({ categories }: { categories: Category[] }) {
             </p>
             <div className="mt-6 flex gap-8">
               <div>
-                <div className="font-serif text-3xl font-bold text-gold"><AnimatedCounter value={70} suffix="+" /></div>
+                <div className="font-serif text-3xl font-bold text-gold"><NumberFlip value={70} suffix="+" /></div>
                 <div className="text-xs uppercase tracking-wider text-ivory/60">Unique Weaves</div>
               </div>
               <div>
-                <div className="font-serif text-3xl font-bold text-gold"><AnimatedCounter value={2400} suffix="+" /></div>
+                <div className="font-serif text-3xl font-bold text-gold"><NumberFlip value={2400} suffix="+" /></div>
                 <div className="text-xs uppercase tracking-wider text-ivory/60">Happy Customers</div>
               </div>
               <div>
-                <div className="font-serif text-3xl font-bold text-gold"><AnimatedCounter value={4.8} decimals={1} suffix="★" /></div>
+                <div className="font-serif text-3xl font-bold text-gold"><NumberFlip value={4.8} decimals={1} suffix="★" /></div>
                 <div className="text-xs uppercase tracking-wider text-ivory/60">Avg. Rating</div>
               </div>
             </div>
@@ -504,17 +506,19 @@ export function HomePage({ categories }: { categories: Category[] }) {
             {testimonials.map((t, i) => (
               <motion.div
                 key={t.id}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: (i % 3) * 0.08 }}
-                className="relative rounded-lg border border-border bg-card p-6 shadow-sm"
+                initial={{ opacity: 0, y: 24, rotateY: 15 }}
+                whileInView={{ opacity: 1, y: 0, rotateY: 0 }}
+                viewport={{ once: true, margin: "-10%" }}
+                transition={{ duration: 0.6, delay: (i % 3) * 0.12, ease: [0.22, 1, 0.36, 1] }}
+                whileHover={{ y: -6, scale: 1.02 }}
+                style={{ transformStyle: "preserve-3d", transformPerspective: 1000 }}
+                className="group relative rounded-lg border border-border bg-card p-6 shadow-sm transition-shadow duration-300 hover:shadow-[0_20px_50px_-15px_rgba(212,175,55,0.25)] hover:border-gold/30"
               >
-                <Star className="absolute right-5 top-5 h-8 w-8 fill-gold/10 text-gold/30" />
+                <Star className="absolute right-5 top-5 h-8 w-8 fill-gold/10 text-gold/30 transition-transform duration-500 group-hover:rotate-12 group-hover:scale-110" />
                 <StarRating rating={t.rating} size={16} />
                 <p className="mt-4 font-serif text-lg leading-relaxed text-foreground">&ldquo;{t.quote}&rdquo;</p>
                 <div className="mt-5 flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-navy-gradient font-serif text-sm font-semibold text-gold">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-navy-gradient font-serif text-sm font-semibold text-gold transition-transform duration-300 group-hover:scale-110">
                     {t.name.charAt(0)}
                   </div>
                   <div>

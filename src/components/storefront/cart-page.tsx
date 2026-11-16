@@ -152,7 +152,7 @@ export function CartPage() {
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ type: "spring", stiffness: 120, damping: 18 }}
-          className={`flex h-20 w-20 items-center justify-center rounded-full ${isPendingPayment ? "bg-amber-100" : "bg-green-100"}`}
+          className={`flex h-20 w-20 items-center justify-center rounded-full ${isPendingPayment ? "bg-amber-100" : "bg-green-100 animate-pulse-glow"}`}
         >
           {isPendingPayment ? (
             <Loader2 className="h-10 w-10 animate-spin text-amber-700" />

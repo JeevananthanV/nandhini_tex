@@ -55,6 +55,7 @@ export function CursorSpotlight({ className, color = "rgba(212, 175, 55, 0.08)" 
 // 2. AuroraBackground — animated flowing gradient (for hero / CTA)
 // ============================================================================
 // Multiple blurred blobs that drift slowly — creates a living background.
+// Includes a liquid-morphing gold blob for organic movement.
 export function AuroraBackground({ className }: { className?: string }) {
   const reduce = useReducedMotion();
   if (reduce) return null;
@@ -78,6 +79,11 @@ export function AuroraBackground({ className }: { className?: string }) {
         style={{ background: "radial-gradient(circle, #C9A227, transparent 70%)" }}
         animate={{ x: [0, 50, 0], y: [0, -30, 0] }}
         transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
+      />
+      {/* Liquid morphing gold blob — organic, flowing shape */}
+      <div
+        className="animate-liquid absolute right-1/4 top-1/4 h-40 w-40 opacity-10 blur-[60px]"
+        style={{ background: "linear-gradient(135deg, #D4AF37, #C9A227)" }}
       />
     </div>
   );
