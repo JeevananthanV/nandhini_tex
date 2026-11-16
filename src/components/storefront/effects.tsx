@@ -131,7 +131,7 @@ export function ScrollReveal3D({
 }) {
   const reduce = useReducedMotion();
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-15%" });
+  const inView = useInView(ref, { once: false, margin: "-10%" });
 
   if (reduce) {
     return <div className={className}>{children}</div>;
@@ -141,7 +141,7 @@ export function ScrollReveal3D({
     <motion.div
       ref={ref}
       initial={{ opacity: 0, rotateX: 25, y: 60 }}
-      animate={inView ? { opacity: 1, rotateX: 0, y: 0 } : {}}
+      animate={inView ? { opacity: 1, rotateX: 0, y: 0 } : { opacity: 0, rotateX: 25, y: 60 }}
       transition={{ duration: DUR.slow, delay, ease: EASE_LUXE }}
       style={{ transformPerspective: 1000, transformStyle: "preserve-3d" }}
       className={className}
@@ -228,10 +228,15 @@ export function TypewriterText({
   const [displayed, setDisplayed] = useState(reduce ? text : "");
   const [started, setStarted] = useState(false);
   const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-10%" });
+  const inView = useInView(ref, { once: false, margin: "-10%" });
 
   useEffect(() => {
-    if (reduce || !inView) return;
+    if (reduce) return;
+    if (!inView) {
+      setStarted(false);
+      setDisplayed("");
+      return;
+    }
     const startTimer = setTimeout(() => setStarted(true), delay * 1000);
     return () => clearTimeout(startTimer);
   }, [inView, delay, reduce]);
@@ -284,15 +289,18 @@ export function NumberFlip({
 }) {
   const reduce = useReducedMotion();
   const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-10%" });
+  const inView = useInView(ref, { once: false, margin: "-10%" });
   const [display, setDisplay] = useState(reduce ? value : 0);
   const [started, setStarted] = useState(false);
 
-  // Start animation when in view (deferred to avoid sync setState in effect)
+  // Start animation when in view, or reset when scrolled out of view
   useEffect(() => {
     if (inView && !started) {
       const t = setTimeout(() => setStarted(true), 0);
       return () => clearTimeout(t);
+    } else if (!inView && started) {
+      setStarted(false);
+      setDisplay(0);
     }
   }, [inView, started]);
 
@@ -614,7 +622,7 @@ export function TextStagger({
 }) {
   const reduce = useReducedMotion();
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-10%" });
+  const inView = useInView(ref, { once: false, margin: "-10%" });
   const words = text.split(" ");
 
   if (reduce) {
@@ -627,7 +635,7 @@ export function TextStagger({
         <motion.span
           key={i}
           initial={{ opacity: 0, y: 20, filter: "blur(4px)" }}
-          animate={inView ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}}
+          animate={inView ? { opacity: 1, y: 0, filter: "blur(0px)" } : { opacity: 0, y: 20, filter: "blur(4px)" }}
           transition={{ duration: 0.5, delay: delay + i * 0.08, ease: EASE_SILK }}
           className="inline-block"
         >

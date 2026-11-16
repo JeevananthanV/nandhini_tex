@@ -24,7 +24,7 @@ export function ProductCard({ product, index = 0 }: { product: ProductCard; inde
     <motion.div
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-10%" }}
+      viewport={{ once: false, margin: "-10%" }}
       transition={{ duration: 0.5, delay: (index % 4) * 0.06, ease: [0.22, 1, 0.36, 1] }}
       whileHover={{ y: -8 }}
       className="group relative flex flex-col transition-shadow duration-300 hover:shadow-[0_20px_50px_-15px_rgba(8,27,58,0.35)]"

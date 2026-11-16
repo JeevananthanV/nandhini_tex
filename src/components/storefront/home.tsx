@@ -385,8 +385,14 @@ export function HomePage({ categories }: { categories: Category[] }) {
       {/* ===== THE COLLECTIONS (REPLICATED VISUAL SECTION) ===== */}
       <section className="bg-[#FAF8F5]/50 py-12 md:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
-          {/* Header */}
-          <div className="flex flex-col items-center justify-center text-center">
+          {/* Header with continuous scroll re-trigger */}
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, margin: "-8%" }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            className="flex flex-col items-center justify-center text-center"
+          >
             <LotusOrnament className="w-10 h-6 text-[#C5A059] mb-1.5" />
             <div className="flex items-center justify-center gap-3 sm:gap-4 w-full max-w-xl">
               <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-[#D4AF37]/50 to-[#D4AF37]" />
@@ -397,17 +403,17 @@ export function HomePage({ categories }: { categories: Category[] }) {
               <span className="text-[#C5A059] text-xs">✦</span>
               <div className="h-[1px] flex-1 bg-gradient-to-l from-transparent via-[#D4AF37]/50 to-[#D4AF37]" />
             </div>
-          </div>
+          </motion.div>
 
-          {/* 2-Column × 3-Row Grid */}
+          {/* 2-Column × 3-Row Grid — fluid continuous re-trigger */}
           <div className="mt-8 sm:mt-10 grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 lg:gap-6">
             {REPLICATED_COLLECTIONS.map((item, i) => (
               <motion.div
                 key={item.id}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-5%" }}
-                transition={{ duration: 0.45, delay: i * 0.06 }}
+                initial={{ opacity: 0, y: 22, scale: 0.98 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: false, margin: "-6%" }}
+                transition={{ duration: 0.5, delay: (i % 2) * 0.08, ease: [0.22, 1, 0.36, 1] }}
                 className="group flex flex-col sm:flex-row overflow-hidden rounded-2xl border border-[#E7DCBE] bg-[#FDFBF7] shadow-[0_3px_14px_rgba(11,26,48,0.03)] hover:shadow-[0_8px_30px_rgba(212,175,55,0.15)] hover:border-[#D4AF37]/60 transition-all duration-300"
               >
                 {/* Left Image */}
@@ -471,8 +477,14 @@ export function HomePage({ categories }: { categories: Category[] }) {
       {/* ===== NEW ARRIVALS (REPLICATED VISUAL SECTION) ===== */}
       <section className="bg-[#FAF8F5]/70 border-t border-[#E7DCBE]/60 py-12 md:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
-          {/* Header */}
-          <div className="flex flex-col items-center justify-center text-center">
+          {/* Header with continuous scroll re-trigger */}
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, margin: "-8%" }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            className="flex flex-col items-center justify-center text-center"
+          >
             <LotusOrnament className="w-9 h-5 text-[#C5A059] mb-1.5" />
             <div className="flex items-center justify-center gap-2.5 sm:gap-4 w-full max-w-xl">
               <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-[#D4AF37]/50 to-[#D4AF37]" />
@@ -486,7 +498,7 @@ export function HomePage({ categories }: { categories: Category[] }) {
               <span className="text-[#C5A059] text-xs">✦</span>
               <div className="h-[1px] flex-1 bg-gradient-to-l from-transparent via-[#D4AF37]/50 to-[#D4AF37]" />
             </div>
-          </div>
+          </motion.div>
 
           {/* Carousel with Navigation Buttons */}
           <div className="relative mt-8 sm:mt-10">
@@ -508,16 +520,20 @@ export function HomePage({ categories }: { categories: Category[] }) {
               <ChevronRight className="h-5 w-5" />
             </button>
 
-            {/* Product Cards Row */}
+            {/* Product Cards Row — continuous scroll re-trigger */}
             <div
               ref={newArrivalsScrollRef}
               className="flex gap-3 sm:gap-4 overflow-x-auto scroll-smooth no-scrollbar py-2 px-1"
             >
-              {REPLICATED_NEW_ARRIVALS.map((item) => {
+              {REPLICATED_NEW_ARRIVALS.map((item, i) => {
                 const wishlisted = isWishlisted(item.id);
                 return (
-                  <div
+                  <motion.div
                     key={item.id}
+                    initial={{ opacity: 0, y: 20, scale: 0.96 }}
+                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                    viewport={{ once: false, margin: "-6%" }}
+                    transition={{ duration: 0.45, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }}
                     onClick={() => goProduct(item.slug)}
                     className="min-w-[175px] sm:min-w-[200px] md:min-w-[215px] flex-1 bg-[#FDFBF7] rounded-xl border border-[#E7DCBE] p-2.5 flex flex-col justify-between hover:shadow-md hover:border-[#D4AF37]/60 transition-all duration-300 group cursor-pointer"
                   >
@@ -568,7 +584,7 @@ export function HomePage({ categories }: { categories: Category[] }) {
                         ₹{item.price.toLocaleString("en-IN")}
                       </p>
                     </div>
-                  </div>
+                  </motion.div>
                 );
               })}
             </div>
@@ -594,9 +610,9 @@ export function HomePage({ categories }: { categories: Category[] }) {
         <div className="absolute inset-0 flex items-center">
           <div className="mx-auto w-full max-w-7xl px-6 md:px-8">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: false, margin: "-8%" }}
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
               className="max-w-lg"
             >
@@ -623,10 +639,10 @@ export function HomePage({ categories }: { categories: Category[] }) {
       <section className="bg-navy-gradient text-ivory">
         <div className="mx-auto grid max-w-7xl items-center gap-10 px-6 py-16 md:grid-cols-2 md:px-8 md:py-24">
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
+            initial={{ opacity: 0, x: -24 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            viewport={{ once: false, margin: "-8%" }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
             <span className="text-[11px] font-medium uppercase tracking-[0.15em] text-gold">Our Story</span>
             <h2 className="mt-3 font-serif text-3xl font-semibold md:text-4xl">Threads of Heritage from Elampillai</h2>
@@ -652,10 +668,10 @@ export function HomePage({ categories }: { categories: Category[] }) {
             </div>
           </motion.div>
           <motion.div
-            initial={{ opacity: 0, scale: 0.96 }}
+            initial={{ opacity: 0, scale: 0.94 }}
             whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            viewport={{ once: false, margin: "-8%" }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             className="relative aspect-[4/3] overflow-hidden rounded-lg shadow-navy"
           >
             <Image src="https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=800&q=80" alt="Handloom silk weaving" fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" />
@@ -710,7 +726,7 @@ export function HomePage({ categories }: { categories: Category[] }) {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-10%" }}
+            viewport={{ once: false, margin: "-10%" }}
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             className="relative overflow-hidden rounded-xl bg-navy-gradient px-6 py-10 text-center md:px-12 md:py-14"
           >
@@ -753,7 +769,7 @@ export function HomePage({ categories }: { categories: Category[] }) {
                 key={f.name}
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-5%" }}
+                viewport={{ once: false, margin: "-5%" }}
                 transition={{ duration: 0.4, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
                 onClick={() => goCategory("bridal")}
                 className="group relative aspect-[4/5] overflow-hidden rounded-lg"
@@ -792,7 +808,7 @@ export function HomePage({ categories }: { categories: Category[] }) {
                 rel="noopener noreferrer"
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
+                viewport={{ once: false, margin: "-5%" }}
                 transition={{ duration: 0.3, delay: i * 0.05 }}
                 className="group relative aspect-square overflow-hidden rounded-md bg-muted"
               >
@@ -835,7 +851,7 @@ export function HomePage({ categories }: { categories: Category[] }) {
                 key={t.id}
                 initial={{ opacity: 0, y: 24, rotateY: 15 }}
                 whileInView={{ opacity: 1, y: 0, rotateY: 0 }}
-                viewport={{ once: true, margin: "-10%" }}
+                viewport={{ once: false, margin: "-10%" }}
                 transition={{ duration: 0.6, delay: (i % 3) * 0.12, ease: [0.22, 1, 0.36, 1] }}
                 whileHover={{ y: -6, scale: 1.02 }}
                 style={{ transformStyle: "preserve-3d", transformPerspective: 1000 }}
@@ -999,14 +1015,14 @@ function SectionHeading({ eyebrow, title, center }: { eyebrow: string; title: st
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-10%" }}
+      viewport={{ once: false, margin: "-10%" }}
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       className={center ? "text-center" : ""}
     >
       <motion.span
         initial={{ opacity: 0, letterSpacing: "0.3em" }}
         whileInView={{ opacity: 1, letterSpacing: "0.15em" }}
-        viewport={{ once: true }}
+        viewport={{ once: false }}
         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         className="inline-block text-[11px] font-semibold uppercase tracking-[0.15em] text-gold-dark"
       >
@@ -1016,7 +1032,7 @@ function SectionHeading({ eyebrow, title, center }: { eyebrow: string; title: st
       <motion.div
         initial={{ scaleX: 0 }}
         whileInView={{ scaleX: 1 }}
-        viewport={{ once: true }}
+        viewport={{ once: false }}
         transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
         className={`mt-3 h-px w-16 origin-left bg-gold-gradient ${center ? "mx-auto" : ""}`}
       />

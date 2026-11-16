@@ -131,6 +131,7 @@ export function safeStagger(reduce: boolean): Variants {
   return staggerContainer;
 }
 
-// Viewport options for whileInView
-export const VIEWPORT_ONCE = { once: true, margin: "-10%" } as const;
-export const VIEWPORT_ONCE_SOFT = { once: true, margin: "-5%" } as const;
+// Viewport options for whileInView — continuous re-trigger on scroll up or down
+export const VIEWPORT_ONCE = { once: false, margin: "-10%" } as const;
+export const VIEWPORT_ONCE_SOFT = { once: false, margin: "-5%" } as const;
+export const VIEWPORT_RETRIGGER = { once: false, margin: "-8%" } as const;

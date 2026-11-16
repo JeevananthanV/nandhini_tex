@@ -152,13 +152,16 @@ export function AnimatedCounter({
   className?: string;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-50px" });
+  const inView = useInView(ref, { once: false, margin: "-50px" });
   const reduce = useReducedMotion();
   const [display, setDisplay] = useState(0);
   const shouldAnimate = inView && !reduce;
 
   useEffect(() => {
-    if (!shouldAnimate) return;
+    if (!shouldAnimate) {
+      setDisplay(0);
+      return;
+    }
     let raf: number;
     const start = performance.now();
     const animate = (t: number) => {
