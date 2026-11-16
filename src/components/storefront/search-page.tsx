@@ -53,7 +53,7 @@ export function SearchPage() {
               className="h-12 w-full rounded-sm border border-border bg-card pl-10 pr-4 text-sm outline-none focus:border-gold"
             />
           </div>
-          <button type="submit" className="rounded-sm bg-navy px-6 text-sm font-semibold text-ivory hover:bg-navy-light">Search</button>
+          <button type="submit" className="h-12 rounded-sm bg-navy px-6 text-sm font-semibold text-ivory hover:bg-navy-light transition-colors">Search</button>
         </form>
 
         <p className="mt-6 text-sm text-muted-foreground">

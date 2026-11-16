@@ -36,6 +36,7 @@ export function QuickViewModal() {
   useEffect(() => {
     if (!productId) return;
     let cancelled = false;
+    setLoading(true);
     fetch(`/api/products?limit=100`)
       .then((r) => r.json())
       .then((d) => {
@@ -48,6 +49,16 @@ export function QuickViewModal() {
   }, [productId]);
 
   const close = () => { setProductId(null); setData(null); };
+
+  // Keyboard Escape listener
+  useEffect(() => {
+    if (!productId) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") close();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [productId]);
   const addToCart = useStore((s) => s.addToCart);
   const goProduct = useStore((s) => s.goProduct);
   const toggleWishlist = useStore((s) => s.toggleWishlist);
@@ -86,7 +97,7 @@ export function QuickViewModal() {
             ) : (
               <div className="grid gap-0 sm:grid-cols-2">
                 <div className="relative aspect-[4/5] overflow-hidden bg-muted">
-                  <Image src={data.images[0]} alt={data.title} fill sizes="50vw" className="object-cover" />
+                  <Image src={data.images?.[0] || "/placeholder.svg"} alt={data.title} fill sizes="50vw" className="object-cover" />
                   <div className="absolute left-2 top-2 flex flex-col gap-1">
                     {data.isNew && <NewBadge />}
                     {data.isBestseller && <BestsellerBadge />}
@@ -175,6 +186,16 @@ export function WishlistDrawer() {
     return () => window.removeEventListener("open-wishlist", handler);
   }, []);
 
+  // Keyboard Escape listener
+  useEffect(() => {
+    if (!open) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [open]);
+
   return (
     <AnimatePresence>
       {open && (
@@ -187,6 +208,11 @@ export function WishlistDrawer() {
             className="fixed inset-0 z-[85] bg-navy-dark/50 backdrop-blur-sm"
           />
           <motion.aside
+            id="wishlist-drawer"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Wishlist"
+            data-state="open"
             initial={reduce ? { opacity: 0 } : { x: "100%" }}
             animate={reduce ? { opacity: 1 } : { x: 0 }}
             exit={reduce ? { opacity: 0 } : { x: "100%" }}
@@ -223,7 +249,7 @@ export function WishlistDrawer() {
                   {wishlist.map((item) => (
                     <li key={item.productId} className="flex gap-3 rounded-lg border border-border bg-card p-3">
                       <button onClick={() => { goProduct(item.slug); setOpen(false); }} className="relative h-24 w-20 shrink-0 overflow-hidden rounded-md bg-muted">
-                        <Image src={item.image} alt={item.title} fill sizes="80px" className="object-cover" />
+                        <Image src={item.image || "/placeholder.svg"} alt={item.title} fill sizes="80px" className="object-cover" />
                       </button>
                       <div className="flex flex-1 flex-col">
                         <button onClick={() => { goProduct(item.slug); setOpen(false); }} className="text-left font-serif text-sm font-medium leading-snug text-foreground hover:text-navy">

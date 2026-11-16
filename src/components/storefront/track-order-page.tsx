@@ -415,7 +415,7 @@ function OrderDetail({ order }: { order: TrackedOrder }) {
             <div key={i} className="flex items-center gap-3">
               <div className="relative h-16 w-14 shrink-0 overflow-hidden rounded-md bg-muted">
                 {it.image ? (
-                  <Image src={it.image} alt={it.title} fill sizes="56px" className="object-cover" />
+                  <Image src={it.image || "/placeholder.svg"} alt={it.title} fill sizes="56px" className="object-cover" />
                 ) : (
                   <div className="flex h-full items-center justify-center"><ShoppingBag className="h-5 w-5 text-muted-foreground/50" /></div>
                 )}

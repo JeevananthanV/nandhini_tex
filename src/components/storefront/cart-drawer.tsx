@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Plus, Minus, ShoppingBag, Trash2, ArrowRight, Tag, MessageCircle } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useStore } from "@/lib/store";
 import { Price } from "./primitives";
 import { getCartWhatsAppUrl } from "@/lib/whatsapp";
@@ -24,6 +24,16 @@ export function CartDrawer() {
   const [code, setCode] = useState("");
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [loading, setLoading] = useState(false);
+
+  // Keyboard Escape listener
+  useEffect(() => {
+    if (!open) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeCart();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [open, closeCart]);
 
   const shipping = subtotal - discount >= 999 || subtotal === 0 ? 0 : 60;
   const total = Math.max(0, subtotal - discount + shipping);
@@ -65,6 +75,11 @@ export function CartDrawer() {
             className="fixed inset-0 z-[80] bg-navy-dark/50 backdrop-blur-sm"
           />
           <motion.aside
+            id="cart-drawer"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Shopping Bag"
+            data-state="open"
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
@@ -108,7 +123,7 @@ export function CartDrawer() {
                           onClick={() => { goProduct(item.slug); closeCart(); }}
                           className="relative h-24 w-20 shrink-0 overflow-hidden rounded-md bg-muted"
                         >
-                          <Image src={item.image} alt={item.title} fill sizes="80px" className="object-cover" />
+                          <Image src={item.image || "/placeholder.svg"} alt={item.title} fill sizes="80px" className="object-cover" />
                         </button>
                         <div className="flex flex-1 flex-col gap-1">
                           <button onClick={() => { goProduct(item.slug); closeCart(); }} className="text-left font-serif text-sm font-medium leading-snug text-foreground hover:text-navy">

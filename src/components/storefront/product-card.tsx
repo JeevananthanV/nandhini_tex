@@ -16,8 +16,8 @@ export function ProductCard({ product, index = 0 }: { product: ProductCard; inde
   const toggleWishlist = useStore((s) => s.toggleWishlist);
   const isWishlisted = useStore((s) => s.wishlist.some((w) => w.productId === product.id));
 
-  const img = product.images[0] || "/placeholder.svg";
-  const altImg = product.images[1] || product.images[0] || "/placeholder.svg";
+  const img = product.images?.[0] || "/placeholder.svg";
+  const altImg = product.images?.[1] || product.images?.[0] || "/placeholder.svg";
 
   return (
     <motion.div

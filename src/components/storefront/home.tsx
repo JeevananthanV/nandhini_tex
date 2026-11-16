@@ -87,7 +87,7 @@ export function HomePage({ categories }: { categories: Category[] }) {
       <section className="relative h-[88vh] min-h-[560px] w-full overflow-hidden" aria-label="Hero — Handwoven silk sarees from Tamil Nadu">
         <div className="absolute inset-0">
           <Image
-            src="https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/504fe6faa6dc.jpg"
+            src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=1600&q=85"
             alt="Bride wearing a handwoven red Kanchipuram silk saree with gold zari border from Nandhini Tex"
             fill
             priority
@@ -261,7 +261,7 @@ export function HomePage({ categories }: { categories: Category[] }) {
       {/* ===== BRIDAL BANNER ===== */}
       <section className="relative overflow-hidden">
         <div className="relative h-[420px] w-full md:h-[480px]">
-          <Image src="https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/57427ea841a4.png" alt="Bridal silk saree collection" fill sizes="100vw" className="object-cover" />
+          <Image src="https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=1600&q=85" alt="Bridal silk saree collection" fill sizes="100vw" className="object-cover" />
           <div className="absolute inset-0 bg-gradient-to-r from-navy-dark/90 via-navy-dark/50 to-transparent" />
         </div>
         <div className="absolute inset-0 flex items-center">
@@ -331,7 +331,7 @@ export function HomePage({ categories }: { categories: Category[] }) {
             transition={{ duration: 0.6 }}
             className="relative aspect-[4/3] overflow-hidden rounded-lg shadow-navy"
           >
-            <Image src="https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/a7699e04fe3b.png" alt="Handloom silk weaving" fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" />
+            <Image src="https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=800&q=80" alt="Handloom silk weaving" fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" />
           </motion.div>
         </div>
       </section>
@@ -417,10 +417,10 @@ export function HomePage({ categories }: { categories: Category[] }) {
           <p className="mt-4 max-w-2xl text-ivory/70">Celebrate Pongal, Diwali, and wedding seasons with our curated festive sarees — rich colours, pure zari, and heirloom weaves for every auspicious occasion.</p>
           <div className="mt-10 grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-5 lg:grid-cols-4">
             {[
-              { name: "Pongal Edit", desc: "Vibrant silks for the harvest festival", img: "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/c5af66d51871.jpg", color: "#D4AF37" },
-              { name: "Diwali Collection", desc: "Luminous zari weaves for the festival of lights", img: "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/dc4814dd8745.jpeg", color: "#B3261E" },
-              { name: "Wedding Season", desc: "Grand bridal and reception sarees", img: "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/34b61bbedff3.jpg", color: "#7A1F2B" },
-              { name: "Navratri Specials", desc: "Festive nine-night celebration weaves", img: "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/b0c231bcd321.jpg", color: "#5B2A6B" },
+              { name: "Pongal Edit", desc: "Vibrant silks for the harvest festival", img: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=800&q=80", color: "#D4AF37" },
+              { name: "Diwali Collection", desc: "Luminous zari weaves for the festival of lights", img: "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=800&q=80", color: "#B3261E" },
+              { name: "Wedding Season", desc: "Grand bridal and reception sarees", img: "https://images.unsplash.com/photo-1609357605129-26f69add5d6e?w=800&q=80", color: "#7A1F2B" },
+              { name: "Navratri Specials", desc: "Festive nine-night celebration weaves", img: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&q=80", color: "#5B2A6B" },
             ].map((f, i) => (
               <motion.button
                 key={f.name}
@@ -451,12 +451,12 @@ export function HomePage({ categories }: { categories: Category[] }) {
           <p className="mx-auto mt-4 max-w-lg text-center text-sm text-muted-foreground">Follow us on Instagram for saree draping styles, blouse pairing ideas, and behind-the-scenes weaving stories.</p>
           <div className="mt-10 grid grid-cols-3 gap-2 md:grid-cols-6 md:gap-3">
             {[
-              "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/f2d2d11dfedb.jpg",
-              "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/e57893896ef2.webp",
-              "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/8c5dcb89a6fe.jpg",
-              "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/fbb5a4b85795.jpg",
-              "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/34b61bbedff3.jpg",
-              "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/da6a6323db3d.jpg",
+              "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=600&q=80",
+              "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=600&q=80",
+              "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=600&q=80",
+              "https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?w=600&q=80",
+              "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=600&q=80",
+              "https://images.unsplash.com/photo-1609357605129-26f69add5d6e?w=600&q=80",
             ].map((img, i) => (
               <motion.a
                 key={i}

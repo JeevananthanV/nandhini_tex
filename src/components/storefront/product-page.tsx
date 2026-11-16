@@ -61,6 +61,15 @@ export function ProductPage() {
     return () => { cancelled = true; };
   }, [slug]);
 
+  useEffect(() => {
+    if (!lightboxOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setLightboxOpen(false);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [lightboxOpen]);
+
   const checkPincode = () => {
     if (pincode.length !== 6) {
       setPincodeResult({ ok: false, msg: "Please enter a valid 6-digit pincode" });
@@ -143,12 +152,12 @@ export function ProductPage() {
             {galleryMode === "360" ? (
               <Viewer360 images={product.images} alt={product.title} className="w-full" />
             ) : galleryMode === "zoom" ? (
-              <DeepZoom src={product.images[activeImg] || product.images[0]} alt={product.title} className="w-full" />
+              <DeepZoom src={product.images[activeImg] || product.images[0] || "/placeholder.svg"} alt={product.title} className="w-full" />
             ) : (
               <div className="flex flex-col gap-3 md:flex-row-reverse">
                 <div className="relative aspect-[3/4] flex-1 overflow-hidden rounded-lg bg-muted">
                   <Image
-                    src={product.images[activeImg] || product.images[0]}
+                    src={product.images[activeImg] || product.images[0] || "/placeholder.svg"}
                     alt={product.title}
                     fill
                     sizes="(max-width: 768px) 100vw, 50vw"
@@ -170,7 +179,7 @@ export function ProductPage() {
                         onClick={() => setActiveImg(i)}
                         className={`relative h-20 w-16 shrink-0 overflow-hidden rounded-md border-2 transition-colors md:h-24 md:w-20 ${activeImg === i ? "border-gold" : "border-transparent opacity-60 hover:opacity-100"}`}
                       >
-                        <Image src={img} alt={`${product.title} view ${i + 1}`} fill sizes="80px" className="object-cover" />
+                        <Image src={img || "/placeholder.svg"} alt={`${product.title} view ${i + 1}`} fill sizes="80px" className="object-cover" />
                       </button>
                     ))}
                   </div>
@@ -628,11 +637,11 @@ export function ProductPage() {
             onClick={() => setLightboxOpen(false)}
             className="fixed inset-0 z-[100] flex items-center justify-center bg-navy-dark/90 p-4 backdrop-blur"
           >
-            <button className="absolute right-5 top-5 text-ivory" aria-label="Close">
+            <button onClick={() => setLightboxOpen(false)} className="absolute right-5 top-5 text-ivory hover:opacity-80 transition" aria-label="Close Lightbox">
               <X className="h-7 w-7" />
             </button>
             <div className="relative aspect-[3/4] h-[85vh]">
-              <Image src={product.images[activeImg]} alt={product.title} fill sizes="80vw" className="object-contain" onClick={(e) => e.stopPropagation()} />
+              <Image src={product.images[activeImg] || product.images[0] || "/placeholder.svg"} alt={product.title} fill sizes="80vw" className="object-contain" onClick={(e) => e.stopPropagation()} />
             </div>
           </motion.div>
         )}
