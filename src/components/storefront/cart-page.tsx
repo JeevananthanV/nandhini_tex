@@ -3,10 +3,11 @@
 import Image from "next/image";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Minus, Plus, Trash2, ShoppingBag, Tag, Check, ChevronRight, Truck, ShieldCheck, RefreshCw, MessageCircle } from "lucide-react";
+import { Minus, Plus, Trash2, ShoppingBag, Tag, Check, ChevronRight, Truck, ShieldCheck, RefreshCw, MessageCircle, CreditCard, Loader2 } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { getCartWhatsAppUrl } from "@/lib/whatsapp";
 import { Button } from "@/components/ui/button";
+import { openRazorpayCheckout } from "@/lib/razorpay-client";
 
 export function CartPage() {
   const goHome = useStore((s) => s.goHome);
@@ -25,10 +26,11 @@ export function CartPage() {
   const [code, setCode] = useState("");
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [loading, setLoading] = useState(false);
+  const [paymentError, setPaymentError] = useState<string | null>(null);
   const [checkoutStep, setCheckoutStep] = useState<"cart" | "address" | "payment" | "done">("cart");
   const [address, setAddress] = useState({ name: "", phone: "", line1: "", city: "", state: "Tamil Nadu", pincode: "" });
   const [paymentMethod, setPaymentMethod] = useState("cod");
-  const [placedOrder, setPlacedOrder] = useState<{ orderNumber: string } | null>(null);
+  const [placedOrder, setPlacedOrder] = useState<{ orderNumber: string; paymentMethod?: string } | null>(null);
 
   const shipping = subtotal - discount >= 999 || subtotal === 0 ? 0 : 60;
   const codSurcharge = paymentMethod === "cod" ? 40 : 0;
@@ -58,6 +60,7 @@ export function CartPage() {
 
   const placeOrder = async () => {
     setLoading(true);
+    setPaymentError(null);
     const res = await fetch("/api/orders", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -66,7 +69,15 @@ export function CartPage() {
         customerPhone: address.phone,
         customerEmail: "",
         shippingAddress: address,
-        items: cart.map((c) => ({ title: c.title, variant: c.color, qty: c.qty, price: c.price, image: c.image })),
+        items: cart.map((c) => ({
+          title: c.title,
+          slug: c.slug,
+          productId: c.productId,
+          variant: c.color,
+          qty: c.qty,
+          price: c.price,
+          image: c.image,
+        })),
         paymentMethod,
         subtotal,
         discount,
@@ -78,26 +89,100 @@ export function CartPage() {
     });
     const data = await res.json();
     setLoading(false);
-    if (data.success) {
-      setPlacedOrder({ orderNumber: data.order.orderNumber });
+
+    if (!data.success) {
+      setPaymentError(data.error || "Failed to place order. Please try again.");
+      return;
+    }
+
+    const orderNumber = data.order.orderNumber as string;
+
+    // For COD, order is complete — show confirmation
+    if (paymentMethod === "cod") {
+      setPlacedOrder({ orderNumber, paymentMethod: "cod" });
       setCheckoutStep("done");
       clearCart();
+      return;
     }
+
+    // For online payments (upi/card/netbanking), open Razorpay Checkout
+    if (paymentMethod === "upi" || paymentMethod === "card" || paymentMethod === "netbanking") {
+      setLoading(true);
+      const result = await openRazorpayCheckout({
+        orderNumber,
+        amountInRupees: total,
+        customerName: address.name,
+        customerPhone: address.phone,
+      });
+      setLoading(false);
+
+      if (result.success) {
+        setPlacedOrder({ orderNumber, paymentMethod: result.method });
+        setCheckoutStep("done");
+        clearCart();
+      } else {
+        // Payment failed or cancelled — order still exists as "pending"
+        // Show error so customer can retry payment
+        setPaymentError(
+          result.code === "USER_CANCELLED"
+            ? "Payment cancelled. Your order is saved — retry payment from the order tracking page."
+            : result.error || "Payment failed. Your order is saved — retry from the tracking page."
+        );
+        // Still navigate to a "partial" confirmation so the customer sees their order number
+        setPlacedOrder({ orderNumber, paymentMethod: "pending" });
+        setCheckoutStep("done");
+        // Don't clear cart — they might want to retry
+      }
+      return;
+    }
+
+    // Fallback (shouldn't reach here)
+    setPlacedOrder({ orderNumber, paymentMethod });
+    setCheckoutStep("done");
+    clearCart();
   };
 
   if (checkoutStep === "done" && placedOrder) {
+    const isPaid = placedOrder.paymentMethod !== "cod" && placedOrder.paymentMethod !== "pending";
+    const isPendingPayment = placedOrder.paymentMethod === "pending";
+
     return (
       <div className="flex min-h-screen flex-col items-center justify-center px-6 pt-20">
-        <motion.div initial={{ scale: 0, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: "spring", stiffness: 120, damping: 18 }} className="flex h-20 w-20 items-center justify-center rounded-full bg-green-100">
-          <Check className="h-10 w-10 text-green-700" />
+        <motion.div
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ type: "spring", stiffness: 120, damping: 18 }}
+          className={`flex h-20 w-20 items-center justify-center rounded-full ${isPendingPayment ? "bg-amber-100" : "bg-green-100"}`}
+        >
+          {isPendingPayment ? (
+            <Loader2 className="h-10 w-10 animate-spin text-amber-700" />
+          ) : (
+            <Check className="h-10 w-10 text-green-700" />
+          )}
         </motion.div>
-        <h1 className="mt-6 font-serif text-3xl font-semibold text-navy">Order Confirmed!</h1>
-        <p className="mt-2 text-center text-muted-foreground">Thank you for your order. We'll send a confirmation on WhatsApp & SMS shortly.</p>
+        <h1 className="mt-6 font-serif text-3xl font-semibold text-navy">
+          {isPendingPayment ? "Payment Pending" : "Order Confirmed!"}
+        </h1>
+        <p className="mt-2 max-w-md text-center text-muted-foreground">
+          {isPendingPayment
+            ? "Your order is placed but payment is pending. Complete payment now or retry from the tracking page."
+            : isPaid
+              ? "Thank you! Your payment is confirmed. We'll send a confirmation on WhatsApp & SMS shortly."
+              : "Thank you for your order. We'll send a confirmation on WhatsApp & SMS shortly."}
+        </p>
+        {paymentError && (
+          <div className="mt-4 max-w-md rounded-md border border-amber-300 bg-amber-50 px-4 py-3 text-center text-sm text-amber-800">
+            {paymentError}
+          </div>
+        )}
         <div className="mt-6 rounded-lg border border-border bg-card px-8 py-5 text-center">
           <p className="text-xs uppercase tracking-wider text-muted-foreground">Order Number</p>
           <p className="font-serif text-2xl font-bold text-navy">{placedOrder.orderNumber}</p>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Payment: {isPaid ? <span className="font-semibold text-green-700">Paid</span> : isPendingPayment ? <span className="font-semibold text-amber-700">Pending</span> : <span className="font-semibold">COD</span>}
+          </p>
         </div>
-        <div className="mt-8 flex gap-3">
+        <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Button onClick={goHome} className="bg-navy hover:bg-navy-light">Continue Shopping</Button>
           <Button onClick={() => goTrack(placedOrder.orderNumber)} variant="outline" className="border-navy/30 text-navy hover:bg-navy/5">
             Track Your Order
@@ -210,32 +295,54 @@ export function CartPage() {
                 <h2 className="font-serif text-lg font-semibold text-navy">Payment Method</h2>
                 <div className="mt-4 space-y-3">
                   {[
-                    { id: "cod", label: "Cash on Delivery", desc: "Pay when you receive · ₹40 surcharge applies" },
-                    { id: "upi", label: "UPI (GPay / PhonePe / Paytm)", desc: "Pay instantly via UPI" },
-                    { id: "card", label: "Credit / Debit Card", desc: "Visa, Mastercard, RuPay" },
-                    { id: "netbanking", label: "Net Banking", desc: "All major banks" },
+                    { id: "cod", label: "Cash on Delivery", desc: "Pay when you receive · ₹40 surcharge applies", icon: null },
+                    { id: "upi", label: "UPI (GPay / PhonePe / Paytm)", desc: "Pay instantly via UPI · Secured by Razorpay", icon: <CreditCard className="h-4 w-4 text-gold-dark" /> },
+                    { id: "card", label: "Credit / Debit Card", desc: "Visa, Mastercard, RuPay · Secured by Razorpay", icon: <CreditCard className="h-4 w-4 text-gold-dark" /> },
+                    { id: "netbanking", label: "Net Banking", desc: "All major banks · Secured by Razorpay", icon: <CreditCard className="h-4 w-4 text-gold-dark" /> },
                   ].map((p) => (
                     <button
                       key={p.id}
-                      onClick={() => setPaymentMethod(p.id)}
+                      onClick={() => { setPaymentMethod(p.id); setPaymentError(null); }}
                       className={`flex w-full items-center gap-3 rounded-md border p-4 text-left transition-colors ${paymentMethod === p.id ? "border-navy bg-navy/5" : "border-border hover:border-navy/40"}`}
                     >
                       <span className={`flex h-5 w-5 items-center justify-center rounded-full border-2 ${paymentMethod === p.id ? "border-navy" : "border-muted-foreground/40"}`}>
                         {paymentMethod === p.id && <span className="h-2.5 w-2.5 rounded-full bg-navy" />}
                       </span>
-                      <div>
-                        <p className="text-sm font-semibold text-foreground">{p.label}</p>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <p className="text-sm font-semibold text-foreground">{p.label}</p>
+                          {p.icon}
+                        </div>
                         <p className="text-xs text-muted-foreground">{p.desc}</p>
                       </div>
                     </button>
                   ))}
                 </div>
-                <div className="mt-6 flex justify-between">
+
+                {paymentError && (
+                  <div className="mt-4 rounded-md border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive">
+                    {paymentError}
+                  </div>
+                )}
+
+                <div className="mt-6 flex items-center justify-between gap-3">
                   <Button variant="ghost" onClick={() => setCheckoutStep("address")} className="text-navy">Back</Button>
                   <Button onClick={placeOrder} disabled={loading} className="bg-gold-gradient text-navy hover:opacity-90">
-                    {loading ? "Placing Order..." : `Place Order · ₹${total.toLocaleString("en-IN")}`}
+                    {loading
+                      ? (paymentMethod === "cod" ? "Placing Order..." : "Processing Payment...")
+                      : paymentMethod === "cod"
+                        ? `Place Order · ₹${total.toLocaleString("en-IN")}`
+                        : `Pay ₹${total.toLocaleString("en-IN")} Securely`}
                   </Button>
                 </div>
+
+                {paymentMethod !== "cod" && (
+                  <div className="mt-3 flex items-center justify-center gap-1.5 text-[10px] text-muted-foreground">
+                    <ShieldCheck className="h-3 w-3 text-green-600" />
+                    <span>256-bit SSL encrypted · PCI-DSS compliant · Powered by Razorpay</span>
+                  </div>
+                )}
+
                 {/* WhatsApp Order Alternative */}
                 <div className="mt-4 flex items-center gap-3">
                   <div className="h-px flex-1 bg-border" />

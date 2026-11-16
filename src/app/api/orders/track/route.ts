@@ -56,17 +56,20 @@ export async function GET(req: NextRequest) {
         where: { customerPhone: q },
         orderBy: { createdAt: "desc" },
         take: 5,
-        // Don't return full PII for phone-based lookups — these are more enumerable
+        // Don't return full PII for phone-based lookups — these are more enumerable.
+        // We DO include customerName (first name only) for the payment retry banner.
         select: {
           orderNumber: true,
+          customerName: true,
           status: true,
           paymentStatus: true,
+          paymentMethod: true,
           grandTotal: true,
           createdAt: true,
           updatedAt: true,
           items: true,
           timeline: true,
-          // Explicitly NOT selecting: customerName, customerPhone, customerEmail, shippingAddress, courier
+          // Explicitly NOT selecting: customerPhone, customerEmail, shippingAddress, courier
         },
       });
     } else {

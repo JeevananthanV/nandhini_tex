@@ -5,11 +5,12 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import {
   PackageSearch, Search, Truck, Package, CheckCircle2, MapPin, Clock,
-  MessageCircle, Phone, CircleAlert, ExternalLink, ShoppingBag,
+  MessageCircle, Phone, CircleAlert, ExternalLink, ShoppingBag, CreditCard, Loader2,
 } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { openRazorpayCheckout } from "@/lib/razorpay-client";
 
 const STEPS = [
   { key: "pending", label: "Placed", note: "Order placed successfully" },
@@ -300,10 +301,15 @@ function OrderDetail({ order }: { order: TrackedOrder }) {
             <StatusBadge status={order.status} />
             <span className="text-xs text-muted-foreground">
               {order.paymentMethod === "cod" ? "Cash on Delivery" : order.paymentMethod.toUpperCase()}
-              {order.paymentStatus === "paid" ? " · Paid" : ""}
+              {order.paymentStatus === "paid" ? " · Paid" : order.paymentStatus === "pending" && order.paymentMethod !== "cod" ? " · Payment Pending" : ""}
             </span>
           </div>
         </div>
+
+        {/* Retry payment banner for pending online payments */}
+        {order.paymentStatus === "pending" && order.paymentMethod !== "cod" && order.status !== "cancelled" && (
+          <RetryPaymentBanner orderNumber={order.orderNumber} total={order.grandTotal} customerName={order.customerName || ""} customerPhone={phone} />
+        )}
 
         {/* Terminal bad states */}
         {isBad && (
@@ -473,5 +479,88 @@ function OrderDetail({ order }: { order: TrackedOrder }) {
         Want to check another order? Use the search box above — order numbers look like NTX2025xxxx.
       </p>
     </motion.div>
+  );
+}
+
+// ============================================================================
+// Retry Payment Banner — shown when an online order has pending payment
+// ============================================================================
+function RetryPaymentBanner({
+  orderNumber,
+  total,
+  customerName,
+  customerPhone,
+}: {
+  orderNumber: string;
+  total: number;
+  customerName: string;
+  customerPhone: string;
+}) {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+
+  const retryPayment = async () => {
+    setLoading(true);
+    setError(null);
+    const result = await openRazorpayCheckout({
+      orderNumber,
+      amountInRupees: total,
+      customerName,
+      customerPhone,
+    });
+    setLoading(false);
+    if (result.success) {
+      setSuccess(true);
+      // Reload after 2s to show updated payment status
+      setTimeout(() => window.location.reload(), 2000);
+    } else {
+      setError(result.error || "Payment failed. Please try again.");
+    }
+  };
+
+  if (success) {
+    return (
+      <div className="mt-4 flex items-center gap-3 rounded-md border border-green-300 bg-green-50 px-4 py-3 text-sm text-green-800">
+        <CheckCircle2 className="h-5 w-5 shrink-0" />
+        <span>Payment successful! Refreshing order status…</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mt-4 rounded-md border border-amber-300 bg-amber-50 px-4 py-3">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-2">
+          <Clock className="h-5 w-5 shrink-0 text-amber-700" />
+          <div>
+            <p className="text-sm font-semibold text-amber-900">Payment Pending</p>
+            <p className="text-xs text-amber-700">
+              Complete your payment of ₹{total.toLocaleString("en-IN")} to confirm this order.
+            </p>
+          </div>
+        </div>
+        <Button
+          onClick={retryPayment}
+          disabled={loading}
+          className="bg-navy text-ivory hover:bg-navy-light"
+        >
+          {loading ? (
+            <>
+              <Loader2 className="mr-1.5 h-4 w-4 animate-spin" />
+              Processing…
+            </>
+          ) : (
+            <>
+              <CreditCard className="mr-1.5 h-4 w-4" />
+              Pay Now
+            </>
+          )}
+        </Button>
+      </div>
+      {error && (
+        <p className="mt-2 text-xs text-amber-800">{error}</p>
+      )}
+    </div>
   );
 }
