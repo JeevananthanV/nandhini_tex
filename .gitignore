@@ -62,3 +62,12 @@ db/*.db
 db/*.db-journal
 db/*.db-wal
 db/*.db-shm
+
+# Netlify
+.netlify/
+
+# Prisma SQLite database binaries
+prisma/*.db
+prisma/*.db-journal
+prisma/*.db-wal
+prisma/*.db-shm
