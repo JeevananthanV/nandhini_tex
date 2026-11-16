@@ -16,6 +16,7 @@ import { addRecentlyViewed } from "./premium-features";
 import { SectionReveal } from "./premium";
 import { PdpSkeleton } from "./skeletons";
 import { getProductWhatsAppUrl, getBulkWhatsAppUrl } from "@/lib/whatsapp";
+import { TurnstileWidget } from "@/components/ui/turnstile";
 import type { ProductDetail, ReviewOut } from "@/lib/format";
 
 export function ProductPage() {
@@ -657,18 +658,29 @@ function ReviewForm({ productId, onClose }: { productId: string; onClose: () => 
   const [city, setCity] = useState("");
   const [done, setDone] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState("");
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    await fetch("/api/reviews", {
+    const res = await fetch("/api/reviews", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ productId, authorName: name, authorCity: city, rating, title, body: body }),
+      body: JSON.stringify({
+        productId,
+        authorName: name,
+        authorCity: city,
+        rating,
+        title,
+        body: body,
+        turnstileToken,
+      }),
     });
     setLoading(false);
-    setDone(true);
-    setTimeout(onClose, 2500);
+    if (res.ok) {
+      setDone(true);
+      setTimeout(onClose, 2500);
+    }
   };
 
   if (done) {
@@ -700,6 +712,7 @@ function ReviewForm({ productId, onClose }: { productId: string; onClose: () => 
       <input value={city} onChange={(e) => setCity(e.target.value)} placeholder="City (optional)" className="h-10 w-full rounded-sm border border-border px-3 text-sm outline-none focus:border-gold" />
       <input required value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Review title" className="h-10 w-full rounded-sm border border-border px-3 text-sm outline-none focus:border-gold" />
       <textarea required value={body} onChange={(e) => setBody(e.target.value)} placeholder="Share your experience..." rows={3} className="w-full rounded-sm border border-border p-3 text-sm outline-none focus:border-gold" />
+      <TurnstileWidget onVerify={setTurnstileToken} />
       <button type="submit" disabled={loading} className="rounded-sm bg-navy px-4 py-2 text-sm font-semibold text-ivory hover:bg-navy-light disabled:opacity-50">
         {loading ? "Submitting..." : "Submit Review"}
       </button>

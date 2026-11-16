@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { toReviewOut } from "@/lib/format";
 import { submitReviewSchema, formatZodErrors } from "@/lib/validation";
-import { rateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+import { rateLimit, RATE_LIMITS, getClientIp } from "@/lib/rate-limit";
+import { verifyTurnstileToken } from "@/lib/integrations/turnstile";
 
 export const dynamic = "force-dynamic";
 
@@ -45,6 +46,18 @@ export async function POST(req: NextRequest) {
     );
   }
   const data = parsed.data;
+
+  // Verify Turnstile CAPTCHA (if configured — fails open if not)
+  const turnstileToken = (raw as { turnstileToken?: string }).turnstileToken;
+  if (turnstileToken !== undefined) {
+    const turnstileResult = await verifyTurnstileToken(turnstileToken, getClientIp(req));
+    if (!turnstileResult.success) {
+      return NextResponse.json(
+        { error: "CAPTCHA verification failed", code: "CAPTCHA_FAILED", details: turnstileResult.errorCodes },
+        { status: 403 }
+      );
+    }
+  }
 
   // Verify the product exists before creating a review (prevents foreign-key errors
   // and stops attackers from spamming reviews against non-existent products)

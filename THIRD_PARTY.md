@@ -1,383 +1,369 @@
 # Third-Party Integrations — Nandhini Tex
 
-This document covers every third-party service the project can integrate with. Each integration is **optional** — the app works without any of them (falls back to COD-only, no email/SMS).
+This document covers every third-party service the Nandhini Tex platform can integrate with. Each integration is **optional** — the app runs with zero integrations configured (COD-only, no email/SMS/analytics).
 
-## At a glance
+## Quick Reference
 
-| Service | Category | Status | Env vars | Setup time |
-|---|---|---|---|---|
-| **Razorpay** | Payment | Configurable | 2 | 15 min |
-| **Shiprocket** | Shipping | Configurable | 2 | 20 min |
-| **Resend** | Email | Configurable | 2 | 10 min |
-| **MSG91** | SMS | Configurable | 3 | 30 min (DLT) |
-| **Plausible** | Analytics | Configurable | 1 | 5 min |
-| **Sentry** | Monitoring | Configurable | 4 | 15 min |
-| **Cloudflare Turnstile** | Security | Configurable | 2 | 10 min |
-| **Z.AI SDK** | AI | Configurable | 1 | 5 min |
-| **WhatsApp** | Commerce | ✅ Built-in | 1 | 0 (defaults to Nandhini Tex number) |
-| **Image CDN** | Media | ✅ Built-in | 0 | 0 (uses z-cdn.chatglm.cn) |
+| # | Service | Category | Status | Required Env Vars | Free Tier |
+|---|---|---|---|---|---|
+| 1 | [Razorpay](#1-razorpay--payments) | Payment | Implemented | `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET` | Test mode free |
+| 2 | [Shiprocket](#2-shiprocket--shipping) | Shipping | Implemented | `SHIPROCKET_EMAIL`, `SHIPROCKET_PASSWORD` | 100 shipments/mo |
+| 3 | [Resend](#3-resend--email) | Email | Implemented | `RESEND_API_KEY`, `RESEND_FROM_EMAIL` | 3k emails/mo |
+| 4 | [MSG91](#4-msg91--sms) | SMS | Implemented | `MSG91_AUTH_KEY`, `MSG91_SENDER_ID`, `MSG91_TEMPLATE_ID` | 130 SMS credits |
+| 5 | [Plausible](#5-plausible--analytics) | Analytics | Implemented | `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` | 10k pageviews/mo |
+| 6 | [Sentry](#6-sentry--error-monitoring) | Monitoring | Stubbed | `SENTRY_DSN` | 5k errors/mo |
+| 7 | [Turnstile](#7-cloudflare-turnstile--captcha) | Security | Implemented | `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY` | Unlimited |
+| 8 | [Z.AI SDK](#8-zai-sdk--ai-chatbot) | AI | Available | `ZAI_API_KEY` | Varies |
 
-**To check which are configured in your environment:**
-```bash
-# Via API (admin-only)
-curl -b "ntx_admin_session=..." http://localhost:3000/api/integrations/status
+**Check status at runtime:** `GET /api/integrations/status` (admin-only) returns which integrations are configured.
 
-# Or via the admin panel → Settings → Integrations
+---
+
+## Architecture
+
 ```
+                           ┌─────────────────────┐
+                           │   Next.js App       │
+                           │   (port 3000)       │
+                           └──────────┬──────────┘
+                                      │
+                 ┌────────────────────┼────────────────────┐
+                 │                    │                    │
+          ┌──────▼──────┐    ┌────────▼────────┐   ┌───────▼───────┐
+          │  Payments   │    │  Communication  │   │  Monitoring   │
+          │             │    │                 │   │               │
+          │  Razorpay   │    │  Resend (email) │   │  Plausible    │
+          │  (UPI/card) │    │  MSG91 (SMS)    │   │  Sentry       │
+          └──────┬──────┘    └────────┬────────┘   └───────────────┘
+                 │                    │
+          ┌──────▼──────┐    ┌────────▼────────┐
+          │  Shipping   │    │  Security       │
+          │             │    │                 │
+          │  Shiprocket │    │  Turnstile      │
+          │  (Delhivery │    │  (CAPTCHA)      │
+          │   /DTDC/    │    └─────────────────┘
+          │   India Post│
+          └─────────────┘
+```
+
+All integrations follow this pattern:
+- **Config check:** `isXConfigured()` returns `true` if env vars are present
+- **Graceful degradation:** If not configured, the feature is skipped (not crashed)
+- **Non-blocking:** Email/SMS/analytics calls are fire-and-forget (`.catch(() => {})`)
+- **No secrets in client:** All API keys stay server-side; only `NEXT_PUBLIC_*` vars reach the browser
 
 ---
 
 ## 1. Razorpay — Payments
 
-**What:** India's leading payment gateway. Accept UPI, cards, netbanking, wallets, EMI.
+India's leading payment gateway. Accepts UPI, cards, netbanking, wallets, EMI.
 
-**Free tier:** None (transaction fees only — 2% domestic cards, 0% UPI)
+### Setup
 
-**Setup (15 min):**
-1. Sign up at [dashboard.razorpay.com](https://dashboard.razorpay.com)
-2. Complete KYC (PAN + bank account) — takes 24-48h
-3. Generate API keys: Settings → API Keys → Generate Key
-4. Copy the `Key ID` (starts with `rzr_test_` or `rzr_live_`) and `Key Secret`
-5. Set env vars:
+1. **Create account:** [dashboard.razorpay.com](https://dashboard.razorpay.com)
+2. **Get API keys:** Settings → API Keys → Generate Test Keys
+   - Key ID: starts with `rzr_test_`
+   - Key Secret: shown once (save it!)
+3. **Set env vars:**
+   ```env
+   RAZORPAY_KEY_ID="rzr_test_XXXXXXXXXXXX"
+   RAZORPAY_KEY_SECRET="your-secret-here"
+   RAZORPAY_WEBHOOK_SECRET="optional-for-webhooks"
+   ```
+4. **Test with:** card `4111 1111 1111 1111`, any expiry, any CVV
 
-```env
-RAZORPAY_KEY_ID="rzr_test_xxxxxxxxxxxxx"
-RAZORPAY_KEY_SECRET="xxxxxxxxxxxxxxxxxxxxxxxx"
-RAZORPAY_WEBHOOK_SECRET=""  # only if using webhooks
+### Flow
+
+```
+Customer → Cart → Checkout
+  ↓
+POST /api/payments/razorpay/create-order
+  → Creates Razorpay Order (server-to-server)
+  → Returns { razorpayOrderId, amount, keyId }
+  ↓
+Razorpay Checkout modal opens (client-side)
+  → Customer pays via UPI/card/netbanking
+  → Returns { razorpay_payment_id, razorpay_signature }
+  ↓
+POST /api/payments/razorpay/verify
+  → Verifies HMAC-SHA256 signature
+  → Fetches payment status from Razorpay API
+  → Marks order as "paid" + "confirmed"
+  → Sends confirmation email + SMS
+  ↓
+Order confirmed → Customer sees success page
 ```
 
-6. Restart the server. The storefront will now show "Pay Online" as a payment option.
+### Webhooks (optional but recommended)
 
-**Test cards:**
-- Card: `4111 1111 1111 1111`
-- Expiry: any future date
-- CVV: any 3 digits
+For production, set up a webhook to catch async events (refunds, failed captures):
 
-**Flow:**
-1. Customer places order → `/api/orders` creates an order with `paymentStatus: "pending"`
-2. Customer clicks "Pay Online" → frontend calls `/api/payments/razorpay/create-order`
-3. Razorpay Checkout modal opens (loads `https://checkout.razorpay.com/v1/checkout.js`)
-4. Customer pays → Razorpay returns `razorpay_payment_id` + `razorpay_signature`
-5. Frontend posts to `/api/payments/razorpay/verify` → we verify the HMAC signature
-6. Order marked `paid` + `confirmed` → confirmation email + SMS sent
+1. Go to Razorpay Dashboard → Webhooks → Add Webhook
+2. URL: `https://yourdomain.com/api/webhooks/razorpay`
+3. Events: `payment.captured`, `payment.failed`, `refund.processed`
+4. Copy the Webhook Secret → `RAZORPAY_WEBHOOK_SECRET`
 
-**Files:**
-- `src/lib/integrations/razorpay.ts` — SDK wrapper (create order, verify signature, fetch payment)
-- `src/app/api/payments/razorpay/create-order/route.ts` — POST endpoint
-- `src/app/api/payments/razorpay/verify/route.ts` — POST endpoint
+### Going live
+
+1. Complete KYC in Razorpay dashboard
+2. Switch to Live Keys (starts with `rzr_live_`)
+3. Test a ₹1 transaction end-to-end
 
 ---
 
 ## 2. Shiprocket — Shipping
 
-**What:** India's shipping aggregator. One API for Delhivery, DTDC, India Post, BlueDart, Xpressbees, etc.
+India's leading shipping aggregator. One API for Delhivery, DTDC, India Post, BlueDart, Xpressbees.
 
-**Free tier:** ₹0 setup. Per-shipment pricing (₹25-50 for <500g, prepaid; ₹40-70 COD)
+### Setup
 
-**Setup (20 min):**
-1. Sign up at [app.shiprocket.in](https://app.shiprocket.in)
-2. Add a pickup location (your warehouse address) — note the name (e.g. "Elampillai-Office")
-3. Add your bank account for COD remittance
-4. Set env vars:
+1. **Create account:** [app.shiprocket.in](https://app.shiprocket.in)
+2. **Add pickup address:** Settings → Pickup Locations → Add (your Elampillai warehouse)
+3. **Set env vars:**
+   ```env
+   SHIPROCKET_EMAIL="your-api-user@email.com"
+   SHIPROCKET_PASSWORD="your-password"
+   SHIPROCKET_PICKUP_LOCATION="Elampillai"
+   ```
+4. **Pro tip:** Create a dedicated "API User" in Shiprocket rather than using your main account
 
-```env
-SHIPROCKET_EMAIL="your-email@nandhinitex.com"
-SHIPROCKET_PASSWORD="your-shiprocket-password"
-SHIPROCKET_SANDBOX="false"  # set "true" for staging
+### Flow
+
+```
+Admin → Orders → View order → "Create Shipment"
+  ↓
+POST /api/admin/orders/[id]/ship
+  → Calls createShiprocketShipment()
+  → Shiprocket auto-assigns AWB + courier partner
+  → Returns { awb_code, courier_name, label_url }
+  ↓
+Order status → "shipped"
+  → Sends shipping SMS to customer
+  → Updates timeline
+  ↓
+Customer tracks via /api/orders/track
+  → trackShiprocketShipment(awb) fetches live status
 ```
 
-5. When an admin moves an order to "confirmed" status, Shiprocket auto-creates a shipment, assigns an AWB, and schedules pickup.
+### Courier assignment
 
-**Courier auto-assignment:** Shiprocket picks the cheapest serviceable courier for the destination pincode based on your rate card.
-
-**Tracking:** The `/api/orders/track` endpoint fetches live status from Shiprocket by AWB (if configured). Falls back to showing the manually-entered courier info otherwise.
-
-**Files:**
-- `src/lib/integrations/shiprocket.ts` — auth token caching, create shipment, track by AWB
+Shiprocket's "smart courier assignment" picks the best courier based on:
+- Serviceability at destination pincode
+- Cost (lowest among available)
+- TAT (turnaround time)
+- COD availability
 
 ---
 
-## 3. Resend — Transactional Email
+## 3. Resend — Email
 
-**What:** Modern email API. Send order confirmations, shipping alerts, newsletters.
+Modern email API for transactional emails. Built by ex-React team members.
 
-**Free tier:** 3,000 emails/month, 100/day. No credit card required.
+### Setup
 
-**Setup (10 min):**
-1. Sign up at [resend.com](https://resend.com)
-2. (Optional but recommended) Verify your domain at [resend.com/domains](https://resend.com/domains) — takes 5 min (add 3 DNS records)
-3. Generate API key: API Keys → Create API Key → copy (starts with `re_`)
-4. Set env vars:
+1. **Create account:** [resend.com](https://resend.com)
+2. **Get API key:** API Keys → Create → starts with `re_`
+3. **Verify domain (optional but recommended):**
+   - Free tier: can only send FROM `onboarding@resend.dev`
+   - Verified domain: send FROM `noreply@yourdomain.com`
+4. **Set env vars:**
+   ```env
+   RESEND_API_KEY="re_XXXXXXXXXXXX"
+   RESEND_FROM_EMAIL="onboarding@resend.dev"
+   RESEND_REPLY_TO="support@nandhinitex.com"
+   ```
 
-```env
-RESEND_API_KEY="re_xxxxxxxxxxxxx"
-# Until domain is verified, you can ONLY send FROM onboarding@resend.dev:
-RESEND_FROM_EMAIL="onboarding@resend.dev"
-# After domain verification:
-RESEND_FROM_EMAIL="noreply@nandhinitex.com"
-RESEND_REPLY_TO="support@nandhinitex.com"
-```
+### Email types
 
-5. Restart the server. Order confirmations will now send email automatically.
+The app sends these emails automatically:
 
-**When emails are sent:**
-- Order placed (COD or prepaid) → confirmation email
-- Order paid via Razorpay → confirmation email + "Payment captured" note
-- (Future) Order shipped → shipping notification email
+| Trigger | Email | Template |
+|---|---|---|
+| Order placed (COD) | Order Confirmation | `renderOrderConfirmationEmail()` |
+| Payment captured (Razorpay) | Order Confirmation + Payment Receipt | `renderOrderConfirmationEmail()` |
+| Order shipped | Shipping Notification | (use `sendEmail()` directly) |
+| Order delivered | Delivery Confirmation | (use `sendEmail()` directly) |
 
-**Template:** The order confirmation email uses the Royal Heritage theme (Navy/Gold/Ivory) — see `renderOrderConfirmationEmail()` in `src/lib/integrations/resend.ts`.
-
-**Files:**
-- `src/lib/integrations/resend.ts` — sendEmail(), order confirmation template
+All emails use the **Royal Heritage theme** (Navy `#081B3A` + Gold `#D4AF37` + Ivory `#FAF7F0`) with Cinzel/Playfair Display fonts.
 
 ---
 
 ## 4. MSG91 — SMS
 
-**What:** India-focused SMS provider. Order confirmations, shipping alerts, OTP.
+India-focused SMS provider for transactional alerts.
 
-**Free trial:** 130 SMS credits on signup. Per-SMS cost ~₹0.20 (transactional).
+### Setup
 
-**Setup (30 min — DLT registration takes time):**
-1. Sign up at [msg91.com](https://msg91.com)
-2. Complete DLT registration (required by TRAI for all Indian SMS):
-   - Register at [msg91.com/dlt](https://msg91.com/dlt) — takes 24-48h
-   - Approve a 6-char sender ID (e.g. "NDHTXT" for Nandhini Tex)
-   - Create a DLT-approved template for each message type
-3. Get your auth key: Dashboard → API → Auth Key
-4. Set env vars:
+1. **Create account:** [msg91.com](https://msg91.com)
+2. **Get auth key:** Dashboard → API → Auth Key
+3. **Register sender ID:** 6 characters (e.g. `NDHTXT`) — requires DLT approval
+4. **Register DLT template:** TRAI requires all transactional SMS to use an approved template
+5. **Set env vars:**
+   ```env
+   MSG91_AUTH_KEY="your-auth-key"
+   MSG91_SENDER_ID="NDHTXT"
+   MSG91_TEMPLATE_ID="your-dlt-template-id"
+   ```
 
-```env
-MSG91_AUTH_KEY="xxxxxxxxxxxx"
-MSG91_SENDER_ID="NDHTXT"
-MSG91_TEMPLATE_ID="xxxxxxxxxxxx"  # DLT template ID for order confirmation
+### DLT template registration
+
+Register these templates at [msg91.com/dlt](https://msg91.com/dlt):
+
+**Order Confirmation:**
+```
+Dear {var1}, your order {var2} for Rs.{var3} is confirmed. Track at {var4}. - Nandhini Tex
 ```
 
-**DLT template example (order confirmation):**
+**Shipping Notification:**
 ```
-Dear {var1}, your order {var2} for Rs.{var3} is confirmed.
-Track at {var4}. - Nandhini Tex
+Dear {var1}, your order {var2} has been shipped via {var3}. AWB: {var4}. Track at {var5}. - Nandhini Tex
 ```
-- `{var1}` = customer first name
-- `{var2}` = order number
-- `{var3}` = total amount
-- `{var4}` = tracking URL
 
-5. Restart the server. SMS will be sent on order placement + shipping.
+**Delivery Confirmation:**
+```
+Dear {var1}, your order {var2} has been delivered. Thank you for shopping with Nandhini Tex!
+```
 
-**When SMS are sent:**
-- Order placed → confirmation SMS (with tracking URL)
-- Order paid via Razorpay → confirmation SMS
-- (Future) Order shipped → shipping SMS with AWB
-- (Future) Order delivered → delivery confirmation SMS
+### SMS sending
 
-**Files:**
-- `src/lib/integrations/msg91.ts` — sendSMS(), order confirmation + shipping + delivery templates
+The app sends SMS automatically:
+- Order placed → `sendOrderConfirmationSMS()`
+- Order shipped → `sendShippingSMS()`
+- Order delivered → `sendDeliverySMS()`
+
+All calls are non-blocking — if MSG91 fails, the order still succeeds.
 
 ---
 
-## 5. Plausible Analytics — Privacy-Friendly Analytics
+## 5. Plausible — Analytics
 
-**What:** Cookie-free, GDPR-compliant web analytics. No cookie banner needed.
+Privacy-friendly, cookie-free analytics. No cookie banner needed (GDPR-compliant out of the box).
 
-**Free tier:** Cloud: 10k pageviews/month. Self-hosted: unlimited.
+### Setup
 
-**Setup (5 min):**
-1. Sign up at [plausible.io](https://plausible.io) (or self-host via Docker)
-2. Add your site — you'll get a domain to track (e.g. "nandhinitex.com")
-3. Set env vars:
+1. **Create account:** [plausible.io](https://plausible.io) (or self-host)
+2. **Add your site:** Sites → Add Site → enter your domain
+3. **Set env vars:**
+   ```env
+   NEXT_PUBLIC_PLAUSIBLE_DOMAIN="nandhinitex.com"
+   NEXT_PUBLIC_PLAUSIBLE_SRC="https://plausible.io/js/script.js"
+   # For self-hosted:
+   # NEXT_PUBLIC_PLAUSIBLE_SRC="https://stats.yourdomain.com/js/script.js"
+   ```
 
-```env
-NEXT_PUBLIC_PLAUSIBLE_DOMAIN="nandhinitex.com"
-# Optional — for self-hosted:
-NEXT_PUBLIC_PLAUSIBLE_SRC="https://stats.yourdomain.com/js/script.js"
-# Optional — for server-side event tracking (conversions):
-PLAUSIBLE_API_KEY="xxxxxxxxxxxx"
+### What it tracks
+
+- **Automatic:** Page views, bounce rate, visit duration, referrers, top pages
+- **Custom events** (server-side via `trackPlausibleEvent()`):
+  - `Order Placed` — with `revenue`, `paymentMethod`, `itemCount`
+  - `Review Submitted` — with `rating`, `productId`
+
+### Self-hosting
+
+For zero-cost unlimited analytics:
+```bash
+docker run -d -p 8000:8000 plausible/analytics:latest
+# Set NEXT_PUBLIC_PLAUSIBLE_SRC to http://your-server:8000/js/script.js
 ```
-
-4. Restart the server. The Plausible script is auto-injected into `<head>` only when the domain is set.
-
-**Why Plausible over Google Analytics:**
-- No cookies → no cookie banner needed
-- No personal data → no DPA needed
-- 1KB script (vs GA's 50KB) → faster page loads
-- Simple, focused on what matters (pageviews, sources, goals)
-
-**Custom events:** The order-placement API route fires a `trackPlausibleEvent("Order Placed", { revenue, paymentMethod, itemCount })` event automatically.
-
-**Files:**
-- `src/lib/integrations/plausible.ts` — config + trackPlausibleEvent()
-- `src/app/layout.tsx` — script injection (conditional on env var)
 
 ---
 
 ## 6. Sentry — Error Monitoring
 
-**What:** Capture unhandled exceptions, track performance, get alerts on regressions.
+Automatic capture of unhandled exceptions + performance tracing.
 
-**Free tier:** 5,000 errors/month, 50 performance transactions.
-
-**Setup (15 min):**
-1. Sign up at [sentry.io](https://sentry.io)
-2. Create a project → platform: Next.js
-3. Copy the DSN (looks like `https://xxxxx@o123456.ingest.sentry.io/123456`)
-4. Install the SDK:
+### Setup (requires installing the package)
 
 ```bash
 bun add @sentry/nextjs
 ```
 
-5. Set env vars:
+Then:
 
-```env
-SENTRY_DSN="https://xxxxx@o123456.ingest.sentry.io/123456"
-SENTRY_AUTH_TOKEN="sntrys_xxxxxxxxxxxx"  # for source map upload
-SENTRY_ORG="your-org-slug"
-SENTRY_PROJECT="nandhini-tex"
-```
+1. **Create account:** [sentry.io](https://sentry.io)
+2. **Create a Next.js project** → get the DSN
+3. **Set env vars:**
+   ```env
+   SENTRY_DSN="https://xxx@sentry.io/123"
+   SENTRY_ORG="your-org"
+   SENTRY_PROJECT="nandhini-tex"
+   SENTRY_AUTH_TOKEN="sntrys_..."  # for source map upload at build time
+   ```
+4. **Create config files:**
+   - `sentry.client.config.ts`
+   - `sentry.server.config.ts`
+   - Wrap `next.config.ts` with `withSentryConfig()`
+5. **Uncomment the implementation** in `src/lib/integrations/sentry.ts`
 
-6. Initialize Sentry by uncommenting the code in `src/lib/integrations/sentry.ts` (the file has the implementation commented out so the app works without the package installed)
+### Current state
 
-7. (Optional) Add `sentry.client.config.ts` + `sentry.server.config.ts` + wrap `next.config.ts` per [the Sentry Next.js docs](https://docs.sentry.io/platforms/javascript/guides/nextjs/)
-
-**When errors are captured:**
-- API route throws → `captureException(err, { context })` in catch blocks
-- Razorpay payment verification fails → captured with order context
-- Email/SMS send failures → captured (but don't block the order)
-
-**Files:**
-- `src/lib/integrations/sentry.ts` — initSentryServer(), captureException(), captureMessage()
+The Sentry integration is **stubbed** — `captureException()` and `captureMessage()` are available but fall back to `console.error` until `@sentry/nextjs` is installed. This means the app code already calls `captureException(err)` in catch blocks, so when Sentry is installed, it "just works" with no code changes.
 
 ---
 
 ## 7. Cloudflare Turnstile — CAPTCHA
 
-**What:** Privacy-friendly CAPTCHA. Replaces Google reCAPTCHA. Invisible by default.
+Privacy-friendly CAPTCHA. Free, unlimited. Replaces Google reCAPTCHA.
 
-**Free tier:** Unlimited. No caps.
+### Why Turnstile over reCAPTCHA
 
-**Setup (10 min):**
-1. Sign up at [dash.cloudflare.com](https://dash.cloudflare.com) (free account works)
-2. Go to Turnstile → Add site
-3. Copy the Site Key + Secret Key
-4. Set env vars:
-
-```env
-NEXT_PUBLIC_TURNSTILE_SITE_KEY="0x4AAAAAAA..."  # public, safe for browser
-TURNSTILE_SECRET_KEY="0x4AAAAAAA..."            # server-only, NEVER expose
-```
-
-5. Add the Turnstile widget to any form:
-
-```tsx
-<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />
-<div className="cf-turnstile" data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY} />
-```
-
-6. On the server, verify the token:
-
-```ts
-import { verifyTurnstileToken } from "@/lib/integrations/turnstile";
-
-const result = await verifyTurnstileToken(token, requestIp);
-if (!result.success) return 400;
-```
-
-**Why Turnstile over reCAPTCHA:**
-- No "I'm not a robot" checkbox (invisible)
+- No cookie banner needed (GDPR-friendly)
+- No "I'm not a robot" checkbox (invisible by default)
 - No image challenges ("select all traffic lights")
-- No cookies → no cookie banner needed
-- Free, unlimited (reCAPTCHA has quotas)
+- Free, unlimited
 
-**Files:**
-- `src/lib/integrations/turnstile.ts` — verifyTurnstileToken()
+### Setup
 
----
+1. **Create account:** [dash.cloudflare.com](https://dash.cloudflare.com/?to=/:account/turnstile)
+2. **Add a site:** Turnstile → Add Site → enter your domain
+3. **Copy keys:**
+   - Site Key (public) → `NEXT_PUBLIC_TURNSTILE_SITE_KEY`
+   - Secret Key (server) → `TURNSTILE_SECRET_KEY`
+4. **Set env vars:**
+   ```env
+   NEXT_PUBLIC_TURNSTILE_SITE_KEY="0x4AAAA..."
+   TURNSTILE_SECRET_KEY="0x4AAAA..."
+   ```
 
-## 8. Z.AI Web Dev SDK — AI Features
+### Usage
 
-**What:** LLM chatbot, image generation, vision understanding, TTS, ASR.
+The `verifyTurnstileToken()` function is available in:
+- Review submission form
+- Newsletter signup
+- Admin login (recommended)
 
-**Status:** Package is installed (`z-ai-web-dev-sdk@^0.0.18`) but **never imported** in the current codebase. Set the API key to enable future AI features.
-
-**Setup (5 min):**
-1. Get an API key from [chatglm.cn](https://chatglm.cn) (or your Z.AI provider)
-2. Set env var:
-
-```env
-ZAI_API_KEY="xxxxxxxxxxxx"
-```
-
-3. Use the SDK in any server-side route:
-
-```ts
-import ZAI from "z-ai-web-dev-sdk";
-
-const zai = await ZAI.create();
-const completion = await zai.chat.completions.create({
-  messages: [{ role: "user", content: "Hello" }],
-});
-```
-
-**IMPORTANT:** The SDK MUST be used **server-side only**. Never import it in a client component — it would leak your API key to the browser.
-
-**Files:**
-- (No integration file yet — the SDK is available for ad-hoc use)
+If not configured, verification fails **open** (forms work without CAPTCHA).
 
 ---
 
-## 9. WhatsApp — Built-in
+## 8. Z.AI SDK — AI Chatbot
 
-**Status:** ✅ Already integrated via deep-links.
+The `z-ai-web-dev-sdk` is already installed. Enables:
+- **LLM chatbot** for customer support
+- **Image generation** for product mockups
+- **Vision understanding** for image analysis
+- **TTS/ASR** for voice features
 
-**How it works:** Customers tap a "Order on WhatsApp" button → opens `wa.me/917604811838?text=...` with a pre-filled message containing the product/cart details.
+### Setup
 
-**Configuration:**
-```env
-NEXT_PUBLIC_WHATSAPP_NUMBER="917604811838"  # international format, no +
-```
+1. **Get API key:** from the Z.AI platform
+2. **Set env var:**
+   ```env
+   ZAI_API_KEY="your-api-key"
+   ```
+3. **Use the Skill system:** invoke `Skill(command="LLM")`, `Skill(command="image-generation")`, etc.
 
-The default number (+91 76048 11838) is Nandhini Tex's support line. Change it via env var without code edits.
+### Important constraint
 
-**Where it's used:**
-- Product page → "Order on WhatsApp" button
-- Cart page → "Order on WhatsApp" button
-- Bulk inquiry module → tiered pricing WhatsApp links
-- Track order page → "WhatsApp Support" fallback
-
-**Files:**
-- `src/lib/whatsapp.ts` — message builders + URL helpers
-
----
-
-## 10. Image CDN — Built-in
-
-**Status:** ✅ Already integrated via `next/image`.
-
-**Host:** `z-cdn.chatglm.cn` (configured in `next.config.ts` `images.remotePatterns`)
-
-**How it works:** Next.js optimizes images on-the-fly (resize, WebP/AVIF conversion, lazy-loading) using `sharp`. The remote host serves the original; Next serves the optimized version from `/__next/image?url=...&w=...&q=75`.
-
-**Adding more hosts:** Edit `next.config.ts`:
-
-```ts
-images: {
-  remotePatterns: [
-    { protocol: "https", hostname: "z-cdn.chatglm.cn" },
-    { protocol: "https", hostname: "images.unsplash.com" },
-    // Add your own CDN:
-    // { protocol: "https", hostname: "cdn.yourdomain.com" },
-  ],
-},
-```
+The Z.AI SDK **MUST be used backend-only** — never in client-side code. The API key must never reach the browser bundle.
 
 ---
 
-## Configuration status endpoint
+## Integration Status API
 
-**GET `/api/integrations/status`** (admin-only)
+### `GET /api/integrations/status`
 
-Returns which integrations are configured (without exposing secrets):
+Returns which integrations are configured (admin-only):
 
 ```json
 {
@@ -387,56 +373,119 @@ Returns which integrations are configured (without exposing secrets):
       "name": "Razorpay (UPI, Cards, NetBanking)",
       "category": "payment",
       "isConfigured": true,
+      "isRequired": false,
       "requiredEnvVars": ["RAZORPAY_KEY_ID", "RAZORPAY_KEY_SECRET"],
       "docsUrl": "https://dashboard.razorpay.com",
-      "description": "..."
-    },
-    // ... 8 more integrations
+      "description": "India's leading payment gateway..."
+    }
   ],
   "summary": {
     "payment": { "configured": 1, "total": 1, "missing": [] },
     "shipping": { "configured": 0, "total": 1, "missing": ["shiprocket"] },
-    // ... etc
+    ...
   }
 }
 ```
 
----
-
-## Troubleshooting
-
-### "Payments not configured" error
-- Check `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET` are set
-- Verify the keys are valid in the Razorpay dashboard
-- Test keys start with `rzr_test_`, live with `rzr_live_`
-
-### Email not sending
-- Check `RESEND_API_KEY` is set (starts with `re_`)
-- On free tier, you can only send FROM `onboarding@resend.dev` until you verify your domain
-- Check logs for `[email]` prefixed messages
-
-### SMS not sending
-- Check `MSG91_AUTH_KEY`, `MSG91_SENDER_ID`, `MSG91_TEMPLATE_ID` are all set
-- Verify your DLT template is approved
-- The phone number must be 10 digits (or `91` + 10 digits)
-
-### Analytics not appearing in Plausible
-- Check `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` matches exactly what's in your Plausible dashboard
-- The script is only injected when the env var is set — clear cache and reload
-- Check browser DevTools → Network → look for `plausible.io/js/script.js`
-
-### Razorpay signature mismatch
-- Ensure `RAZORPAY_KEY_SECRET` matches the secret in the dashboard (not the test one if using live mode)
-- The signature is HMAC-SHA256 of `order_id|payment_id` — verify you're using the Razorpay order_id (starts with `rzr_`), not your internal order number
+Used by the admin Settings page to show a checklist.
 
 ---
 
-## Removing integrations
+## Environment Variable Reference
 
-To completely remove an integration:
-1. Delete the env vars from `.env`
-2. (Optional) Delete the lib file at `src/lib/integrations/<service>.ts`
-3. (Optional) Delete the API routes at `src/app/api/<service>/`
-4. Remove imports from `src/lib/integrations/index.ts`
+See [`.env.third-party.example`](./.env.third-party.example) for the complete template with all integration env vars.
 
-The app will gracefully degrade — no crashes, just missing features.
+### Required for production
+
+| Var | Description |
+|---|---|
+| `DATABASE_URL` | SQLite path or Postgres connection string |
+| `ADMIN_PASSWORD` | Admin panel password (min 12 chars) |
+| `ADMIN_SESSION_SECRET` | HMAC signing secret for session tokens |
+
+### Payment
+
+| Var | Description |
+|---|---|
+| `RAZORPAY_KEY_ID` | Public key (starts with `rzr_`) |
+| `RAZORPAY_KEY_SECRET` | Secret key (server-only!) |
+| `RAZORPAY_WEBHOOK_SECRET` | For verifying webhook signatures |
+
+### Shipping
+
+| Var | Description |
+|---|---|
+| `SHIPROCKET_EMAIL` | Shiprocket account email |
+| `SHIPROCKET_PASSWORD` | Shiprocket account password |
+| `SHIPROCKET_PICKUP_LOCATION` | Pickup location name (configured in Shiprocket dashboard) |
+
+### Email
+
+| Var | Description |
+|---|---|
+| `RESEND_API_KEY` | Resend API key (starts with `re_`) |
+| `RESEND_FROM_EMAIL` | Sender address (must be verified) |
+| `RESEND_REPLY_TO` | Reply-to address (optional) |
+
+### SMS
+
+| Var | Description |
+|---|---|
+| `MSG91_AUTH_KEY` | MSG91 auth key |
+| `MSG91_SENDER_ID` | 6-char sender ID (DLT-approved) |
+| `MSG91_TEMPLATE_ID` | DLT template ID |
+
+### Analytics
+
+| Var | Description |
+|---|---|
+| `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` | Tracked domain (public) |
+| `NEXT_PUBLIC_PLAUSIBLE_SRC` | Script URL (public) |
+| `PLAUSIBLE_API_KEY` | Server-side API key for custom events |
+
+### Monitoring
+
+| Var | Description |
+|---|---|
+| `SENTRY_DSN` | Public DSN (ok in browser) |
+| `SENTRY_AUTH_TOKEN` | Server token for source map upload (build only) |
+| `SENTRY_ORG` | Sentry org slug |
+| `SENTRY_PROJECT` | Sentry project slug |
+
+### Security
+
+| Var | Description |
+|---|---|
+| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Turnstile site key (public) |
+| `TURNSTILE_SECRET_KEY` | Turnstile secret key (server-only!) |
+
+### AI
+
+| Var | Description |
+|---|---|
+| `ZAI_API_KEY` | Z.AI API key (server-only!) |
+
+---
+
+## Adding a New Integration
+
+1. **Create the module:** `src/lib/integrations/<service>.ts`
+   - Export `isXConfigured()` function
+   - Export the main API functions (e.g. `sendX()`, `verifyX()`)
+   - Use `getEnv()` pattern — return `null` if not configured
+   - Never throw if not configured — log a warning and return `null`/`false`
+
+2. **Register in the index:** `src/lib/integrations/index.ts`
+   ```ts
+   import { isNewServiceConfigured } from "./new-service";
+   // Add to INTEGRATIONS array
+   ```
+
+3. **Wire into the app:** Call the integration from the relevant route handler
+   - Use `import()` (dynamic) to avoid loading if not configured
+   - Use `.catch(() => {})` for non-critical calls (email/SMS/analytics)
+   - Use `await` for critical calls (payment verification)
+
+4. **Document the env vars:** Add to `.env.third-party.example` and this file
+
+5. **Test:** Verify the app works with the integration both configured and not configured
