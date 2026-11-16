@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import {
-  ShieldCheck, Truck, RefreshCw, Hand, Star, ChevronRight,
+  ShieldCheck, Truck, RefreshCw, Hand, Star, ChevronRight, ChevronLeft,
   Sparkles, Award, Heart, Phone, Mail, MapPin, MessageCircle, ArrowRight
 } from "lucide-react";
 import {
@@ -24,6 +24,155 @@ type Category = { id: string; name: string; slug: string; description: string | 
 type Testimonial = { id: string; name: string; city: string | null; quote: string; rating: number };
 type Faq = { id: string; question: string; answer: string; category: string };
 
+function LotusOrnament({ className = "w-10 h-6" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 60 28" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+      <defs>
+        <linearGradient id="lotus-gold-gradient" x1="30" y1="2" x2="30" y2="26" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#FDE8BB" />
+          <stop offset="0.4" stopColor="#D4AF37" />
+          <stop offset="1" stopColor="#9C740E" />
+        </linearGradient>
+      </defs>
+      <path
+        d="M30 2C30 2 34.5 9 34.5 16C34.5 20.2 32.5 23 30 23C27.5 23 25.5 20.2 25.5 16C25.5 9 30 2 30 2Z"
+        fill="url(#lotus-gold-gradient)"
+      />
+      <path
+        d="M30 23C33.8 23 41.5 21.5 45.5 14.5C45.5 14.5 43 20.5 38.5 23.2C35 25.2 31.8 23.5 30 23Z"
+        fill="url(#lotus-gold-gradient)"
+        opacity="0.92"
+      />
+      <path
+        d="M30 23C26.2 23 18.5 21.5 14.5 14.5C14.5 14.5 17 20.5 21.5 23.2C25 25.2 28.2 23.5 30 23Z"
+        fill="url(#lotus-gold-gradient)"
+        opacity="0.92"
+      />
+      <path
+        d="M38.5 23.2C44.5 24.5 53.5 20.5 56.5 14.5C56.5 14.5 52.5 21.8 46.5 24.8C42.5 26.2 39.5 24.2 38.5 23.2Z"
+        fill="url(#lotus-gold-gradient)"
+        opacity="0.8"
+      />
+      <path
+        d="M21.5 23.2C15.5 24.5 6.5 20.5 3.5 14.5C3.5 14.5 7.5 21.8 13.5 24.8C17.5 26.2 20.5 24.2 21.5 23.2Z"
+        fill="url(#lotus-gold-gradient)"
+        opacity="0.8"
+      />
+      <circle cx="30" cy="25" r="2" fill="#D4AF37" />
+    </svg>
+  );
+}
+
+function MannequinIcon({ className = "w-4 h-4" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
+      <path d="M12 2a2 2 0 100 4 2 2 0 000-4zm-1.8 5c-.7 0-1.2.6-1.2 1.3v.9c0 1.9 1.1 3.5 2.7 4.2L10.5 18h1.2v3h1.6v-3h1.2l-1.2-4.6c1.6-.7 2.7-2.3 2.7-4.2v-.9c0-.7-.5-1.3-1.2-1.3h-4.6z" opacity="0.85" />
+    </svg>
+  );
+}
+
+function HandloomLoomIcon({ className = "w-4 h-4" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" className={className}>
+      <rect x="2.5" y="3.5" width="15" height="13" rx="2" stroke="#E5B556" />
+      <line x1="6" y1="3.5" x2="6" y2="16.5" stroke="#E5B556" strokeDasharray="1.2 1.5" />
+      <line x1="10" y1="3.5" x2="10" y2="16.5" stroke="#E5B556" strokeDasharray="1.2 1.5" />
+      <line x1="14" y1="3.5" x2="14" y2="16.5" stroke="#E5B556" strokeDasharray="1.2 1.5" />
+      <path d="M4 10H16" stroke="#FDE8BB" strokeWidth="1.8" strokeLinecap="round" />
+      <polygon points="8,7.5 12,7.5 13.5,10 12,12.5 8,12.5 6.5,10" fill="#E5B556" fillOpacity="0.45" stroke="#FDE8BB" strokeWidth="0.75" />
+    </svg>
+  );
+}
+
+const REPLICATED_COLLECTIONS = [
+  {
+    id: "view-all",
+    title: "View All Sarees",
+    subtitle: null,
+    designs: "32 Designs",
+    image: "/collections/view-all.jpg",
+    action: "all",
+  },
+  {
+    id: "silk-varieties",
+    title: "Silk Varieties",
+    subtitle: "Soft Silk, Kubera Pattu & Banarasi Mashru",
+    designs: "18 Designs",
+    image: "/collections/silk-varieties.jpg",
+    action: "silk-varieties",
+  },
+  {
+    id: "bridal-pattu",
+    title: "Bridal & Pattu",
+    subtitle: "Grand Samudhrikha & Pure Gold Zari Silks",
+    designs: "31 Designs",
+    image: "/collections/bridal-pattu.jpg",
+    action: "bridal",
+  },
+  {
+    id: "cotton-collections",
+    title: "Cotton Collections",
+    subtitle: "Breathable Handloom Khadi & Sungudi",
+    designs: "10 Designs",
+    image: "/collections/cotton-collections.jpg",
+    action: "cotton-sarees",
+  },
+  {
+    id: "fancy-printed",
+    title: "Fancy & Printed",
+    subtitle: "Modern Softy Prints & Butterfly Cut Work",
+    designs: "11 Designs",
+    image: "/collections/fancy-printed.jpg",
+    action: "designer",
+  },
+  {
+    id: "ethnic-combos",
+    title: "Ethnic Sets & Combos",
+    subtitle: "Bridal Couple Combos & Traditional Sets",
+    designs: "3 Designs",
+    image: "/collections/ethnic-combos.jpg",
+    action: "combos",
+  },
+];
+
+const REPLICATED_NEW_ARRIVALS = [
+  {
+    id: "na-royal-blue",
+    title: "Royal Blue Kanchipuram Silk Saree",
+    price: 4999,
+    image: "/new-arrivals/saree-royal-blue.jpg",
+    slug: "traditional-elampillai-half-saree-set-royal-blue-gold",
+  },
+  {
+    id: "na-violet",
+    title: "Violet Soft Silk Saree",
+    price: 3999,
+    image: "/new-arrivals/saree-violet.jpg",
+    slug: "butterfly-cut-work-designer-saree-wine",
+  },
+  {
+    id: "na-emerald",
+    title: "Emerald Handloom Saree",
+    price: 4499,
+    image: "/new-arrivals/saree-emerald.jpg",
+    slug: "semi-kancheepuram-soft-cotton-saree-temple-green",
+  },
+  {
+    id: "na-rani-pink",
+    title: "Rani Pink Pattu Saree",
+    price: 4799,
+    image: "/new-arrivals/saree-rani-pink.jpg",
+    slug: "digital-softy-floral-print-saree-mint-peach",
+  },
+  {
+    id: "na-golden-zari",
+    title: "Golden Zari Saree",
+    price: 4299,
+    image: "/new-arrivals/saree-golden-zari.jpg",
+    slug: "celebrity-inspired-nita-ambani-style-tissue-saree-gold",
+  },
+];
+
 const CATEGORY_TAGLINES: Record<string, string> = {
   "silk-varieties": "Soft Silk, Kubera Pattu & Banarasi Mashru",
   "bridal": "Grand Samudhrikha & Pure Gold Zari Silks",
@@ -37,6 +186,19 @@ export function HomePage({ categories }: { categories: Category[] }) {
   const goCategory = useStore((s) => s.goCategory);
   const goAllProducts = useStore((s) => s.goAllProducts);
   const goProduct = useStore((s) => s.goProduct);
+  const isWishlisted = useStore((s) => s.isWishlisted);
+  const toggleWishlist = useStore((s) => s.toggleWishlist);
+  const newArrivalsScrollRef = useRef<HTMLDivElement>(null);
+
+  const scrollNewArrivals = (direction: "left" | "right") => {
+    if (newArrivalsScrollRef.current) {
+      const scrollAmount = 320;
+      newArrivalsScrollRef.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth",
+      });
+    }
+  };
   const [newArrivals, setNewArrivals] = useState<ProductCardType[]>([]);
   const [bestsellers, setBestsellers] = useState<ProductCardType[]>([]);
   const [bridal, setBridal] = useState<ProductCardType[]>([]);
@@ -220,88 +382,199 @@ export function HomePage({ categories }: { categories: Category[] }) {
         </div>
       </section>
 
-      {/* ===== CATEGORY RAIL ===== */}
-      <section className="mx-auto max-w-7xl px-6 py-16 md:px-8 md:py-24">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-          <SectionHeading eyebrow="Shop by Collection" title="The Collections" />
-          <button
-            onClick={goAllProducts}
-            className="inline-flex items-center gap-1.5 self-start text-xs font-semibold uppercase tracking-wider text-navy transition-colors hover:text-gold sm:self-end md:text-sm"
-          >
-            View All Sarees <ChevronRight className="h-4 w-4" />
-          </button>
-        </div>
-        <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-3">
-          {categories.slice(0, 6).map((c, i) => (
-            <motion.button
-              key={c.id}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-5%" }}
-              transition={{ duration: 0.5, delay: (i % 3) * 0.08, ease: [0.22, 1, 0.36, 1] }}
-              whileHover={{ y: -8 }}
-              onClick={() => goCategory(c.slug)}
-              className="group relative aspect-[3/4] overflow-hidden rounded-xl bg-muted text-left ring-1 ring-border/50 transition-all duration-500 hover:ring-gold/60 hover:shadow-[0_25px_60px_-15px_rgba(8,27,58,0.45)]"
-              aria-label={`Explore ${c.name} Collection, ${c.productCount} sarees`}
-            >
-              {c.bannerImage && (
-                <Image
-                  src={c.bannerImage}
-                  alt=""
-                  role="presentation"
-                  aria-hidden="true"
-                  fill
-                  sizes="(max-width: 768px) 50vw, 33vw"
-                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-                />
-              )}
-              {/* Multi-stop atmospheric luxury vignette */}
-              <div className="absolute inset-0 bg-gradient-to-t from-navy-dark via-navy-dark/45 to-transparent opacity-90 transition-opacity duration-300 group-hover:opacity-95" />
+      {/* ===== THE COLLECTIONS (REPLICATED VISUAL SECTION) ===== */}
+      <section className="bg-[#FAF8F5]/50 py-12 md:py-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
+          {/* Header */}
+          <div className="flex flex-col items-center justify-center text-center">
+            <LotusOrnament className="w-10 h-6 text-[#C5A059] mb-1.5" />
+            <div className="flex items-center justify-center gap-3 sm:gap-4 w-full max-w-xl">
+              <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-[#D4AF37]/50 to-[#D4AF37]" />
+              <span className="text-[#C5A059] text-xs">✦</span>
+              <h2 className="font-serif text-2xl sm:text-3xl md:text-[34px] font-semibold text-[#0B1A30] tracking-tight">
+                The Collections
+              </h2>
+              <span className="text-[#C5A059] text-xs">✦</span>
+              <div className="h-[1px] flex-1 bg-gradient-to-l from-transparent via-[#D4AF37]/50 to-[#D4AF37]" />
+            </div>
+          </div>
 
-              {/* Top badge row: piece count tag */}
-              <div className="absolute left-3.5 top-3.5 z-10 flex items-center gap-2">
-                <span className="rounded-full border border-gold/40 bg-navy/85 px-2.5 py-1 font-sans text-[10px] font-semibold uppercase tracking-wider text-gold backdrop-blur-md shadow-sm">
-                  {c.productCount} Designs
-                </span>
-              </div>
-
-              {/* Arrow badge top-right */}
-              <div className="absolute right-3.5 top-3.5 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-black/35 text-ivory backdrop-blur-md transition-all duration-300 group-hover:border-gold group-hover:bg-gold group-hover:text-navy group-hover:rotate-45">
-                <ChevronRight className="h-4 w-4" />
-              </div>
-
-              {/* Bottom content: Title + Subtitle + Action link */}
-              <div className="absolute inset-x-0 bottom-0 z-10 p-4 md:p-5">
-                <span className="text-[10px] font-medium uppercase tracking-[0.14em] text-gold/90">
-                  Handloom Collection
-                </span>
-                <h3 className="mt-1 font-serif text-lg font-semibold leading-tight text-ivory md:text-xl group-hover:text-gold-light transition-colors">
-                  {c.name}
-                </h3>
-                <p className="mt-1 text-xs text-ivory/70 line-clamp-1">
-                  {CATEGORY_TAGLINES[c.slug] || c.description || "Authentic Handloom Weaves"}
-                </p>
-                <div className="mt-2.5 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-gold opacity-90 transition-all duration-300 group-hover:translate-x-1 group-hover:opacity-100">
-                  <span>Explore Collection</span>
-                  <ArrowRight className="h-3.5 w-3.5" />
+          {/* 2-Column × 3-Row Grid */}
+          <div className="mt-8 sm:mt-10 grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 lg:gap-6">
+            {REPLICATED_COLLECTIONS.map((item, i) => (
+              <motion.div
+                key={item.id}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-5%" }}
+                transition={{ duration: 0.45, delay: i * 0.06 }}
+                className="group flex flex-col sm:flex-row overflow-hidden rounded-2xl border border-[#E7DCBE] bg-[#FDFBF7] shadow-[0_3px_14px_rgba(11,26,48,0.03)] hover:shadow-[0_8px_30px_rgba(212,175,55,0.15)] hover:border-[#D4AF37]/60 transition-all duration-300"
+              >
+                {/* Left Image */}
+                <div className="relative w-full sm:w-[46%] md:w-[48%] h-64 sm:h-auto min-h-[220px] sm:min-h-[260px] overflow-hidden shrink-0 bg-[#F5EFE6]">
+                  <Image
+                    src={item.image}
+                    alt={item.title}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 30vw"
+                    className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
+                  />
                 </div>
-              </div>
 
-              {/* Golden hover glow line at bottom */}
-              <div className="absolute inset-x-0 bottom-0 h-1 origin-left scale-x-0 bg-gold-gradient transition-transform duration-500 ease-out group-hover:scale-x-100" />
-            </motion.button>
-          ))}
+                {/* Right Content */}
+                <div className="flex flex-1 flex-col justify-between p-5 sm:p-6">
+                  <div>
+                    <h3 className="font-serif text-xl sm:text-2xl font-bold text-[#0B1A30] leading-tight">
+                      {item.title}
+                    </h3>
+                    {item.subtitle && (
+                      <p className="mt-1.5 font-serif italic text-xs sm:text-[13px] text-[#4A5568] leading-snug">
+                        {item.subtitle}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="mt-4 space-y-3">
+                    {/* Design count with mannequin icon */}
+                    <div className="flex items-center gap-2 text-xs sm:text-sm font-medium text-[#2D3748]">
+                      <MannequinIcon className="h-4 w-4 text-[#718096]" />
+                      <span>{item.designs}</span>
+                    </div>
+
+                    {/* Handloom Collection Badge */}
+                    <div className="inline-flex items-center gap-2 rounded-lg border border-[#23354E] bg-[#0B1A30] px-3 py-1.5 text-xs font-medium text-[#E5D7B7] shadow-xs w-fit">
+                      <HandloomLoomIcon className="h-3.5 w-3.5 text-[#E5C378]" />
+                      <span>Handloom Collection</span>
+                    </div>
+
+                    {/* Explore Button */}
+                    <div>
+                      <button
+                        onClick={() => {
+                          if (item.action === "all") goAllProducts();
+                          else goCategory(item.action);
+                        }}
+                        className="inline-flex items-center justify-between gap-2.5 rounded-full bg-gradient-to-r from-[#FDE8BB] via-[#F3CE7A] to-[#E5B556] px-5 py-2 sm:px-6 sm:py-2.5 text-xs sm:text-sm font-semibold text-[#2C1E05] shadow-[0_2px_8px_rgba(218,165,32,0.25)] hover:shadow-[0_4px_14px_rgba(218,165,32,0.35)] hover:brightness-105 active:scale-95 transition-all w-fit cursor-pointer"
+                      >
+                        <span>Explore Collection</span>
+                        <span className="font-normal text-sm leading-none">→</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* ===== NEW ARRIVALS ===== */}
-      {loading ? (
-        <ProductRailSkeleton />
-      ) : (
-        newArrivals.length > 0 && (
-          <ProductRail eyebrow="Just In" title="New Arrivals" products={newArrivals} />
-        )
-      )}
+      {/* ===== NEW ARRIVALS (REPLICATED VISUAL SECTION) ===== */}
+      <section className="bg-[#FAF8F5]/70 border-t border-[#E7DCBE]/60 py-12 md:py-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
+          {/* Header */}
+          <div className="flex flex-col items-center justify-center text-center">
+            <LotusOrnament className="w-9 h-5 text-[#C5A059] mb-1.5" />
+            <div className="flex items-center justify-center gap-2.5 sm:gap-4 w-full max-w-xl">
+              <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-[#D4AF37]/50 to-[#D4AF37]" />
+              <span className="text-[#C5A059] text-xs">✦</span>
+              <span className="bg-gradient-to-r from-[#FDE8BB] via-[#F3CE7A] to-[#E5B556] text-[#2C1E05] px-3.5 py-0.5 rounded-full text-[11px] font-bold shadow-xs uppercase tracking-wider">
+                Just In
+              </span>
+              <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-[#0B1A30] tracking-tight">
+                New Arrivals
+              </h2>
+              <span className="text-[#C5A059] text-xs">✦</span>
+              <div className="h-[1px] flex-1 bg-gradient-to-l from-transparent via-[#D4AF37]/50 to-[#D4AF37]" />
+            </div>
+          </div>
+
+          {/* Carousel with Navigation Buttons */}
+          <div className="relative mt-8 sm:mt-10">
+            {/* Left Circular Button */}
+            <button
+              onClick={() => scrollNewArrivals("left")}
+              aria-label="Previous products"
+              className="absolute -left-2 sm:-left-4 top-1/2 -translate-y-1/2 z-20 flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full border border-[#E7DCBE] bg-white text-[#0B1A30] shadow-md hover:border-[#D4AF37] hover:bg-gold-light/20 active:scale-95 transition-all cursor-pointer"
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+
+            {/* Right Circular Button */}
+            <button
+              onClick={() => scrollNewArrivals("right")}
+              aria-label="Next products"
+              className="absolute -right-2 sm:-right-4 top-1/2 -translate-y-1/2 z-20 flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full border border-[#E7DCBE] bg-white text-[#0B1A30] shadow-md hover:border-[#D4AF37] hover:bg-gold-light/20 active:scale-95 transition-all cursor-pointer"
+            >
+              <ChevronRight className="h-5 w-5" />
+            </button>
+
+            {/* Product Cards Row */}
+            <div
+              ref={newArrivalsScrollRef}
+              className="flex gap-3 sm:gap-4 overflow-x-auto scroll-smooth no-scrollbar py-2 px-1"
+            >
+              {REPLICATED_NEW_ARRIVALS.map((item) => {
+                const wishlisted = isWishlisted(item.id);
+                return (
+                  <div
+                    key={item.id}
+                    onClick={() => goProduct(item.slug)}
+                    className="min-w-[175px] sm:min-w-[200px] md:min-w-[215px] flex-1 bg-[#FDFBF7] rounded-xl border border-[#E7DCBE] p-2.5 flex flex-col justify-between hover:shadow-md hover:border-[#D4AF37]/60 transition-all duration-300 group cursor-pointer"
+                  >
+                    <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-[#F5EFE6]">
+                      {/* Wishlist Heart Button overlay */}
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleWishlist({
+                            productId: item.id,
+                            slug: item.slug,
+                            title: item.title,
+                            image: item.image,
+                            price: item.price,
+                          });
+                        }}
+                        aria-label="Add to wishlist"
+                        className={`absolute top-1 right-1 z-10 flex h-7 w-7 items-center justify-center rounded-full transition-all ${
+                          wishlisted
+                            ? "bg-white/90 text-red-500 shadow-xs"
+                            : "bg-transparent text-transparent hover:bg-white/80 hover:text-red-400"
+                        }`}
+                      >
+                        <Heart
+                          className={`h-4 w-4 transition-colors ${
+                            wishlisted ? "fill-red-500 text-red-500" : ""
+                          }`}
+                        />
+                      </button>
+
+                      <Image
+                        src={item.image}
+                        alt={item.title}
+                        fill
+                        unoptimized
+                        sizes="(max-width: 640px) 50vw, 20vw"
+                        className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                      />
+                    </div>
+
+                    {/* Product Info */}
+                    <div className="pt-2.5">
+                      <h4 className="font-serif text-[13px] sm:text-sm font-semibold text-[#0B1A30] line-clamp-2 leading-snug group-hover:text-gold-dark transition-colors">
+                        {item.title}
+                      </h4>
+                      <p className="mt-1 font-serif text-sm sm:text-base font-bold text-[#0B1A30]">
+                        ₹{item.price.toLocaleString("en-IN")}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* ===== BESTSELLERS ===== */}
       {loading ? (
