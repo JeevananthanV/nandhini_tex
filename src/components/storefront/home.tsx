@@ -17,6 +17,7 @@ import { StarRating } from "./primitives";
 import { AnimatedCounter, Marquee, TextReveal, MagneticButton, SectionReveal, StaggerGrid, StaggerItem } from "./premium";
 import { CountdownTimer } from "./premium-features";
 import { ProductRailSkeleton, ProductGridSkeleton } from "./skeletons";
+import { AuroraBackground, CursorSpotlight, GradientText, ScrollIndicator, FloatingElements } from "./effects";
 import type { ProductCard as ProductCardType } from "@/lib/format";
 
 type Category = { id: string; name: string; slug: string; description: string | null; bannerImage: string | null; productCount: number };
@@ -98,6 +99,11 @@ export function HomePage({ categories }: { categories: Category[] }) {
           <div className="absolute inset-0 bg-gradient-to-t from-navy-dark/70 via-transparent to-transparent" />
         </div>
 
+        {/* Animated aurora background + floating elements for depth */}
+        <AuroraBackground className="z-[1]" />
+        <FloatingElements className="z-[1] opacity-30" />
+        <CursorSpotlight className="z-[2]" color="rgba(212, 175, 55, 0.06)" />
+
         <div className="relative z-10 mx-auto flex h-full max-w-7xl flex-col justify-center px-6 md:px-8">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
@@ -105,17 +111,36 @@ export function HomePage({ categories }: { categories: Category[] }) {
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             className="max-w-xl"
           >
-            <span className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-navy/30 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.2em] text-gold backdrop-blur font-display">
+            <motion.span
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-navy/30 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.2em] text-gold backdrop-blur font-display"
+            >
               <Sparkles className="h-3 w-3" /> The Royal Silk Collection
-            </span>
+            </motion.span>
             <h1 className="mt-5 font-serif text-4xl font-bold leading-[1.05] text-ivory md:text-6xl">
               Elegance Woven
-              <span className="block text-gold-gradient">Through Generations</span>
+              <span className="block">
+                <GradientText from="#D4AF37" to="#F5E6A8" animate>
+                  Through Generations
+                </GradientText>
+              </span>
             </h1>
-            <p className="mt-5 max-w-md text-base text-ivory/80 md:text-lg font-light">
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="mt-5 max-w-md text-base text-ivory/80 md:text-lg font-light"
+            >
               Discover the beauty of traditional Indian sarees, crafted with timeless artistry by master weavers of Elampillai, Kanchipuram & Arani.
-            </p>
-            <div className="mt-7 flex flex-wrap gap-3">
+            </motion.p>
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.55 }}
+              className="mt-7 flex flex-wrap gap-3"
+            >
               <MagneticButton
                 onClick={() => goCategory("bridal")}
                 className="rounded-sm bg-gold-gradient px-7 py-3 text-sm font-semibold text-navy shadow-gold uppercase tracking-wider"
@@ -129,8 +154,13 @@ export function HomePage({ categories }: { categories: Category[] }) {
               >
                 Shop All Sarees
               </MagneticButton>
-            </div>
-            <div className="mt-9 flex items-center gap-6 text-ivory/70">
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.7 }}
+              className="mt-9 flex items-center gap-6 text-ivory/70"
+            >
               <div className="flex items-center gap-1.5">
                 <StarRating rating={4.8} size={14} />
                 <span className="text-sm font-medium text-ivory">4.8</span>
@@ -138,8 +168,13 @@ export function HomePage({ categories }: { categories: Category[] }) {
               </div>
               <div className="h-4 w-px bg-ivory/20" />
               <span className="text-xs">2,400+ happy customers</span>
-            </div>
+            </motion.div>
           </motion.div>
+        </div>
+
+        {/* Scroll-down hint */}
+        <div className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2">
+          <ScrollIndicator />
         </div>
       </section>
 
@@ -167,24 +202,37 @@ export function HomePage({ categories }: { categories: Category[] }) {
           {categories.slice(0, 8).map((c, i) => (
             <motion.button
               key={c.id}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 24, scale: 0.95 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
               viewport={{ once: true, margin: "-5%" }}
-              transition={{ duration: 0.4, delay: (i % 4) * 0.06, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.5, delay: (i % 4) * 0.08, ease: [0.22, 1, 0.36, 1] }}
+              whileHover={{ y: -6 }}
               onClick={() => goCategory(c.slug)}
-              className="group relative aspect-[4/5] overflow-hidden rounded-md bg-muted"
+              className="group relative aspect-[4/5] overflow-hidden rounded-md bg-muted ring-1 ring-transparent transition-shadow duration-300 hover:shadow-[0_20px_50px_-15px_rgba(212,175,55,0.4)] hover:ring-gold/30"
             >
               {c.bannerImage && (
-                <Image src={c.bannerImage} alt={c.name} fill sizes="(max-width: 768px) 50vw, 25vw" className="object-cover transition-transform duration-500 group-hover:scale-110" />
+                <Image
+                  src={c.bannerImage}
+                  alt={c.name}
+                  fill
+                  sizes="(max-width: 768px) 50vw, 25vw"
+                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-115"
+                />
               )}
-              <div className="absolute inset-0 bg-gradient-to-t from-navy-dark/85 via-navy-dark/20 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-navy-dark/90 via-navy-dark/25 to-transparent transition-opacity duration-300 group-hover:from-navy-dark/95" />
+              {/* Animated gold border on hover */}
+              <div className="pointer-events-none absolute inset-0 rounded-md ring-1 ring-gold/0 transition-all duration-300 group-hover:ring-1 group-hover:ring-gold/40" />
               <div className="absolute inset-x-0 bottom-0 p-4 text-left">
                 <span className="font-serif text-lg font-semibold text-ivory md:text-xl">{c.name}</span>
                 <span className="mt-0.5 block text-[11px] uppercase tracking-wider text-gold/90">{c.productCount} pieces</span>
               </div>
-              <div className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-ivory/20 text-ivory backdrop-blur transition-all group-hover:bg-gold group-hover:text-navy">
+              <motion.div
+                whileHover={{ rotate: 45 }}
+                transition={{ duration: 0.3 }}
+                className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-ivory/20 text-ivory backdrop-blur transition-all group-hover:bg-gold group-hover:text-navy"
+              >
                 <ChevronRight className="h-4 w-4" />
-              </div>
+              </motion.div>
             </motion.button>
           ))}
         </div>
@@ -618,15 +666,29 @@ export function HomePage({ categories }: { categories: Category[] }) {
 function SectionHeading({ eyebrow, title, center }: { eyebrow: string; title: string; center?: boolean }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
+      initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      viewport={{ once: true, margin: "-10%" }}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       className={center ? "text-center" : ""}
     >
-      <span className="text-[11px] font-semibold uppercase tracking-[0.15em] text-gold-dark">{eyebrow}</span>
+      <motion.span
+        initial={{ opacity: 0, letterSpacing: "0.3em" }}
+        whileInView={{ opacity: 1, letterSpacing: "0.15em" }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        className="inline-block text-[11px] font-semibold uppercase tracking-[0.15em] text-gold-dark"
+      >
+        {eyebrow}
+      </motion.span>
       <h2 className="mt-2 font-serif text-2xl font-semibold text-foreground md:text-4xl">{title}</h2>
-      <div className={`mt-3 h-px w-16 bg-gold-gradient ${center ? "mx-auto" : ""}`} />
+      <motion.div
+        initial={{ scaleX: 0 }}
+        whileInView={{ scaleX: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+        className={`mt-3 h-px w-16 origin-left bg-gold-gradient ${center ? "mx-auto" : ""}`}
+      />
     </motion.div>
   );
 }
