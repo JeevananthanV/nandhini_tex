@@ -72,7 +72,7 @@ export function Storefront({ categories }: { categories: Category[] }) {
       <WishlistDrawer />
       <BackToTop />
       <LiveChatWidget />
-      <MobileBottomNav />
+      {storeView !== "product" && <MobileBottomNav />}
     </div>
   );
 }

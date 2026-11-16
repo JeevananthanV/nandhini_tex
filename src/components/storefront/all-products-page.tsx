@@ -395,7 +395,7 @@ export function AllProductsPage({ categories }: { categories: Category[] }) {
             {loading ? (
               <ProductGridSkeleton
                 count={8}
-                className={density === 3 ? "md:grid-cols-3" : "lg:grid-cols-3 xl:grid-cols-4"}
+                className={density === 3 ? "md:grid-cols-3" : "md:grid-cols-3 xl:grid-cols-4"}
               />
             ) : filtered.length === 0 ? (
               <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-border py-20 text-center">
@@ -406,7 +406,7 @@ export function AllProductsPage({ categories }: { categories: Category[] }) {
               </div>
             ) : (
               <>
-                <div className={cn("grid grid-cols-2 gap-4 transition-opacity duration-200 md:gap-6", density === 3 ? "md:grid-cols-3" : "lg:grid-cols-3 xl:grid-cols-4", refreshing && "pointer-events-none opacity-50")}>
+                <div className={cn("grid grid-cols-2 gap-4 transition-opacity duration-200 md:gap-6", density === 3 ? "md:grid-cols-3" : "md:grid-cols-3 xl:grid-cols-4", refreshing && "pointer-events-none opacity-50")}>
                   {visible.map((p, i) => (
                     <ProductCard key={p.id} product={p} index={i} />
                   ))}

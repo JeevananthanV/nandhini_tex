@@ -150,7 +150,7 @@ export function HomePage({ categories }: { categories: Category[] }) {
                 </MagneticButton>
               </div>
               <MagneticButton
-                onClick={() => goCategory("soft-silk")}
+                onClick={() => goAllProducts()}
                 className="rounded-sm border border-ivory/40 px-7 py-3 text-sm font-semibold text-ivory backdrop-blur transition-colors hover:bg-ivory/10"
                 strength={0.2}
               >
@@ -573,7 +573,7 @@ export function HomePage({ categories }: { categories: Category[] }) {
                 placeholder="Your email address"
                 className="h-12 min-w-0 flex-1 rounded-sm border border-ivory/30 bg-navy-dark/40 px-4 text-sm text-ivory placeholder:text-ivory/50 focus:border-gold focus:outline-none"
               />
-              <button type="submit" className="rounded-sm bg-gold-gradient px-6 text-sm font-semibold text-navy hover:opacity-90">
+              <button type="submit" className="h-12 flex items-center justify-center rounded-sm bg-gold-gradient px-6 text-sm font-semibold text-navy hover:opacity-90 transition-opacity">
                 Subscribe
               </button>
             </form>
@@ -712,6 +712,14 @@ function ProductRail({ eyebrow, title, products, bg }: { eyebrow: string; title:
           {products.map((p, i) => (
             <ProductCard key={p.id} product={p} index={i} />
           ))}
+        </div>
+        <div className="mt-8 flex justify-center md:hidden">
+          <button
+            onClick={() => goCategory(products[0]?.categorySlug || "soft-silk")}
+            className="flex items-center gap-1.5 rounded-sm border border-navy/25 bg-background px-5 py-2.5 text-xs font-semibold uppercase tracking-wider text-navy shadow-sm transition-colors hover:border-gold hover:text-gold"
+          >
+            View All in Collection <ChevronRight className="h-3.5 w-3.5" />
+          </button>
         </div>
       </div>
     </section>

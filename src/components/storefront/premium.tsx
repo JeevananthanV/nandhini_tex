@@ -2,7 +2,7 @@
 
 import { useRef, useState, useEffect, type ReactNode, type MouseEvent } from "react";
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence, useScroll, useReducedMotion, useInView } from "framer-motion";
-import { ArrowUp, X, Sparkles, Loader2, Home, ShoppingBag, Heart, User } from "lucide-react";
+import { ArrowUp, X, Sparkles, Loader2, Home, ShoppingBag, Heart, User, PackageSearch } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { EASE_SILK, DUR, VIEWPORT_ONCE } from "@/lib/motion";
 import { cn } from "@/lib/utils";
@@ -607,15 +607,19 @@ export function MobileBottomNav() {
   const goHome = useStore((s) => s.goHome);
   const goAllProducts = useStore((s) => s.goAllProducts);
   const openCart = useStore((s) => s.openCart);
+  const goTrack = useStore((s) => s.goTrack);
   const cartCount = useStore((s) => s.cartCount());
   const wishlistCount = useStore((s) => s.wishlist.length);
   const storeView = useStore((s) => s.storeView);
 
+  // Hide on product detail view so the sticky Add to Bag / Buy Now bar is fully accessible
+  if (storeView === "product") return null;
+
   const items = [
     { icon: Home, label: "Home", onClick: goHome, active: storeView === "home" },
-    { icon: ShoppingBag, label: "Shop", onClick: goAllProducts, active: storeView === "all-products" || storeView === "category" || storeView === "product" || storeView === "search" },
+    { icon: ShoppingBag, label: "Shop", onClick: goAllProducts, active: storeView === "all-products" || storeView === "category" || storeView === "search" },
     { icon: Heart, label: "Wishlist", onClick: () => window.dispatchEvent(new Event("open-wishlist")), badge: wishlistCount, active: false },
-    { icon: User, label: "Account", onClick: () => {}, active: false },
+    { icon: PackageSearch, label: "Track", onClick: () => goTrack(), active: storeView === "track" },
     { icon: ShoppingBag, label: "Bag", onClick: openCart, badge: cartCount, active: storeView === "cart" },
   ];
 

@@ -118,7 +118,7 @@ export function ProductPage() {
   }));
 
   return (
-    <div className="min-h-screen pt-16">
+    <div className="min-h-screen pt-16 pb-24 md:pb-12">
       <div className="mx-auto max-w-7xl px-4 py-6 md:px-8 md:py-10">
         {/* breadcrumb */}
         <nav className="mb-6 flex items-center gap-1.5 text-xs text-muted-foreground">
@@ -177,7 +177,7 @@ export function ProductPage() {
                       <button
                         key={i}
                         onClick={() => setActiveImg(i)}
-                        className={`relative h-20 w-16 shrink-0 overflow-hidden rounded-md border-2 transition-colors md:h-24 md:w-20 ${activeImg === i ? "border-gold" : "border-transparent opacity-60 hover:opacity-100"}`}
+                        className={`relative aspect-[3/4] w-16 shrink-0 overflow-hidden rounded-md border-2 transition-colors md:w-20 ${activeImg === i ? "border-gold" : "border-transparent opacity-60 hover:opacity-100"}`}
                       >
                         <Image src={img || "/placeholder.svg"} alt={`${product.title} view ${i + 1}`} fill sizes="80px" className="object-cover" />
                       </button>
@@ -281,32 +281,32 @@ export function ProductPage() {
 
             {/* Qty + actions */}
             <div className="mt-6 flex flex-wrap items-center gap-3">
-              <div className="flex items-center rounded-full border border-border">
-                <button onClick={() => setQty(Math.max(1, qty - 1))} className="flex h-10 w-10 items-center justify-center text-muted-foreground transition-colors hover:text-navy" aria-label="Decrease quantity">
+              <div className="flex h-12 items-center rounded-sm border border-border">
+                <button onClick={() => setQty(Math.max(1, qty - 1))} className="flex h-full w-10 items-center justify-center text-muted-foreground transition-colors hover:text-navy" aria-label="Decrease quantity">
                   <Minus className="h-4 w-4" />
                 </button>
                 <span className="w-10 text-center text-sm font-semibold">{qty}</span>
-                <button onClick={() => setQty(qty + 1)} className="flex h-10 w-10 items-center justify-center text-muted-foreground transition-colors hover:text-navy" aria-label="Increase quantity">
+                <button onClick={() => setQty(qty + 1)} className="flex h-full w-10 items-center justify-center text-muted-foreground transition-colors hover:text-navy" aria-label="Increase quantity">
                   <Plus className="h-4 w-4" />
                 </button>
               </div>
               <button
                 onClick={() => handleAddToCart(false)}
                 disabled={!inStock}
-                className="flex flex-1 min-w-[140px] items-center justify-center gap-2 rounded-sm bg-navy px-6 py-3 text-sm font-semibold text-ivory transition-transform hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex h-12 flex-1 min-w-[140px] items-center justify-center gap-2 rounded-sm bg-navy px-6 text-sm font-semibold text-ivory transition-transform hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <ShoppingBag className="h-4 w-4" /> Add to Bag
               </button>
               <button
                 onClick={() => handleAddToCart(true)}
                 disabled={!inStock}
-                className="flex-1 min-w-[120px] rounded-sm bg-gold-gradient px-6 py-3 text-sm font-semibold text-navy transition-transform hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex h-12 flex-1 min-w-[120px] items-center justify-center rounded-sm bg-gold-gradient px-6 text-sm font-semibold text-navy transition-transform hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Buy Now
               </button>
               <button
                 onClick={() => toggleWishlist({ productId: product.id, slug: product.slug, title: product.title, image: product.images[0] || "", price: product.basePrice })}
-                className={`flex h-12 w-12 items-center justify-center rounded-sm border transition-colors ${isWishlisted ? "border-navy bg-navy/5 text-navy" : "border-border text-muted-foreground hover:border-navy"}`}
+                className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-sm border transition-colors ${isWishlisted ? "border-navy bg-navy/5 text-navy" : "border-border text-muted-foreground hover:border-navy"}`}
                 aria-label="Add to wishlist"
               >
                 <Heart className={`h-5 w-5 ${isWishlisted ? "fill-navy" : ""}`} />
@@ -417,7 +417,7 @@ export function ProductPage() {
                   placeholder="Enter 6-digit pincode"
                   className="h-10 flex-1 rounded-sm border border-border bg-background px-3 text-sm outline-none focus:border-gold"
                 />
-                <button onClick={checkPincode} className="rounded-sm bg-navy px-4 text-sm font-semibold text-ivory hover:bg-navy-light">
+                <button onClick={checkPincode} className="h-10 rounded-sm bg-navy px-4 text-sm font-semibold text-ivory hover:bg-navy-light transition-colors">
                   Check
                 </button>
               </div>
@@ -450,9 +450,16 @@ export function ProductPage() {
                       key={i}
                       onClick={() => { setGalleryMode("zoom"); setActiveImg(i); }}
                       className="group relative aspect-square overflow-hidden rounded-md border border-border"
+                      aria-label={`View ${["Border", "Pallu", "Weave"][i] || "Detail"} close up`}
                     >
-                      <img src={img} alt={`${product.title} zari detail ${i + 1}`} className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110" />
-                      <div className="absolute inset-0 flex items-end bg-gradient-to-t from-navy/70 to-transparent p-2 opacity-0 transition-opacity group-hover:opacity-100">
+                      <Image
+                        src={img || "/placeholder.svg"}
+                        alt={`${product.title} zari detail ${i + 1}`}
+                        fill
+                        sizes="160px"
+                        className="object-cover transition-transform duration-300 group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 z-10 flex items-end bg-gradient-to-t from-navy/70 to-transparent p-2 opacity-0 transition-opacity group-hover:opacity-100">
                         <span className="text-[10px] font-medium text-ivory">{["Border", "Pallu", "Weave"][i] || "Detail"}</span>
                       </div>
                     </button>

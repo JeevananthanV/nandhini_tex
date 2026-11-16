@@ -127,8 +127,13 @@ export async function openRazorpayCheckout(params: RazorpayPaymentParams): Promi
     };
 
     // 3. Open the Razorpay Checkout modal
+    if (!window.Razorpay) {
+      return { success: false, error: "Razorpay SDK could not be loaded." };
+    }
+    const RazorpayCtor = window.Razorpay;
+
     const paymentResult = await new Promise<{ success: true; paymentId: string; method: string } | { success: false; error: string; code?: string }>((resolve) => {
-      const rzp = new window.Razorpay({
+      const rzp = new RazorpayCtor({
         key: createData.keyId,
         amount: createData.amount,
         currency: createData.currency,

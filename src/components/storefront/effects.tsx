@@ -186,10 +186,10 @@ export function MagneticLink({
       y.set((e.clientY - cy) * strength);
     };
     const onLeave = () => { x.set(0); y.set(0); };
-    el.addEventListener("mousemove", onMove);
+    el.addEventListener("mousemove", onMove as unknown as EventListener);
     el.addEventListener("mouseleave", onLeave);
     return () => {
-      el.removeEventListener("mousemove", onMove);
+      el.removeEventListener("mousemove", onMove as unknown as EventListener);
       el.removeEventListener("mouseleave", onLeave);
     };
   }, [x, y, strength, reduce]);

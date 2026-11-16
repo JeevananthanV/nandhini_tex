@@ -17,7 +17,8 @@ export function ProductCard({ product, index = 0 }: { product: ProductCard; inde
   const isWishlisted = useStore((s) => s.wishlist.some((w) => w.productId === product.id));
 
   const img = product.images?.[0] || "/placeholder.svg";
-  const altImg = product.images?.[1] || product.images?.[0] || "/placeholder.svg";
+  const hasAlt = Boolean(product.images?.[1] && product.images[1] !== img);
+  const altImg = hasAlt ? product.images[1] : null;
 
   return (
     <motion.div
@@ -39,15 +40,20 @@ export function ProductCard({ product, index = 0 }: { product: ProductCard; inde
           alt={product.title}
           fill
           sizes="(max-width: 768px) 50vw, 25vw"
-          className="object-cover transition-all duration-700 ease-out group-hover:scale-110 group-hover:opacity-0"
+          className={cn(
+            "object-cover transition-all duration-700 ease-out group-hover:scale-110",
+            hasAlt && "group-hover:opacity-0"
+          )}
         />
-        <Image
-          src={altImg}
-          alt={`${product.title} alternate view`}
-          fill
-          sizes="(max-width: 768px) 50vw, 25vw"
-          className="object-cover opacity-0 transition-all duration-700 ease-out group-hover:scale-110 group-hover:opacity-100"
-        />
+        {hasAlt && altImg && (
+          <Image
+            src={altImg}
+            alt={`${product.title} alternate view`}
+            fill
+            sizes="(max-width: 768px) 50vw, 25vw"
+            className="object-cover opacity-0 transition-all duration-700 ease-out group-hover:scale-110 group-hover:opacity-100"
+          />
+        )}
         {/* badges */}
         <div className="absolute left-2 top-2 z-20 flex flex-col items-start gap-1">
           {product.isNew && <NewBadge />}
@@ -104,7 +110,7 @@ export function ProductCard({ product, index = 0 }: { product: ProductCard; inde
         </span>
         <button
           onClick={() => goProduct(product.slug)}
-          className="text-left font-serif text-[15px] font-medium leading-snug text-foreground transition-colors hover:text-navy line-clamp-2"
+          className="text-left font-serif text-[15px] font-medium leading-snug text-foreground transition-colors hover:text-navy line-clamp-2 min-h-[2.5rem]"
         >
           {product.title}
         </button>
