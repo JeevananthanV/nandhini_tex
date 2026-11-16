@@ -5,7 +5,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import {
   ShieldCheck, Truck, RefreshCw, Hand, Star, ChevronRight,
-  Sparkles, Award, Heart, Phone, Mail, MapPin, MessageCircle
+  Sparkles, Award, Heart, Phone, Mail, MapPin, MessageCircle, ArrowRight
 } from "lucide-react";
 import {
   Accordion, AccordionContent, AccordionItem, AccordionTrigger,
@@ -23,6 +23,15 @@ import type { ProductCard as ProductCardType } from "@/lib/format";
 type Category = { id: string; name: string; slug: string; description: string | null; bannerImage: string | null; productCount: number };
 type Testimonial = { id: string; name: string; city: string | null; quote: string; rating: number };
 type Faq = { id: string; question: string; answer: string; category: string };
+
+const CATEGORY_TAGLINES: Record<string, string> = {
+  "silk-varieties": "Soft Silk, Kubera Pattu & Banarasi Mashru",
+  "bridal": "Grand Samudhrikha & Pure Gold Zari Silks",
+  "cotton-sarees": "Breathable Handloom Khadi & Sungudi",
+  "designer": "Modern Softy Prints & Butterfly Cut Work",
+  "combos": "Bridal Couple Combos & Traditional Sets",
+  "celebrity": "Celebrity-Inspired Handwoven Silks",
+};
 
 export function HomePage({ categories }: { categories: Category[] }) {
   const goCategory = useStore((s) => s.goCategory);
@@ -181,60 +190,105 @@ export function HomePage({ categories }: { categories: Category[] }) {
       </section>
 
       {/* ===== TRUST STRIP ===== */}
-      <section className="border-y border-border bg-navy text-ivory">
-        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-4 px-6 py-5 md:grid-cols-4 md:px-8">
-          {[
-            { icon: Hand, label: "100% Handwoven" },
-            { icon: Truck, label: "Pan-India Shipping" },
-            { icon: RefreshCw, label: "7-Day Returns" },
-            { icon: ShieldCheck, label: "Secure Payments" },
-          ].map((t, i) => (
-            <div key={i} className="flex items-center justify-center gap-2.5 text-center md:justify-start">
-              <t.icon className="h-5 w-5 shrink-0 text-gold" strokeWidth={1.5} />
-              <span className="text-xs font-medium uppercase tracking-wider md:text-sm">{t.label}</span>
-            </div>
-          ))}
+      <section className="relative border-y border-gold/20 bg-navy text-ivory shadow-sm">
+        <div className="mx-auto max-w-7xl px-6 py-6 md:px-8 md:py-7">
+          <div className="grid grid-cols-2 gap-4 divide-y divide-white/10 sm:divide-y-0 sm:gap-6 md:grid-cols-4 md:divide-x md:divide-white/15">
+            {[
+              { icon: Hand, title: "100% Handwoven", sub: "Master weavers from Elampillai" },
+              { icon: Truck, title: "Pan-India Shipping", sub: "Dispatched in 24h · Free above ₹999" },
+              { icon: RefreshCw, title: "7-Day Easy Returns", sub: "Hassle-free doorstep exchanges" },
+              { icon: ShieldCheck, title: "Secure Payments", sub: "COD, UPI & 256-bit safe checkout" },
+            ].map((t, i) => (
+              <div
+                key={i}
+                className={`flex items-center gap-3.5 pt-3 sm:pt-0 ${i % 2 === 1 ? "sm:pl-3" : ""} ${i > 0 ? "md:pl-6" : ""}`}
+              >
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-gold/15 text-gold ring-1 ring-gold/30 transition-transform duration-300 hover:scale-105">
+                  <t.icon className="h-5 w-5" strokeWidth={1.75} />
+                </div>
+                <div className="flex flex-col text-left">
+                  <span className="font-serif text-sm font-semibold tracking-wide text-ivory md:text-base">
+                    {t.title}
+                  </span>
+                  <span className="text-[11px] text-ivory/65 leading-tight mt-0.5">
+                    {t.sub}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* ===== CATEGORY RAIL ===== */}
       <section className="mx-auto max-w-7xl px-6 py-16 md:px-8 md:py-24">
-        <SectionHeading eyebrow="Shop by Collection" title="The Collections" />
-        <div className="mt-10 grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-5 lg:grid-cols-4">
-          {categories.slice(0, 8).map((c, i) => (
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <SectionHeading eyebrow="Shop by Collection" title="The Collections" />
+          <button
+            onClick={goAllProducts}
+            className="inline-flex items-center gap-1.5 self-start text-xs font-semibold uppercase tracking-wider text-navy transition-colors hover:text-gold sm:self-end md:text-sm"
+          >
+            View All Sarees <ChevronRight className="h-4 w-4" />
+          </button>
+        </div>
+        <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-3">
+          {categories.slice(0, 6).map((c, i) => (
             <motion.button
               key={c.id}
-              initial={{ opacity: 0, y: 24, scale: 0.95 }}
-              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-5%" }}
-              transition={{ duration: 0.5, delay: (i % 4) * 0.08, ease: [0.22, 1, 0.36, 1] }}
-              whileHover={{ y: -6 }}
+              transition={{ duration: 0.5, delay: (i % 3) * 0.08, ease: [0.22, 1, 0.36, 1] }}
+              whileHover={{ y: -8 }}
               onClick={() => goCategory(c.slug)}
-              className="group relative aspect-[4/5] overflow-hidden rounded-md bg-muted ring-1 ring-transparent transition-shadow duration-300 hover:shadow-[0_20px_50px_-15px_rgba(212,175,55,0.4)] hover:ring-gold/30"
+              className="group relative aspect-[3/4] overflow-hidden rounded-xl bg-muted text-left ring-1 ring-border/50 transition-all duration-500 hover:ring-gold/60 hover:shadow-[0_25px_60px_-15px_rgba(8,27,58,0.45)]"
+              aria-label={`Explore ${c.name} Collection, ${c.productCount} sarees`}
             >
               {c.bannerImage && (
                 <Image
                   src={c.bannerImage}
-                  alt={c.name}
+                  alt=""
+                  role="presentation"
+                  aria-hidden="true"
                   fill
-                  sizes="(max-width: 768px) 50vw, 25vw"
-                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-115"
+                  sizes="(max-width: 768px) 50vw, 33vw"
+                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                 />
               )}
-              <div className="absolute inset-0 bg-gradient-to-t from-navy-dark/90 via-navy-dark/25 to-transparent transition-opacity duration-300 group-hover:from-navy-dark/95" />
-              {/* Animated gold border on hover */}
-              <div className="pointer-events-none absolute inset-0 rounded-md ring-1 ring-gold/0 transition-all duration-300 group-hover:ring-1 group-hover:ring-gold/40" />
-              <div className="absolute inset-x-0 bottom-0 p-4 text-left">
-                <span className="font-serif text-lg font-semibold text-ivory md:text-xl">{c.name}</span>
-                <span className="mt-0.5 block text-[11px] uppercase tracking-wider text-gold/90">{c.productCount} pieces</span>
+              {/* Multi-stop atmospheric luxury vignette */}
+              <div className="absolute inset-0 bg-gradient-to-t from-navy-dark via-navy-dark/45 to-transparent opacity-90 transition-opacity duration-300 group-hover:opacity-95" />
+
+              {/* Top badge row: piece count tag */}
+              <div className="absolute left-3.5 top-3.5 z-10 flex items-center gap-2">
+                <span className="rounded-full border border-gold/40 bg-navy/85 px-2.5 py-1 font-sans text-[10px] font-semibold uppercase tracking-wider text-gold backdrop-blur-md shadow-sm">
+                  {c.productCount} Designs
+                </span>
               </div>
-              <motion.div
-                whileHover={{ rotate: 45 }}
-                transition={{ duration: 0.3 }}
-                className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-ivory/20 text-ivory backdrop-blur transition-all group-hover:bg-gold group-hover:text-navy"
-              >
+
+              {/* Arrow badge top-right */}
+              <div className="absolute right-3.5 top-3.5 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-black/35 text-ivory backdrop-blur-md transition-all duration-300 group-hover:border-gold group-hover:bg-gold group-hover:text-navy group-hover:rotate-45">
                 <ChevronRight className="h-4 w-4" />
-              </motion.div>
+              </div>
+
+              {/* Bottom content: Title + Subtitle + Action link */}
+              <div className="absolute inset-x-0 bottom-0 z-10 p-4 md:p-5">
+                <span className="text-[10px] font-medium uppercase tracking-[0.14em] text-gold/90">
+                  Handloom Collection
+                </span>
+                <h3 className="mt-1 font-serif text-lg font-semibold leading-tight text-ivory md:text-xl group-hover:text-gold-light transition-colors">
+                  {c.name}
+                </h3>
+                <p className="mt-1 text-xs text-ivory/70 line-clamp-1">
+                  {CATEGORY_TAGLINES[c.slug] || c.description || "Authentic Handloom Weaves"}
+                </p>
+                <div className="mt-2.5 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-gold opacity-90 transition-all duration-300 group-hover:translate-x-1 group-hover:opacity-100">
+                  <span>Explore Collection</span>
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </div>
+              </div>
+
+              {/* Golden hover glow line at bottom */}
+              <div className="absolute inset-x-0 bottom-0 h-1 origin-left scale-x-0 bg-gold-gradient transition-transform duration-500 ease-out group-hover:scale-x-100" />
             </motion.button>
           ))}
         </div>
@@ -697,14 +751,24 @@ function SectionHeading({ eyebrow, title, center }: { eyebrow: string; title: st
   );
 }
 
-function ProductRail({ eyebrow, title, products, bg }: { eyebrow: string; title: string; products: ProductCardType[]; bg?: string }) {
+function ProductRail({ eyebrow, title, products, bg, viewAllAction }: { eyebrow: string; title: string; products: ProductCardType[]; bg?: string; viewAllAction?: () => void }) {
   const goCategory = useStore((s) => s.goCategory);
+  const goAllProducts = useStore((s) => s.goAllProducts);
+
+  const handleViewAll = viewAllAction || (() => {
+    if (title.toLowerCase().includes("new") || title.toLowerCase().includes("bestseller")) {
+      goAllProducts();
+    } else {
+      goCategory(products[0]?.categorySlug || "soft-silk");
+    }
+  });
+
   return (
     <section className={bg ? `bg-ivory ${bg}` : ""}>
       <div className="mx-auto max-w-7xl px-6 py-16 md:px-8 md:py-24">
         <div className="flex items-end justify-between">
           <SectionHeading eyebrow={eyebrow} title={title} />
-          <button onClick={() => goCategory(products[0]?.categorySlug || "soft-silk")} className="hidden items-center gap-1 text-sm font-medium text-navy hover:text-gold md:flex">
+          <button onClick={handleViewAll} className="hidden items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-navy transition-colors hover:text-gold md:flex md:text-sm">
             View All <ChevronRight className="h-4 w-4" />
           </button>
         </div>
@@ -715,10 +779,10 @@ function ProductRail({ eyebrow, title, products, bg }: { eyebrow: string; title:
         </div>
         <div className="mt-8 flex justify-center md:hidden">
           <button
-            onClick={() => goCategory(products[0]?.categorySlug || "soft-silk")}
+            onClick={handleViewAll}
             className="flex items-center gap-1.5 rounded-sm border border-navy/25 bg-background px-5 py-2.5 text-xs font-semibold uppercase tracking-wider text-navy shadow-sm transition-colors hover:border-gold hover:text-gold"
           >
-            View All in Collection <ChevronRight className="h-3.5 w-3.5" />
+            View All {title} <ChevronRight className="h-3.5 w-3.5" />
           </button>
         </div>
       </div>
