@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Heart, ShoppingBag, Menu, X, Shield, PackageSearch } from "lucide-react";
+import { Search, Heart, ShoppingBag, Menu, X, PackageSearch } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
@@ -20,7 +20,6 @@ export function Header({ categories }: { categories: { id: string; name: string;
   const openCart = useStore((s) => s.openCart);
   const toggleMobileMenu = useStore((s) => s.toggleMobileMenu);
   const mobileMenuOpen = useStore((s) => s.mobileMenuOpen);
-  const setMode = useStore((s) => s.setMode);
   const cartCount = useStore((s) => s.cartCount());
   const wishlistCount = useStore((s) => s.wishlist.length);
   const storeView = useStore((s) => s.storeView);
@@ -118,13 +117,6 @@ export function Header({ categories }: { categories: { id: string; name: string;
               aria-label="Search sarees and collections"
             >
               <Search className="h-[18px] w-[18px]" />
-            </button>
-            <button
-              onClick={() => setMode("admin")}
-              className={cn("hidden h-9 items-center gap-1.5 rounded-full px-3 text-xs font-semibold transition-colors sm:flex", onHome && !scrolled ? "text-ivory hover:bg-ivory/10" : "text-navy hover:bg-muted")}
-              title="Admin Panel"
-            >
-              <Shield className="h-4 w-4" /> Admin
             </button>
             <button
               onClick={() => window.dispatchEvent(new Event("open-wishlist"))}
@@ -235,14 +227,6 @@ export function Header({ categories }: { categories: { id: string; name: string;
                   </button>
                 ))}
               </nav>
-              <div className="mt-6 border-t border-border pt-6">
-                <button
-                  onClick={() => { setMode("admin"); toggleMobileMenu(); }}
-                  className="flex w-full items-center gap-2 rounded-md bg-navy px-4 py-3 text-sm font-semibold text-ivory"
-                >
-                  <Shield className="h-4 w-4" /> Admin Panel
-                </button>
-              </div>
             </motion.div>
           </>
         )}

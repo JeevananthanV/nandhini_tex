@@ -8,7 +8,6 @@ export function Footer({ categories }: { categories: { id: string; name: string;
   const goAllProducts = useStore((s) => s.goAllProducts);
   const goCategory = useStore((s) => s.goCategory);
   const goTrack = useStore((s) => s.goTrack);
-  const setMode = useStore((s) => s.setMode);
 
   const goFaq = () => {
     goHome();
@@ -123,9 +122,7 @@ export function Footer({ categories }: { categories: { id: string; name: string;
           <div className="flex items-center gap-4">
             <button className="hover:text-gold">Privacy Policy</button>
             <button className="hover:text-gold">Terms of Service</button>
-            <button onClick={() => setMode("admin")} className="flex items-center gap-1 hover:text-gold">
-              <Send className="h-3 w-3" /> Admin
-            </button>
+            <a href="/admin" className="hover:text-gold transition-colors">Staff Login</a>
           </div>
         </div>
       </div>

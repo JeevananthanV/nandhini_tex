@@ -545,6 +545,7 @@ function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
           onClick={() => {
             setMode("store");
             onNavigate?.();
+            window.location.href = "/";
           }}
           className="flex w-full items-center gap-2.5 rounded-md px-3 py-2.5 text-sm font-medium text-ivory/70 transition-colors hover:bg-white/5 hover:text-ivory"
         >
@@ -571,6 +572,7 @@ function Topbar({ onMenu, onLogout }: { onMenu: () => void; onLogout?: () => voi
     }
     onLogout?.();
     useStore.getState().setMode("store");
+    window.location.href = "/";
   };
 
   return (
@@ -628,10 +630,17 @@ function Topbar({ onMenu, onLogout }: { onMenu: () => void; onLogout?: () => voi
 // ----------------------------------------------------------------------------
 // Main AdminApp
 // ----------------------------------------------------------------------------
-export function AdminApp() {
+export function AdminApp({ standalone = false }: { standalone?: boolean } = {}) {
   const mode = useStore((s) => s.mode);
+  const setMode = useStore((s) => s.setMode);
   const [mobileOpen, setMobileOpen] = useState(false);
   const isClient = useIsClient();
+
+  useEffect(() => {
+    if (standalone && mode !== "admin") {
+      setMode("admin");
+    }
+  }, [standalone, mode, setMode]);
 
   // Auth state — null = unknown (checking), false = not logged in, true = logged in
   const [authed, setAuthed] = useState<boolean | null>(null);
@@ -640,7 +649,7 @@ export function AdminApp() {
   // OPTIONS or a lightweight GET — but since login is POST-only, we ping
   // /api/dashboard which requires auth → 401 means not logged in)
   useEffect(() => {
-    if (!isClient || mode !== "admin") return;
+    if (!isClient || (!standalone && mode !== "admin")) return;
     let alive = true;
     fetch("/api/dashboard", { credentials: "include" })
       .then((r) => {
@@ -653,9 +662,9 @@ export function AdminApp() {
     return () => {
       alive = false;
     };
-  }, [isClient, mode]);
+  }, [isClient, mode, standalone]);
 
-  if (!isClient || mode !== "admin") return null;
+  if (!isClient || (!standalone && mode !== "admin")) return null;
 
   // Show login screen if not authenticated (or while checking)
   if (authed === null) {
@@ -798,7 +807,10 @@ function AdminLogin({ onLogin }: { onLogin: () => void }) {
 
         <div className="mt-6 border-t border-border pt-4">
           <button
-            onClick={() => setMode("store")}
+            onClick={() => {
+              setMode("store");
+              window.location.href = "/";
+            }}
             className="flex w-full items-center justify-center gap-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-navy"
           >
             <ArrowLeft className="h-3.5 w-3.5" /> Back to Store

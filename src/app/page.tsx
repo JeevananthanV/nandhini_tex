@@ -1,6 +1,5 @@
 import { db } from "@/lib/db";
 import { Storefront } from "@/components/storefront/storefront-shell";
-import { AdminApp } from "@/components/admin/admin-app";
 import { getAllSchemas } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
@@ -116,7 +115,6 @@ export default async function Page() {
       </section>
 
       <Storefront categories={cats} />
-      <AdminApp />
     </>
   );
 }
