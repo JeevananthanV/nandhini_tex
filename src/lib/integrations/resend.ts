@@ -105,7 +105,7 @@ export type OrderConfirmationEmail = {
   codSurcharge: number;
   grandTotal: number;
   paymentMethod: string;
-  shippingAddress: { name: string; line1: string; city: string; state: string; pincode: string };
+  shippingAddress: { name?: string; line1: string; city: string; state: string; pincode: string; phone?: string };
   estimatedDelivery: string;
 };
 
@@ -157,7 +157,7 @@ export function renderOrderConfirmationEmail(d: OrderConfirmationEmail): string 
       <div style="background:#FAF7F0;border-radius:8px;padding:16px;margin-top:24px;">
         <p style="margin:0 0 4px;font-weight:600;color:#081B3A;font-size:13px;">Shipping to:</p>
         <p style="margin:0;color:#8B7E74;font-size:13px;line-height:1.5;">
-          ${d.shippingAddress.name}<br>${d.shippingAddress.line1}<br>${d.shippingAddress.city}, ${d.shippingAddress.state} ${d.shippingAddress.pincode}
+          ${d.shippingAddress.name || d.customerName}<br>${d.shippingAddress.line1}<br>${d.shippingAddress.city}, ${d.shippingAddress.state} ${d.shippingAddress.pincode}
         </p>
       </div>
       <p style="color:#8B7E74;font-size:12px;line-height:1.6;margin-top:24px;">
