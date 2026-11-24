@@ -86,7 +86,7 @@ export function ProductCard({ product, index = 0 }: { product: ProductCard; inde
               });
             }}
             disabled={!product.inStock}
-            className="flex flex-1 items-center justify-center gap-1.5 rounded-md bg-navy px-3 py-2 text-xs font-semibold text-ivory shadow-navy transition-colors hover:bg-navy-light disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex flex-1 items-center justify-center gap-1.5 rounded-md bg-navy px-3 py-2 text-xs font-semibold text-ivory shadow-navy transition-all hover:bg-navy-light cursor-pointer active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <ShoppingBag className="h-3.5 w-3.5" /> Add to Bag
           </button>
@@ -95,7 +95,7 @@ export function ProductCard({ product, index = 0 }: { product: ProductCard; inde
               e.stopPropagation();
               openQuickView(product.id);
             }}
-            className="flex items-center justify-center rounded-md border border-border bg-background/90 px-2.5 py-2 text-navy backdrop-blur transition-colors hover:border-gold"
+            className="flex items-center justify-center rounded-md border border-border bg-background/90 px-2.5 py-2 text-navy backdrop-blur transition-all hover:border-gold cursor-pointer active:scale-95"
             aria-label="Quick view product"
             title="Quick view"
           >
@@ -110,7 +110,7 @@ export function ProductCard({ product, index = 0 }: { product: ProductCard; inde
         </span>
         <button
           onClick={() => goProduct(product.slug)}
-          className="text-left font-serif text-[15px] font-medium leading-snug text-foreground transition-colors hover:text-navy line-clamp-2 min-h-[2.5rem]"
+          className="text-left font-serif text-[15px] font-medium leading-snug text-foreground transition-colors hover:text-navy line-clamp-2 min-h-[2.5rem] cursor-pointer"
         >
           {product.title}
         </button>
@@ -132,12 +132,12 @@ export function ProductCard({ product, index = 0 }: { product: ProductCard; inde
           })
         }
         className={cn(
-          "absolute right-2 top-2 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-background/80 backdrop-blur transition-all hover:bg-background",
-          isWishlisted ? "text-navy" : "text-muted-foreground"
+          "absolute right-2 top-2 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-background/80 backdrop-blur transition-all hover:bg-background cursor-pointer active:scale-90",
+          isWishlisted ? "text-red-500 shadow-xs" : "text-muted-foreground hover:text-red-400"
         )}
         aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
       >
-        <Heart className={cn("h-4 w-4 transition-all", isWishlisted && "fill-navy")} />
+        <Heart className={cn("h-4 w-4 transition-all", isWishlisted && "fill-red-500 text-red-500")} />
       </button>
     </motion.div>
   );

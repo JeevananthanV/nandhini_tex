@@ -83,7 +83,7 @@ export function CategoryPage({ categories }: { categories: Category[] }) {
             <button
               key={i}
               onClick={() => setPriceRange(priceRange === i ? null : i)}
-              className={`flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors ${
+              className={`flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors cursor-pointer ${
                 priceRange === i ? "bg-navy/5 font-medium text-navy" : "text-foreground hover:bg-muted"
               }`}
             >
@@ -102,7 +102,7 @@ export function CategoryPage({ categories }: { categories: Category[] }) {
             <button
               key={f}
               onClick={() => setFabric(fabric === f ? "" : f)}
-              className={`flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors ${
+              className={`flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors cursor-pointer ${
                 fabric === f ? "bg-navy/5 font-medium text-navy" : "text-foreground hover:bg-muted"
               }`}
             >

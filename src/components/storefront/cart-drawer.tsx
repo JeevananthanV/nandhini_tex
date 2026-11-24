@@ -202,8 +202,8 @@ export function CartDrawer() {
                   </div>
 
                   <button
-                    onClick={() => { goCart(); }}
-                    className="mt-4 flex w-full items-center justify-center gap-2 rounded-sm bg-navy py-3 text-sm font-semibold text-ivory hover:bg-navy-light"
+                    onClick={() => { goCart(); closeCart(); }}
+                    className="mt-4 flex w-full items-center justify-center gap-2 rounded-sm bg-navy py-3 text-sm font-semibold text-ivory hover:bg-navy-light cursor-pointer transition-all active:scale-[0.99]"
                   >
                     Proceed to Checkout <ArrowRight className="h-4 w-4" />
                   </button>

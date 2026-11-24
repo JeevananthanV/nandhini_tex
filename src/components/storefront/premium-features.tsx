@@ -271,11 +271,11 @@ export function WishlistDrawer() {
                                 mrp: item.price,
                               });
                             }}
-                            className="flex items-center gap-1 rounded-sm bg-navy px-3 py-1.5 text-xs font-semibold text-ivory hover:bg-navy-light"
+                            className="flex items-center gap-1 rounded-sm bg-navy px-3 py-1.5 text-xs font-semibold text-ivory hover:bg-navy-light cursor-pointer active:scale-95 transition-all"
                           >
                             <ShoppingBag className="h-3 w-3" /> Add to Bag
                           </button>
-                          <button onClick={() => removeWishlist(item.productId)} className="text-muted-foreground hover:text-destructive" aria-label="Remove">
+                          <button onClick={() => removeWishlist(item.productId)} className="text-muted-foreground hover:text-destructive cursor-pointer p-1" aria-label="Remove from wishlist">
                             <Trash2 className="h-4 w-4" />
                           </button>
                         </div>

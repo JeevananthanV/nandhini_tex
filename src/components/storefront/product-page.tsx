@@ -294,23 +294,23 @@ export function ProductPage() {
               <button
                 onClick={() => handleAddToCart(false)}
                 disabled={!inStock}
-                className="flex h-12 flex-1 min-w-[140px] items-center justify-center gap-2 rounded-sm bg-navy px-6 text-sm font-semibold text-ivory transition-transform hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex h-12 flex-1 min-w-[140px] items-center justify-center gap-2 rounded-sm bg-navy px-6 text-sm font-semibold text-ivory transition-all hover:bg-navy-light cursor-pointer active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <ShoppingBag className="h-4 w-4" /> Add to Bag
               </button>
               <button
                 onClick={() => handleAddToCart(true)}
                 disabled={!inStock}
-                className="flex h-12 flex-1 min-w-[120px] items-center justify-center rounded-sm bg-gold-gradient px-6 text-sm font-semibold text-navy transition-transform hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex h-12 flex-1 min-w-[120px] items-center justify-center rounded-sm bg-gold-gradient px-6 text-sm font-semibold text-navy shadow-gold transition-all hover:brightness-105 cursor-pointer active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Buy Now
               </button>
               <button
                 onClick={() => toggleWishlist({ productId: product.id, slug: product.slug, title: product.title, image: product.images[0] || "", price: product.basePrice })}
-                className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-sm border transition-colors ${isWishlisted ? "border-navy bg-navy/5 text-navy" : "border-border text-muted-foreground hover:border-navy"}`}
-                aria-label="Add to wishlist"
+                className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-sm border cursor-pointer transition-all active:scale-95 ${isWishlisted ? "border-red-200 bg-red-50 text-red-500 shadow-xs" : "border-border text-muted-foreground hover:border-navy"}`}
+                aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
               >
-                <Heart className={`h-5 w-5 ${isWishlisted ? "fill-navy" : ""}`} />
+                <Heart className={`h-5 w-5 transition-colors ${isWishlisted ? "fill-red-500 text-red-500" : ""}`} />
               </button>
             </div>
 

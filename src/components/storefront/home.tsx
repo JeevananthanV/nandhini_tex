@@ -96,7 +96,7 @@ function HandloomLoomIcon({ className = "w-4 h-4" }: { className?: string }) {
 const REPLICATED_COLLECTIONS = [
   {
     id: "view-all",
-    title: "View All Sarees",
+    title: "View All\nSarees",
     subtitle: null,
     designs: "32 Designs",
     image: "/collections/view-all.jpg",
@@ -105,7 +105,7 @@ const REPLICATED_COLLECTIONS = [
   {
     id: "silk-varieties",
     title: "Silk Varieties",
-    subtitle: "Soft Silk, Kubera Pattu & Banarasi Mashru",
+    subtitle: "Soft Silk, Kubera Pattu &\nBanarasi Mashru",
     designs: "18 Designs",
     image: "/collections/silk-varieties.jpg",
     action: "silk-varieties",
@@ -113,7 +113,7 @@ const REPLICATED_COLLECTIONS = [
   {
     id: "bridal-pattu",
     title: "Bridal & Pattu",
-    subtitle: "Grand Samudhrikha & Pure Gold Zari Silks",
+    subtitle: "Grand Samudhrikha &\nPure Gold Zari Silks",
     designs: "31 Designs",
     image: "/collections/bridal-pattu.jpg",
     action: "bridal",
@@ -121,7 +121,7 @@ const REPLICATED_COLLECTIONS = [
   {
     id: "cotton-collections",
     title: "Cotton Collections",
-    subtitle: "Breathable Handloom Khadi & Sungudi",
+    subtitle: "Breathable Handloom\nKhadi & Sungudi",
     designs: "10 Designs",
     image: "/collections/cotton-collections.jpg",
     action: "cotton-sarees",
@@ -129,7 +129,7 @@ const REPLICATED_COLLECTIONS = [
   {
     id: "fancy-printed",
     title: "Fancy & Printed",
-    subtitle: "Modern Softy Prints & Butterfly Cut Work",
+    subtitle: "Modern Softy Prints &\nButterfly Cut Work",
     designs: "11 Designs",
     image: "/collections/fancy-printed.jpg",
     action: "designer",
@@ -137,7 +137,7 @@ const REPLICATED_COLLECTIONS = [
   {
     id: "ethnic-combos",
     title: "Ethnic Sets & Combos",
-    subtitle: "Bridal Couple Combos & Traditional Sets",
+    subtitle: "Bridal Couple Combos &\nTraditional Sets",
     designs: "3 Designs",
     image: "/collections/ethnic-combos.jpg",
     action: "combos",
@@ -381,7 +381,7 @@ export function HomePage({ categories }: { categories: Category[] }) {
                   <span className="font-serif text-sm font-semibold tracking-wide text-ivory md:text-base">
                     {t.title}
                   </span>
-                  <span className="text-[11px] text-ivory/65 leading-tight mt-0.5">
+                  <span className="text-[11px] text-ivory/80 leading-tight mt-0.5">
                     {t.sub}
                   </span>
                 </div>
@@ -423,13 +423,13 @@ export function HomePage({ categories }: { categories: Category[] }) {
                 whileInView={{ opacity: 1, y: 0, scale: 1 }}
                 viewport={{ once: false, margin: "-6%" }}
                 transition={{ duration: 0.5, delay: (i % 2) * 0.08, ease: [0.22, 1, 0.36, 1] }}
-                className="group flex flex-col sm:flex-row overflow-hidden rounded-2xl border border-[#E7DCBE] bg-[#FDFBF7] shadow-[0_3px_14px_rgba(11,26,48,0.03)] hover:shadow-[0_8px_30px_rgba(212,175,55,0.15)] hover:border-[#D4AF37]/60 transition-all duration-300"
+                className="group flex flex-col sm:flex-row items-stretch p-3 sm:p-3.5 lg:p-4 rounded-2xl sm:rounded-3xl border border-[#EADBCC] bg-gradient-to-br from-[#FCF9F3] to-[#F8F2E7] shadow-[0_2px_10px_rgba(11,26,48,0.03)] hover:shadow-[0_8px_28px_rgba(212,175,55,0.16)] hover:border-[#D4AF37]/60 transition-all duration-300"
               >
-                {/* Left Image */}
-                <div className="relative w-full sm:w-[48%] md:w-[50%] h-60 sm:h-auto min-h-[200px] sm:min-h-[230px] overflow-hidden shrink-0 bg-[#F5EFE6]">
+                {/* Left Image with all 4 corners rounded */}
+                <div className="relative w-full sm:w-[48%] md:w-[47%] h-56 sm:h-[195px] md:h-[200px] rounded-xl sm:rounded-2xl overflow-hidden shrink-0 bg-[#F5EFE6]">
                   <Image
                     src={item.image}
-                    alt={item.title}
+                    alt={item.title.replace("\n", " ")}
                     fill
                     unoptimized
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 30vw"
@@ -438,30 +438,28 @@ export function HomePage({ categories }: { categories: Category[] }) {
                 </div>
 
                 {/* Right Content */}
-                <div className="flex flex-1 flex-col justify-between p-4 sm:p-5 md:p-5 bg-gradient-to-br from-[#FFFDF9] to-[#FAF6EE]">
+                <div className="flex flex-1 flex-col justify-between pt-3 sm:pt-1 sm:pl-4 md:pl-5 pr-1 pb-1">
                   <div>
-                    <h3 className="font-serif text-lg sm:text-[21px] font-bold text-[#0B1A30] leading-tight">
+                    <h3 className="font-serif text-[20px] sm:text-[22px] md:text-[23px] font-bold text-[#0B1A30] leading-[1.18] whitespace-pre-line tracking-tight">
                       {item.title}
                     </h3>
-                    {item.id === "view-all" ? (
-                      <div className="mt-2 h-[1.5px] w-8 bg-[#C5A059]" />
-                    ) : item.subtitle ? (
-                      <p className="mt-1 font-serif text-xs sm:text-[13px] text-[#2C384A] leading-snug font-normal">
+                    {item.subtitle ? (
+                      <p className="mt-1.5 font-serif text-xs sm:text-[13px] text-[#2C3B4E] leading-snug font-normal whitespace-pre-line">
                         {item.subtitle}
                       </p>
                     ) : null}
                   </div>
 
-                  <div className="mt-3.5 space-y-2.5 sm:space-y-3">
+                  <div className="mt-3.5 sm:mt-4 space-y-2.5 sm:space-y-3">
                     {/* Design count with mannequin icon */}
                     <div className="flex items-center gap-2 text-xs sm:text-[13px] font-medium text-[#2D3748]">
-                      <MannequinIcon className="h-4 w-4 text-[#6D4E35]" />
+                      <MannequinIcon className="h-4 w-4 text-[#7B5537] shrink-0" />
                       <span>{item.designs}</span>
                     </div>
 
-                    {/* Handloom Collection Badge */}
-                    <div className="inline-flex items-center gap-1.5 rounded-full bg-[#0A192F] px-3 py-1 text-[11px] sm:text-xs font-medium text-[#ECC97D] shadow-xs w-fit">
-                      <HandloomLoomIcon className="h-3.5 w-3.5 text-[#ECC97D]" />
+                    {/* Handloom Collection Badge - rounded rectangle */}
+                    <div className="inline-flex items-center gap-1.5 rounded-lg bg-[#0A192F] px-3 py-1.5 text-[11px] sm:text-xs font-medium text-[#ECC97D] shadow-xs w-fit">
+                      <HandloomLoomIcon className="h-3.5 w-3.5 text-[#ECC97D] shrink-0" />
                       <span>Handloom Collection</span>
                     </div>
 
@@ -472,7 +470,7 @@ export function HomePage({ categories }: { categories: Category[] }) {
                           if (item.action === "all") goAllProducts();
                           else goCategory(item.action);
                         }}
-                        className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#FEE5A5] via-[#F3CE79] to-[#E5B556] px-5 py-2 text-xs sm:text-[13px] font-semibold text-[#281802] shadow-[0_2px_8px_rgba(218,165,32,0.25)] hover:shadow-[0_4px_14px_rgba(218,165,32,0.35)] hover:brightness-105 active:scale-95 transition-all w-fit cursor-pointer"
+                        className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#FDE5A3] via-[#F4CE7B] to-[#E6B658] px-5 py-2 text-xs sm:text-[13px] font-bold text-[#281802] shadow-[0_2px_8px_rgba(218,165,32,0.22)] hover:shadow-[0_4px_14px_rgba(218,165,32,0.32)] hover:brightness-105 active:scale-95 transition-all w-fit cursor-pointer border border-[#DFC377]/40"
                       >
                         <span>Explore Collection</span>
                         <span className="font-normal text-sm leading-none">→</span>
@@ -487,7 +485,7 @@ export function HomePage({ categories }: { categories: Category[] }) {
       </section>
 
       {/* ===== NEW ARRIVALS (REPLICATED VISUAL SECTION) ===== */}
-      <section className="bg-[#FAF8F5]/70 border-t border-[#E7DCBE]/60 py-12 md:py-16">
+      <section className="bg-[#FAF8F5] py-12 md:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
           {/* Header with continuous scroll re-trigger */}
           <motion.div
@@ -551,7 +549,7 @@ export function HomePage({ categories }: { categories: Category[] }) {
                   >
                     {/* Saree Image Container */}
                     <div className="relative aspect-[128/96] w-full overflow-hidden rounded-xl bg-[#F7F2E9] shadow-[0_2px_8px_rgba(11,26,48,0.04)] group-hover:shadow-[0_6px_20px_rgba(212,175,55,0.18)] transition-all duration-300">
-                      {/* Wishlist Heart Button overlay */}
+                      {/* Wishlist Heart Button overlay (Top Right) */}
                       <button
                         type="button"
                         onClick={(e) => {
@@ -565,17 +563,11 @@ export function HomePage({ categories }: { categories: Category[] }) {
                           });
                         }}
                         aria-label="Add to wishlist"
-                        className={`absolute top-1.5 right-1.5 z-10 flex h-7 w-7 items-center justify-center rounded-full transition-all ${
-                          wishlisted
-                            ? "bg-white/95 text-red-500 shadow-xs"
-                            : "bg-transparent text-transparent hover:bg-white/70 hover:text-red-400"
-                        }`}
+                        className="absolute top-1 right-1 sm:top-1.5 sm:right-1.5 z-10 flex h-7 w-7 items-center justify-center rounded-full transition-all cursor-pointer hover:scale-110 active:scale-90"
                       >
-                        <Heart
-                          className={`h-4 w-4 transition-colors ${
-                            wishlisted ? "fill-red-500 text-red-500" : ""
-                          }`}
-                        />
+                        {wishlisted && (
+                          <Heart className="h-4 w-4 fill-red-500 text-red-500" />
+                        )}
                       </button>
 
                       <Image
@@ -590,10 +582,10 @@ export function HomePage({ categories }: { categories: Category[] }) {
 
                     {/* Product Info */}
                     <div className="pt-2 px-0.5">
-                      <h4 className="font-serif text-[12.5px] sm:text-[13.5px] font-medium text-[#111827] line-clamp-2 leading-snug group-hover:text-gold-dark transition-colors">
+                      <h4 className="font-serif text-[12.5px] sm:text-[13.5px] font-medium text-[#111827] line-clamp-2 min-h-[34px] leading-snug group-hover:text-gold-dark transition-colors">
                         {item.title}
                       </h4>
-                      <p className="mt-1 font-serif text-[14px] sm:text-[15px] font-bold text-[#0B1A30]">
+                      <p className="mt-1 font-serif text-[14.5px] sm:text-[15.5px] font-bold text-[#0B1A30]">
                         ₹{item.price.toLocaleString("en-IN")}
                       </p>
                     </div>
@@ -636,7 +628,7 @@ export function HomePage({ categories }: { categories: Category[] }) {
               <p className="mt-4 text-ivory/80">Grand Kanchipuram bridal silks in rich reds, maroons and gold — woven over 7 days with pure zari. The heirloom your daughter will cherish.</p>
               <button
                 onClick={() => goCategory("bridal")}
-                className="mt-6 rounded-sm bg-gold-gradient px-7 py-3 text-sm font-semibold text-navy shadow-gold"
+                className="mt-6 rounded-sm bg-gold-gradient px-7 py-3 text-sm font-semibold text-navy shadow-gold transition-all hover:brightness-105 cursor-pointer active:scale-95"
               >
                 Shop Bridal Collection
               </button>
@@ -1070,8 +1062,8 @@ function ProductRail({ eyebrow, title, products, bg, viewAllAction }: { eyebrow:
       <div className="mx-auto max-w-7xl px-6 py-16 md:px-8 md:py-24">
         <div className="flex items-end justify-between">
           <SectionHeading eyebrow={eyebrow} title={title} />
-          <button onClick={handleViewAll} className="hidden items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-navy transition-colors hover:text-gold md:flex md:text-sm">
-            View All <ChevronRight className="h-4 w-4" />
+          <button onClick={handleViewAll} className="group hidden items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-navy transition-colors hover:text-gold md:flex md:text-sm cursor-pointer">
+            View All <ChevronRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
           </button>
         </div>
         <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
@@ -1082,7 +1074,7 @@ function ProductRail({ eyebrow, title, products, bg, viewAllAction }: { eyebrow:
         <div className="mt-8 flex justify-center md:hidden">
           <button
             onClick={handleViewAll}
-            className="flex items-center gap-1.5 rounded-sm border border-navy/25 bg-background px-5 py-2.5 text-xs font-semibold uppercase tracking-wider text-navy shadow-sm transition-colors hover:border-gold hover:text-gold"
+            className="flex items-center gap-1.5 rounded-sm border border-navy/25 bg-background px-5 py-2.5 text-xs font-semibold uppercase tracking-wider text-navy shadow-sm transition-all hover:border-gold hover:text-gold cursor-pointer active:scale-95"
           >
             View All {title} <ChevronRight className="h-3.5 w-3.5" />
           </button>
