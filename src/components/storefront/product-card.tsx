@@ -86,16 +86,16 @@ export function ProductCard({ product, index = 0 }: { product: ProductCard; inde
               });
             }}
             disabled={!product.inStock}
-            className="flex flex-1 items-center justify-center gap-1.5 rounded-md bg-navy px-3 py-2 text-xs font-semibold text-ivory shadow-navy transition-all hover:bg-navy-light cursor-pointer active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex flex-1 items-center justify-center gap-1.5 rounded-md bg-[#071731] px-3 py-2 text-xs font-semibold text-ivory shadow-md border border-[#D4AF37]/35 hover:border-[#D4AF37] hover:bg-[#0E2854] transition-all cursor-pointer active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            <ShoppingBag className="h-3.5 w-3.5" /> Add to Bag
+            <ShoppingBag className="h-3.5 w-3.5 text-[#D4AF37]" /> Add to Bag
           </button>
           <button
             onClick={(e) => {
               e.stopPropagation();
               openQuickView(product.id);
             }}
-            className="flex items-center justify-center rounded-md border border-border bg-background/90 px-2.5 py-2 text-navy backdrop-blur transition-all hover:border-gold cursor-pointer active:scale-95"
+            className="flex items-center justify-center rounded-md border border-[#D4AF37]/30 bg-[#071731]/90 px-2.5 py-2 text-[#ECC97D] backdrop-blur transition-all hover:border-[#D4AF37] hover:bg-[#071731] cursor-pointer active:scale-95"
             aria-label="Quick view product"
             title="Quick view"
           >
@@ -105,12 +105,17 @@ export function ProductCard({ product, index = 0 }: { product: ProductCard; inde
       </TiltCard>
 
       <div className="mt-3 flex flex-col gap-1">
-        <span className="text-[10px] font-medium uppercase tracking-[0.08em] text-gold-dark">
-          {product.categoryName}
-        </span>
+        <div className="flex items-center justify-between text-[10px] font-medium tracking-wide">
+          <span className="uppercase text-[#B9944B] font-semibold">
+            {product.categoryName}
+          </span>
+          <span className="text-muted-foreground/80 font-sans">
+            Handloom Pure
+          </span>
+        </div>
         <button
           onClick={() => goProduct(product.slug)}
-          className="text-left font-serif text-[15px] font-medium leading-snug text-foreground transition-colors hover:text-navy line-clamp-2 min-h-[2.5rem] cursor-pointer"
+          className="text-left font-serif text-[15px] font-medium leading-snug text-foreground transition-colors hover:text-[#081B3A] line-clamp-2 min-h-[2.5rem] cursor-pointer"
         >
           {product.title}
         </button>

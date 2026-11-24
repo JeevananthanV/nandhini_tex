@@ -370,27 +370,27 @@ export function HomePage({ categories }: { categories: Category[] }) {
       </section>
 
       {/* ===== TRUST STRIP ===== */}
-      <section className="relative border-y border-gold/20 bg-navy text-ivory shadow-sm">
+      <section className="relative border-y border-[#D4AF37]/25 bg-[#071731] text-ivory shadow-sm" aria-label="Authenticity and Customer Guarantees">
         <div className="mx-auto max-w-7xl px-6 py-6 md:px-8 md:py-7">
           <div className="grid grid-cols-2 gap-4 divide-y divide-white/10 sm:divide-y-0 sm:gap-6 md:grid-cols-4 md:divide-x md:divide-white/15">
             {[
-              { icon: Hand, title: "100% Handwoven", sub: "Master weavers from Elampillai" },
-              { icon: Truck, title: "Pan-India Shipping", sub: "Dispatched in 24h · Free above ₹999" },
-              { icon: RefreshCw, title: "7-Day Easy Returns", sub: "Hassle-free doorstep exchanges" },
-              { icon: ShieldCheck, title: "Secure Payments", sub: "COD, UPI & 256-bit safe checkout" },
+              { icon: HandloomLoomIcon, title: "Direct From Weavers", sub: "Salem & Elampillai artisan clusters at fair loom prices" },
+              { icon: ShieldCheck, title: "Silk Mark Certified", sub: "100% pure mulberry silk & tested zari guarantee" },
+              { icon: Truck, title: "Pan-India Express Dispatch", sub: "Dispatched in 24h · Free shipping above ₹999" },
+              { icon: RefreshCw, title: "7-Day Doorstep Exchange", sub: "Hassle-free exchanges · Cash on Delivery available" },
             ].map((t, i) => (
               <div
                 key={i}
                 className={`flex items-center gap-3.5 pt-3 sm:pt-0 ${i % 2 === 1 ? "sm:pl-3" : ""} ${i > 0 ? "md:pl-6" : ""}`}
               >
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-gold/15 text-gold ring-1 ring-gold/30 transition-transform duration-300 hover:scale-105">
-                  <t.icon className="h-5 w-5" strokeWidth={1.75} />
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#D4AF37]/15 text-[#D4AF37] ring-1 ring-[#D4AF37]/30 transition-transform duration-300 hover:scale-105 shadow-sm">
+                  <t.icon className="h-5 w-5" />
                 </div>
                 <div className="flex flex-col text-left">
                   <span className="font-serif text-sm font-semibold tracking-wide text-ivory md:text-base">
                     {t.title}
                   </span>
-                  <span className="text-[11px] text-ivory/80 leading-tight mt-0.5">
+                  <span className="text-[11px] text-ivory/80 leading-tight mt-0.5 font-light">
                     {t.sub}
                   </span>
                 </div>
@@ -716,47 +716,118 @@ export function HomePage({ categories }: { categories: Category[] }) {
       {/* ===== BRIDAL PRODUCTS ===== */}
       {loading ? <ProductRailSkeleton /> : bridal.length > 0 && <ProductRail eyebrow="Heirloom Weaves" title="Bridal Collection" products={bridal} />}
 
-      {/* ===== STORY / ABOUT ===== */}
-      <section className="bg-navy-gradient text-ivory">
-        <div className="mx-auto grid max-w-7xl items-center gap-10 px-6 py-16 md:grid-cols-2 md:px-8 md:py-24">
-          <motion.div
-            initial={{ opacity: 0, x: -24 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: false, margin: "-8%" }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <span className="text-[11px] font-medium uppercase tracking-[0.15em] text-gold">Our Story</span>
-            <h2 className="mt-3 font-serif text-3xl font-semibold md:text-4xl">Threads of Heritage from Elampillai</h2>
-            <p className="mt-5 text-ivory/80">
-              For generations, the weavers of Elampillai and Kanchipuram have created sarees that tell stories — of temple festivals, of weddings, of devotion. At Nandhini Tex, we work directly with these master artisans, bringing you handwoven silk that carries the warmth of the loom and the pride of its maker.
+      {/* ===== THE ARTISAN STORY & WEAVING HERITAGE ===== */}
+      <section className="relative overflow-hidden bg-gradient-to-b from-[#061224] via-[#081B3A] to-[#050F1F] text-ivory py-20 md:py-28 border-y border-[#D4AF37]/25" aria-label="Our Handloom Weaving Heritage">
+        {/* Subtle atmospheric glow */}
+        <div className="pointer-events-none absolute inset-0 opacity-[0.04]" style={{ backgroundImage: "url(/patterns/heritage-motif.svg)", backgroundSize: "220px" }} />
+        <div className="pointer-events-none absolute left-1/4 top-0 h-96 w-96 rounded-full bg-[#D4AF37]/10 blur-[120px]" />
+        
+        <div className="relative mx-auto max-w-7xl px-6 md:px-8">
+          {/* Section Header */}
+          <div className="flex flex-col items-center text-center max-w-2xl mx-auto">
+            <LotusOrnament className="w-10 h-6 text-[#D4AF37] mb-2" />
+            <span className="text-xs font-semibold uppercase tracking-[0.25em] text-[#D4AF37]">
+              Artisan Weavers of Elampillai & Kanchipuram
+            </span>
+            <h2 className="mt-3 font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-ivory leading-tight">
+              The Living Loom: Where Heritage is Handcrafted
+            </h2>
+            <p className="mt-4 text-sm sm:text-base text-ivory/80 font-light leading-relaxed">
+              For over 70 years, our master weavers have sat before traditional pit looms, threading pure mulberry silk and authentic zari one shot at a time. No power looms. No synthetic shortcuts. Only generational artistry passed from parent to child.
             </p>
-            <p className="mt-3 text-ivory/80">
-              Every saree ships with a matching blouse piece and the assurance of authentic handloom — no power looms, no shortcuts.
-            </p>
-            <div className="mt-6 flex gap-8">
-              <div>
-                <div className="font-serif text-3xl font-bold text-gold"><NumberFlip value={70} suffix="+" /></div>
-                <div className="text-xs uppercase tracking-wider text-ivory/60">Unique Weaves</div>
+          </div>
+
+          {/* 3 Craft Pillars */}
+          <div className="mt-14 grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+            {/* Pillar 1: Pure Sericulture & Tested Zari */}
+            <div className="rounded-2xl border border-[#D4AF37]/25 bg-[#0A1D3A]/60 p-6 md:p-7 backdrop-blur-sm relative overflow-hidden group hover:border-[#D4AF37]/50 transition-all duration-300">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#D4AF37]/15 ring-1 ring-[#D4AF37]/40 text-[#D4AF37] mb-5">
+                <Sparkles className="h-6 w-6" />
               </div>
-              <div>
-                <div className="font-serif text-3xl font-bold text-gold"><NumberFlip value={2400} suffix="+" /></div>
-                <div className="text-xs uppercase tracking-wider text-ivory/60">Happy Customers</div>
-              </div>
-              <div>
-                <div className="font-serif text-3xl font-bold text-gold"><NumberFlip value={4.8} decimals={1} suffix="★" /></div>
-                <div className="text-xs uppercase tracking-wider text-ivory/60">Avg. Rating</div>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-[#D4AF37]/90">Pillar I</span>
+              <h3 className="mt-1 font-serif text-xl font-bold text-ivory">Mulberry Silk & 24K Zari</h3>
+              <p className="mt-3 text-xs sm:text-sm text-ivory/75 leading-relaxed font-light">
+                We hand-select only high-grade bivoltine mulberry silk, paired with tested and pure gold/silver electroplated zari for a radiant sheen that never tarnishes over decades.
+              </p>
+              <div className="mt-5 pt-4 border-t border-white/10 flex items-center gap-2 text-xs text-[#ECC97D]">
+                <ShieldCheck className="h-4 w-4 shrink-0 text-[#D4AF37]" />
+                <span>Silk Mark Certified Quality</span>
               </div>
             </div>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, scale: 0.94 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: false, margin: "-8%" }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="relative aspect-[4/3] overflow-hidden rounded-lg shadow-navy"
-          >
-            <Image src="https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=800&q=80" alt="Handloom silk weaving" fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" />
-          </motion.div>
+
+            {/* Pillar 2: The Jacquard Pit Loom */}
+            <div className="rounded-2xl border border-[#D4AF37]/25 bg-[#0A1D3A]/60 p-6 md:p-7 backdrop-blur-sm relative overflow-hidden group hover:border-[#D4AF37]/50 transition-all duration-300">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#D4AF37]/15 ring-1 ring-[#D4AF37]/40 text-[#D4AF37] mb-5">
+                <HandloomLoomIcon className="h-6 w-6" />
+              </div>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-[#D4AF37]/90">Pillar II</span>
+              <h3 className="mt-1 font-serif text-xl font-bold text-ivory">Intricate Jacquard Punching</h3>
+              <p className="mt-3 text-xs sm:text-sm text-ivory/75 leading-relaxed font-light">
+                Master designers punch thousands of individual cards by hand to translate temple gopurams, anna-pakshi birds, and mayil buttas into rhythmically moving wooden looms.
+              </p>
+              <div className="mt-5 pt-4 border-t border-white/10 flex items-center gap-2 text-xs text-[#ECC97D]">
+                <Hand className="h-4 w-4 shrink-0 text-[#D4AF37]" />
+                <span>7 to 21 Days of Patient Weaving</span>
+              </div>
+            </div>
+
+            {/* Pillar 3: Loom-to-Doorstep Fair Pricing */}
+            <div className="rounded-2xl border border-[#D4AF37]/25 bg-[#0A1D3A]/60 p-6 md:p-7 backdrop-blur-sm relative overflow-hidden group hover:border-[#D4AF37]/50 transition-all duration-300">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#D4AF37]/15 ring-1 ring-[#D4AF37]/40 text-[#D4AF37] mb-5">
+                <Truck className="h-6 w-6" />
+              </div>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-[#D4AF37]/90">Pillar III</span>
+              <h3 className="mt-1 font-serif text-xl font-bold text-ivory">Direct Loom Fair Pricing</h3>
+              <p className="mt-3 text-xs sm:text-sm text-ivory/75 leading-relaxed font-light">
+                By cutting out wholesalers, commercial distributors, and high showroom markups, every rupee supports our weaving families while delivering unmatched handloom value to you.
+              </p>
+              <div className="mt-5 pt-4 border-t border-white/10 flex items-center gap-2 text-xs text-[#ECC97D]">
+                <Award className="h-4 w-4 shrink-0 text-[#D4AF37]" />
+                <span>Zero Middlemen Markups</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Master Weaver Quote Banner + Stats */}
+          <div className="mt-12 rounded-2xl border border-[#D4AF37]/30 bg-gradient-to-r from-[#071731] via-[#0B1E3F] to-[#071731] p-6 sm:p-8 md:p-10 shadow-2xl relative overflow-hidden">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+              <div className="md:col-span-8 space-y-3">
+                <p className="font-serif italic text-base sm:text-lg text-ivory/90 leading-relaxed">
+                  &ldquo;A true handloom saree doesn&apos;t just drape your shoulders — it wraps you in the rhythmic heartbeat of our village, our heritage, and the blessings woven into every thread.&rdquo;
+                </p>
+                <div className="flex items-center gap-3 pt-2">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gold-gradient text-navy font-bold text-sm shadow-sm font-serif">
+                    M
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-ivory">Master Weaver Murugesan</p>
+                    <p className="text-xs text-[#ECC97D]">Senior Artisan · 42 Years on Elampillai Looms</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="md:col-span-4 border-t md:border-t-0 md:border-l border-white/15 pt-6 md:pt-0 md:pl-8 grid grid-cols-3 gap-4 text-center">
+                <div>
+                  <div className="font-serif text-2xl sm:text-3xl font-bold text-gold-gradient">
+                    <NumberFlip value={70} suffix="+" />
+                  </div>
+                  <div className="text-[10px] uppercase tracking-wider text-ivory/70 mt-1">Weaves</div>
+                </div>
+                <div>
+                  <div className="font-serif text-2xl sm:text-3xl font-bold text-gold-gradient">
+                    <NumberFlip value={2400} suffix="+" />
+                  </div>
+                  <div className="text-[10px] uppercase tracking-wider text-ivory/70 mt-1">Customers</div>
+                </div>
+                <div>
+                  <div className="font-serif text-2xl sm:text-3xl font-bold text-gold-gradient">
+                    <NumberFlip value={4.8} decimals={1} suffix="★" />
+                  </div>
+                  <div className="text-[10px] uppercase tracking-wider text-ivory/70 mt-1">Rating</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -837,7 +908,7 @@ export function HomePage({ categories }: { categories: Category[] }) {
       {/* ===== FESTIVAL COLLECTION ===== */}
       <section className="bg-navy-gradient text-ivory">
         <div className="mx-auto max-w-7xl px-6 py-16 md:px-8 md:py-24">
-          <SectionHeading eyebrow="Seasonal Edits" title="Festival Collection" />
+          <SectionHeading eyebrow="Seasonal Edits" title="Festival Collection" dark />
           <p className="mt-4 max-w-2xl text-ivory/70">Celebrate Pongal, Diwali, and wedding seasons with our curated festive sarees — rich colours, pure zari, and heirloom weaves for every auspicious occasion.</p>
           <div className="mt-10 grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-5 lg:grid-cols-4">
             {[
@@ -1091,7 +1162,7 @@ export function HomePage({ categories }: { categories: Category[] }) {
   );
 }
 
-function SectionHeading({ eyebrow, title, center }: { eyebrow: string; title: string; center?: boolean }) {
+function SectionHeading({ eyebrow, title, center, dark }: { eyebrow: string; title: string; center?: boolean; dark?: boolean }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -1105,11 +1176,11 @@ function SectionHeading({ eyebrow, title, center }: { eyebrow: string; title: st
         whileInView={{ opacity: 1, letterSpacing: "0.15em" }}
         viewport={{ once: false }}
         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-        className="inline-block text-[11px] font-semibold uppercase tracking-[0.15em] text-gold-dark"
+        className={`inline-block text-[11px] font-semibold uppercase tracking-[0.15em] ${dark ? "text-[#ECC97D]" : "text-gold-dark"}`}
       >
         {eyebrow}
       </motion.span>
-      <h2 className="mt-2 font-serif text-2xl font-semibold text-foreground md:text-4xl">{title}</h2>
+      <h2 className={`mt-2 font-serif text-2xl font-semibold md:text-4xl ${dark ? "text-[#FDFBF7]" : "text-foreground"}`}>{title}</h2>
       <motion.div
         initial={{ scaleX: 0 }}
         whileInView={{ scaleX: 1 }}

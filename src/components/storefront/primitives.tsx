@@ -25,8 +25,8 @@ export function Price({ price, mrp, size = "md" }: { price: number; mrp?: number
   const fmt = (n: number) => new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(n);
   return (
     <div className="flex items-baseline gap-2">
-      <span className={cn("font-semibold text-foreground", sz)}>{fmt(price)}</span>
-      {mrp && mrp > price && <span className={cn("text-muted-foreground line-through", mrpSz)}>{fmt(mrp)}</span>}
+      <span className={cn("font-serif font-bold text-foreground", sz)}>{fmt(price)}</span>
+      {mrp && mrp > price && <span className={cn("text-muted-foreground/75 line-through font-sans", mrpSz)}>{fmt(mrp)}</span>}
     </div>
   );
 }
@@ -34,7 +34,7 @@ export function Price({ price, mrp, size = "md" }: { price: number; mrp?: number
 export function DiscountBadge({ pct }: { pct: number }) {
   if (pct <= 0) return null;
   return (
-    <span className="inline-flex items-center rounded-sm bg-navy px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-ivory">
+    <span className="inline-flex items-center rounded-full bg-[#7A1F2B] px-2 py-0.5 text-[9.5px] font-bold uppercase tracking-wider text-[#FAF7F0] shadow-xs border border-[#962635]/50">
       {pct}% Off
     </span>
   );
@@ -42,7 +42,7 @@ export function DiscountBadge({ pct }: { pct: number }) {
 
 export function NewBadge() {
   return (
-    <span className="inline-flex items-center rounded-sm bg-gold px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-navy">
+    <span className="inline-flex items-center rounded-full bg-[#D4AF37] px-2 py-0.5 text-[9.5px] font-bold uppercase tracking-wider text-[#081B3A] shadow-xs">
       New
     </span>
   );
@@ -50,8 +50,8 @@ export function NewBadge() {
 
 export function BestsellerBadge() {
   return (
-    <span className="inline-flex items-center gap-0.5 rounded-sm bg-gold-gradient px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-navy">
-      <Star className="h-2.5 w-2.5 fill-navy text-navy" /> Bestseller
+    <span className="inline-flex items-center gap-1 rounded-full bg-gold-gradient px-2 py-0.5 text-[9.5px] font-bold uppercase tracking-wider text-[#081B3A] shadow-xs">
+      <Star className="h-2.5 w-2.5 fill-[#081B3A] text-[#081B3A]" /> Bestseller
     </span>
   );
 }
