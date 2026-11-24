@@ -49,6 +49,7 @@ export function CategoryPage({ categories }: { categories: Category[] }) {
   useEffect(() => {
     if (!slug) return;
     let cancelled = false;
+    setLoading(true);
     const params = new URLSearchParams({ category: slug, sort });
     if (priceRange !== null) {
       params.set("minPrice", String(PRICE_RANGES[priceRange].min));

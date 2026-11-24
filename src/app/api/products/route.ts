@@ -18,7 +18,19 @@ export async function GET(req: NextRequest) {
   const limit = Math.min(parseInt(searchParams.get("limit") || "100"), 200);
 
   const where: Record<string, unknown> = { status: "published" };
-  if (category) where.category = { slug: category };
+  if (category) {
+    if (category === "offer-sarees" || category === "offers") {
+      where.discountPct = { gt: 0 };
+    } else if (category === "dhotis" || category === "menswear") {
+      where.OR = [
+        { title: { contains: "Vesti" } },
+        { title: { contains: "Shirt" } },
+        { title: { contains: "Dhoti" } },
+      ];
+    } else {
+      where.category = { slug: category };
+    }
+  }
   if (search) {
     where.OR = [
       { title: { contains: search } },

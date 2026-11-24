@@ -66,7 +66,16 @@ function LotusOrnament({ className = "w-10 h-6" }: { className?: string }) {
 function MannequinIcon({ className = "w-4 h-4" }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
-      <path d="M12 2a2 2 0 100 4 2 2 0 000-4zm-1.8 5c-.7 0-1.2.6-1.2 1.3v.9c0 1.9 1.1 3.5 2.7 4.2L10.5 18h1.2v3h1.6v-3h1.2l-1.2-4.6c1.6-.7 2.7-2.3 2.7-4.2v-.9c0-.7-.5-1.3-1.2-1.3h-4.6z" opacity="0.85" />
+      {/* Finial / Knob */}
+      <circle cx="12" cy="2" r="1.5" />
+      {/* Neck */}
+      <rect x="11.2" y="3.5" width="1.6" height="1.5" rx="0.5" />
+      {/* Torso Silhouette */}
+      <path d="M8.5 5.5h7c.7 0 1.3.5 1.2 1.2l-.5 3.8c-.1.7-.5 1.3-1.1 1.6l.8 3.9c.1.5-.3 1-.9 1H8.9c-.6 0-1-.5-.9-1l.8-3.9c-.6-.3-1-.9-1.1-1.6l-.5-3.8c-.1-.7.5-1.2 1.2-1.2z" />
+      {/* Central Pole */}
+      <rect x="11.2" y="17" width="1.6" height="4" rx="0.5" />
+      {/* Base */}
+      <path d="M8 22h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
     </svg>
   );
 }
@@ -74,12 +83,12 @@ function MannequinIcon({ className = "w-4 h-4" }: { className?: string }) {
 function HandloomLoomIcon({ className = "w-4 h-4" }: { className?: string }) {
   return (
     <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" className={className}>
-      <rect x="2.5" y="3.5" width="15" height="13" rx="2" stroke="#E5B556" />
-      <line x1="6" y1="3.5" x2="6" y2="16.5" stroke="#E5B556" strokeDasharray="1.2 1.5" />
-      <line x1="10" y1="3.5" x2="10" y2="16.5" stroke="#E5B556" strokeDasharray="1.2 1.5" />
-      <line x1="14" y1="3.5" x2="14" y2="16.5" stroke="#E5B556" strokeDasharray="1.2 1.5" />
-      <path d="M4 10H16" stroke="#FDE8BB" strokeWidth="1.8" strokeLinecap="round" />
-      <polygon points="8,7.5 12,7.5 13.5,10 12,12.5 8,12.5 6.5,10" fill="#E5B556" fillOpacity="0.45" stroke="#FDE8BB" strokeWidth="0.75" />
+      <rect x="2.5" y="3.5" width="15" height="13" rx="2" stroke="currentColor" strokeWidth="1.3" />
+      <line x1="6" y1="4.5" x2="6" y2="15.5" stroke="currentColor" strokeDasharray="1.5 1.5" strokeWidth="1" />
+      <line x1="10" y1="4.5" x2="10" y2="15.5" stroke="currentColor" strokeDasharray="1.5 1.5" strokeWidth="1" />
+      <line x1="14" y1="4.5" x2="14" y2="15.5" stroke="currentColor" strokeDasharray="1.5 1.5" strokeWidth="1" />
+      <path d="M4 10H16" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      <polygon points="8,8 12,8 13.5,10 12,12 8,12 6.5,10" fill="currentColor" fillOpacity="0.4" stroke="currentColor" strokeWidth="0.8" />
     </svg>
   );
 }
@@ -137,35 +146,35 @@ const REPLICATED_COLLECTIONS = [
 
 const REPLICATED_NEW_ARRIVALS = [
   {
-    id: "na-royal-blue",
+    id: "cmwekdkju00phnjtpyydvfs6m",
     title: "Royal Blue Kanchipuram Silk Saree",
     price: 4999,
     image: "/new-arrivals/saree-royal-blue.jpg",
     slug: "traditional-elampillai-half-saree-set-royal-blue-gold",
   },
   {
-    id: "na-violet",
+    id: "cmwekdki600lbnjtpthauscwj",
     title: "Violet Soft Silk Saree",
     price: 3999,
     image: "/new-arrivals/saree-violet.jpg",
     slug: "butterfly-cut-work-designer-saree-wine",
   },
   {
-    id: "na-emerald",
+    id: "cmwekdkkb00qxnjtp6macak3c",
     title: "Emerald Handloom Saree",
     price: 4499,
     image: "/new-arrivals/saree-emerald.jpg",
     slug: "semi-kancheepuram-soft-cotton-saree-temple-green",
   },
   {
-    id: "na-rani-pink",
+    id: "cmwekdkiu00mnnjtpw2dac1wl",
     title: "Rani Pink Pattu Saree",
     price: 4799,
     image: "/new-arrivals/saree-rani-pink.jpg",
     slug: "digital-softy-floral-print-saree-mint-peach",
   },
   {
-    id: "na-golden-zari",
+    id: "cmwekdkjb00o1njtp2fwpdeh6",
     title: "Golden Zari Saree",
     price: 4299,
     image: "/new-arrivals/saree-golden-zari.jpg",
@@ -417,39 +426,42 @@ export function HomePage({ categories }: { categories: Category[] }) {
                 className="group flex flex-col sm:flex-row overflow-hidden rounded-2xl border border-[#E7DCBE] bg-[#FDFBF7] shadow-[0_3px_14px_rgba(11,26,48,0.03)] hover:shadow-[0_8px_30px_rgba(212,175,55,0.15)] hover:border-[#D4AF37]/60 transition-all duration-300"
               >
                 {/* Left Image */}
-                <div className="relative w-full sm:w-[46%] md:w-[48%] h-64 sm:h-auto min-h-[220px] sm:min-h-[260px] overflow-hidden shrink-0 bg-[#F5EFE6]">
+                <div className="relative w-full sm:w-[48%] md:w-[50%] h-60 sm:h-auto min-h-[200px] sm:min-h-[230px] overflow-hidden shrink-0 bg-[#F5EFE6]">
                   <Image
                     src={item.image}
                     alt={item.title}
                     fill
+                    unoptimized
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 30vw"
                     className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
                   />
                 </div>
 
                 {/* Right Content */}
-                <div className="flex flex-1 flex-col justify-between p-5 sm:p-6">
+                <div className="flex flex-1 flex-col justify-between p-4 sm:p-5 md:p-5 bg-gradient-to-br from-[#FFFDF9] to-[#FAF6EE]">
                   <div>
-                    <h3 className="font-serif text-xl sm:text-2xl font-bold text-[#0B1A30] leading-tight">
+                    <h3 className="font-serif text-lg sm:text-[21px] font-bold text-[#0B1A30] leading-tight">
                       {item.title}
                     </h3>
-                    {item.subtitle && (
-                      <p className="mt-1.5 font-serif italic text-xs sm:text-[13px] text-[#4A5568] leading-snug">
+                    {item.id === "view-all" ? (
+                      <div className="mt-2 h-[1.5px] w-8 bg-[#C5A059]" />
+                    ) : item.subtitle ? (
+                      <p className="mt-1 font-serif text-xs sm:text-[13px] text-[#2C384A] leading-snug font-normal">
                         {item.subtitle}
                       </p>
-                    )}
+                    ) : null}
                   </div>
 
-                  <div className="mt-4 space-y-3">
+                  <div className="mt-3.5 space-y-2.5 sm:space-y-3">
                     {/* Design count with mannequin icon */}
-                    <div className="flex items-center gap-2 text-xs sm:text-sm font-medium text-[#2D3748]">
-                      <MannequinIcon className="h-4 w-4 text-[#718096]" />
+                    <div className="flex items-center gap-2 text-xs sm:text-[13px] font-medium text-[#2D3748]">
+                      <MannequinIcon className="h-4 w-4 text-[#6D4E35]" />
                       <span>{item.designs}</span>
                     </div>
 
                     {/* Handloom Collection Badge */}
-                    <div className="inline-flex items-center gap-2 rounded-lg border border-[#23354E] bg-[#0B1A30] px-3 py-1.5 text-xs font-medium text-[#E5D7B7] shadow-xs w-fit">
-                      <HandloomLoomIcon className="h-3.5 w-3.5 text-[#E5C378]" />
+                    <div className="inline-flex items-center gap-1.5 rounded-full bg-[#0A192F] px-3 py-1 text-[11px] sm:text-xs font-medium text-[#ECC97D] shadow-xs w-fit">
+                      <HandloomLoomIcon className="h-3.5 w-3.5 text-[#ECC97D]" />
                       <span>Handloom Collection</span>
                     </div>
 
@@ -460,7 +472,7 @@ export function HomePage({ categories }: { categories: Category[] }) {
                           if (item.action === "all") goAllProducts();
                           else goCategory(item.action);
                         }}
-                        className="inline-flex items-center justify-between gap-2.5 rounded-full bg-gradient-to-r from-[#FDE8BB] via-[#F3CE7A] to-[#E5B556] px-5 py-2 sm:px-6 sm:py-2.5 text-xs sm:text-sm font-semibold text-[#2C1E05] shadow-[0_2px_8px_rgba(218,165,32,0.25)] hover:shadow-[0_4px_14px_rgba(218,165,32,0.35)] hover:brightness-105 active:scale-95 transition-all w-fit cursor-pointer"
+                        className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#FEE5A5] via-[#F3CE79] to-[#E5B556] px-5 py-2 text-xs sm:text-[13px] font-semibold text-[#281802] shadow-[0_2px_8px_rgba(218,165,32,0.25)] hover:shadow-[0_4px_14px_rgba(218,165,32,0.35)] hover:brightness-105 active:scale-95 transition-all w-fit cursor-pointer"
                       >
                         <span>Explore Collection</span>
                         <span className="font-normal text-sm leading-none">→</span>
@@ -523,21 +535,22 @@ export function HomePage({ categories }: { categories: Category[] }) {
             {/* Product Cards Row — continuous scroll re-trigger */}
             <div
               ref={newArrivalsScrollRef}
-              className="flex gap-3 sm:gap-4 overflow-x-auto scroll-smooth no-scrollbar py-2 px-1"
+              className="flex items-start justify-start md:justify-between gap-3 sm:gap-4 md:gap-4 lg:gap-5 overflow-x-auto scroll-smooth no-scrollbar py-2 px-1"
             >
               {REPLICATED_NEW_ARRIVALS.map((item, i) => {
                 const wishlisted = isWishlisted(item.id);
                 return (
                   <motion.div
                     key={item.id}
-                    initial={{ opacity: 0, y: 20, scale: 0.96 }}
+                    initial={{ opacity: 0, y: 18, scale: 0.97 }}
                     whileInView={{ opacity: 1, y: 0, scale: 1 }}
                     viewport={{ once: false, margin: "-6%" }}
-                    transition={{ duration: 0.45, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }}
+                    transition={{ duration: 0.45, delay: i * 0.05, ease: [0.22, 1, 0.36, 1] }}
                     onClick={() => goProduct(item.slug)}
-                    className="min-w-[175px] sm:min-w-[200px] md:min-w-[215px] flex-1 bg-[#FDFBF7] rounded-xl border border-[#E7DCBE] p-2.5 flex flex-col justify-between hover:shadow-md hover:border-[#D4AF37]/60 transition-all duration-300 group cursor-pointer"
+                    className="min-w-[155px] sm:min-w-[180px] md:min-w-[200px] flex-1 max-w-[230px] flex flex-col group cursor-pointer"
                   >
-                    <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-[#F5EFE6]">
+                    {/* Saree Image Container */}
+                    <div className="relative aspect-[128/96] w-full overflow-hidden rounded-xl bg-[#F7F2E9] shadow-[0_2px_8px_rgba(11,26,48,0.04)] group-hover:shadow-[0_6px_20px_rgba(212,175,55,0.18)] transition-all duration-300">
                       {/* Wishlist Heart Button overlay */}
                       <button
                         type="button"
@@ -552,10 +565,10 @@ export function HomePage({ categories }: { categories: Category[] }) {
                           });
                         }}
                         aria-label="Add to wishlist"
-                        className={`absolute top-1 right-1 z-10 flex h-7 w-7 items-center justify-center rounded-full transition-all ${
+                        className={`absolute top-1.5 right-1.5 z-10 flex h-7 w-7 items-center justify-center rounded-full transition-all ${
                           wishlisted
-                            ? "bg-white/90 text-red-500 shadow-xs"
-                            : "bg-transparent text-transparent hover:bg-white/80 hover:text-red-400"
+                            ? "bg-white/95 text-red-500 shadow-xs"
+                            : "bg-transparent text-transparent hover:bg-white/70 hover:text-red-400"
                         }`}
                       >
                         <Heart
@@ -570,17 +583,17 @@ export function HomePage({ categories }: { categories: Category[] }) {
                         alt={item.title}
                         fill
                         unoptimized
-                        sizes="(max-width: 640px) 50vw, 20vw"
+                        sizes="(max-width: 640px) 180px, 230px"
                         className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
                       />
                     </div>
 
                     {/* Product Info */}
-                    <div className="pt-2.5">
-                      <h4 className="font-serif text-[13px] sm:text-sm font-semibold text-[#0B1A30] line-clamp-2 leading-snug group-hover:text-gold-dark transition-colors">
+                    <div className="pt-2 px-0.5">
+                      <h4 className="font-serif text-[12.5px] sm:text-[13.5px] font-medium text-[#111827] line-clamp-2 leading-snug group-hover:text-gold-dark transition-colors">
                         {item.title}
                       </h4>
-                      <p className="mt-1 font-serif text-sm sm:text-base font-bold text-[#0B1A30]">
+                      <p className="mt-1 font-serif text-[14px] sm:text-[15px] font-bold text-[#0B1A30]">
                         ₹{item.price.toLocaleString("en-IN")}
                       </p>
                     </div>

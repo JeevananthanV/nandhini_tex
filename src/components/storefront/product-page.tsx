@@ -26,10 +26,11 @@ export function ProductPage() {
   const goProduct = useStore((s) => s.goProduct);
   const addToCart = useStore((s) => s.addToCart);
   const toggleWishlist = useStore((s) => s.toggleWishlist);
-  const isWishlisted = useStore((s) => s.wishlist.some((w) => w.productId === (data?.product.id || "")));
+  const wishlist = useStore((s) => s.wishlist);
   const openCart = useStore((s) => s.openCart);
 
   const [data, setData] = useState<{ product: ProductDetail; reviews: ReviewOut[]; related: ProductDetail[] } | null>(null);
+  const isWishlisted = Boolean(data?.product && wishlist.some((w) => w.productId === data.product.id));
   const [loading, setLoading] = useState(true);
   const [activeImg, setActiveImg] = useState(0);
   const [selectedVariant, setSelectedVariant] = useState<string>("");
