@@ -176,6 +176,7 @@ export function WishlistDrawer() {
   const [open, setOpen] = useState(false);
   const wishlist = useStore((s) => s.wishlist);
   const goProduct = useStore((s) => s.goProduct);
+  const goAllProducts = useStore((s) => s.goAllProducts);
   const removeWishlist = useStore((s) => s.removeWishlist);
   const addToCart = useStore((s) => s.addToCart);
 
@@ -239,7 +240,7 @@ export function WishlistDrawer() {
                   <p className="font-serif text-lg text-foreground">Your wishlist is empty</p>
                   <p className="mt-1 text-sm text-muted-foreground">Save sarees you love for later.</p>
                 </div>
-                <button onClick={() => setOpen(false)} className="mt-2 rounded-sm bg-navy px-6 py-2.5 text-sm font-semibold text-ivory hover:bg-navy-light">
+                <button onClick={() => { goAllProducts(); setOpen(false); }} className="mt-2 rounded-sm bg-navy px-6 py-2.5 text-sm font-semibold text-ivory hover:bg-navy-light cursor-pointer active:scale-95 transition-all">
                   Discover Sarees
                 </button>
               </div>

@@ -24,6 +24,7 @@ export function ProductPage() {
   const goHome = useStore((s) => s.goHome);
   const goCategory = useStore((s) => s.goCategory);
   const goProduct = useStore((s) => s.goProduct);
+  const goCart = useStore((s) => s.goCart);
   const addToCart = useStore((s) => s.addToCart);
   const toggleWishlist = useStore((s) => s.toggleWishlist);
   const wishlist = useStore((s) => s.wishlist);
@@ -100,6 +101,8 @@ export function ProductPage() {
       qty,
     });
     if (buyNow) {
+      goCart();
+    } else {
       openCart();
     }
   };

@@ -31,6 +31,15 @@ export function Header({ categories }: { categories: { id: string; name: string;
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    if (!searchOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSearchOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [searchOpen]);
+
   const submitSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (query.trim()) {
@@ -165,8 +174,26 @@ export function Header({ categories }: { categories: { id: string; name: string;
                   placeholder="Search sarees, fabrics, collections..."
                   className="flex-1 bg-transparent text-base outline-none placeholder:text-muted-foreground"
                 />
-                <button type="submit" className="rounded-sm bg-navy px-4 py-1.5 text-sm font-semibold text-ivory hover:bg-navy-light">
+                {query && (
+                  <button
+                    type="button"
+                    onClick={() => setQuery("")}
+                    className="flex h-7 w-7 items-center justify-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground cursor-pointer"
+                    aria-label="Clear search input"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                )}
+                <button type="submit" className="rounded-sm bg-navy px-4 py-1.5 text-sm font-semibold text-ivory hover:bg-navy-light cursor-pointer">
                   Search
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSearchOpen(false)}
+                  className="flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground cursor-pointer"
+                  aria-label="Close search"
+                >
+                  <X className="h-4 w-4" />
                 </button>
               </div>
             </motion.form>

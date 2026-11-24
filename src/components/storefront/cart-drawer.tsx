@@ -15,6 +15,7 @@ export function CartDrawer() {
   const updateQty = useStore((s) => s.updateQty);
   const removeFromCart = useStore((s) => s.removeFromCart);
   const goCart = useStore((s) => s.goCart);
+  const goAllProducts = useStore((s) => s.goAllProducts);
   const goProduct = useStore((s) => s.goProduct);
   const subtotal = useStore((s) => s.cartSubtotal());
   const discount = useStore((s) => s.cartDiscount());
@@ -108,7 +109,10 @@ export function CartDrawer() {
                   <p className="font-serif text-lg text-foreground">Your bag is empty</p>
                   <p className="mt-1 text-sm text-muted-foreground">Discover our handwoven collection and add your favourites.</p>
                 </div>
-                <button onClick={closeCart} className="mt-2 rounded-sm bg-navy px-6 py-2.5 text-sm font-semibold text-ivory hover:bg-navy-light">
+                <button
+                  onClick={() => { goAllProducts(); closeCart(); }}
+                  className="mt-2 rounded-sm bg-navy px-6 py-2.5 text-sm font-semibold text-ivory hover:bg-navy-light cursor-pointer active:scale-95 transition-all"
+                >
                   Continue Shopping
                 </button>
               </div>
@@ -153,6 +157,26 @@ export function CartDrawer() {
 
                 {/* Coupon + summary */}
                 <div className="border-t border-border px-5 py-4">
+                  {/* Free shipping progress bar */}
+                  <div className="mb-3.5 rounded-lg border border-[#E7DCBE] bg-[#FDFBF7] p-2.5 shadow-xs">
+                    <div className="flex items-center justify-between text-xs font-medium">
+                      <span className="text-[#0B1A30]">
+                        {subtotal - discount >= 999
+                          ? "🎉 You unlocked FREE Shipping!"
+                          : `Add ₹${Math.max(0, 999 - (subtotal - discount))} more for FREE Delivery`}
+                      </span>
+                      <span className="font-semibold text-gold-dark">
+                        {Math.min(100, Math.round(((subtotal - discount) / 999) * 100))}%
+                      </span>
+                    </div>
+                    <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-border">
+                      <div
+                        className="h-full bg-gradient-to-r from-gold via-amber-400 to-green-600 transition-all duration-300"
+                        style={{ width: `${Math.min(100, Math.round(((subtotal - discount) / 999) * 100))}%` }}
+                      />
+                    </div>
+                  </div>
+
                   {appliedCoupon ? (
                     <div className="mb-3 flex items-center justify-between rounded-md bg-gold/10 px-3 py-2">
                       <span className="flex items-center gap-1.5 text-xs font-medium text-navy">
@@ -192,9 +216,6 @@ export function CartDrawer() {
                       <span>Shipping</span>
                       <span className={shipping === 0 ? "text-green-700" : "text-foreground"}>{shipping === 0 ? "FREE" : <PriceValue n={shipping} />}</span>
                     </div>
-                    {subtotal - discount < 999 && subtotal > 0 && (
-                      <p className="text-[11px] text-muted-foreground">Add <PriceValue n={999 - (subtotal - discount)} /> more for free shipping</p>
-                    )}
                     <div className="flex justify-between border-t border-border pt-2 font-semibold text-foreground">
                       <span>Total</span>
                       <span><PriceValue n={total} /></span>

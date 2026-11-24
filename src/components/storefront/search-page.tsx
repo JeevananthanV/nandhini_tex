@@ -11,6 +11,7 @@ export function SearchPage() {
   const query = useStore((s) => s.searchQuery);
   const goSearch = useStore((s) => s.goSearch);
   const goHome = useStore((s) => s.goHome);
+  const goAllProducts = useStore((s) => s.goAllProducts);
   const [results, setResults] = useState<ProductCardType[]>([]);
   const [loading, setLoading] = useState(!!query);
   const [input, setInput] = useState(query);
@@ -63,10 +64,33 @@ export function SearchPage() {
         {loading ? (
           <ProductGridSkeleton count={4} className="mt-8 md:grid-cols-4" />
         ) : results.length === 0 ? (
-          <div className="mt-12 flex flex-col items-center justify-center text-center">
+          <div className="mt-12 flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-card/50 p-8 text-center max-w-xl mx-auto">
             <Search className="h-12 w-12 text-muted-foreground/40" />
-            <p className="mt-4 font-serif text-xl text-foreground">No results found</p>
-            <p className="mt-1 text-sm text-muted-foreground">Try a different keyword or browse our collections.</p>
+            <p className="mt-4 font-serif text-xl font-semibold text-foreground">No sarees match “{query}”</p>
+            <p className="mt-1 text-sm text-muted-foreground">Try popular search categories or browse our complete catalogue.</p>
+            
+            <div className="mt-4 flex flex-wrap justify-center gap-2">
+              {["Kanchipuram Silk", "Soft Silk", "Bridal Pattu", "Cotton Sarees", "Banarasi", "Elampillai"].map((term) => (
+                <button
+                  key={term}
+                  type="button"
+                  onClick={() => {
+                    setInput(term);
+                    goSearch(term);
+                  }}
+                  className="rounded-full border border-border bg-background px-3 py-1 text-xs text-navy hover:border-gold hover:bg-gold/10 transition-colors cursor-pointer"
+                >
+                  {term}
+                </button>
+              ))}
+            </div>
+
+            <button
+              onClick={goAllProducts}
+              className="mt-6 rounded-sm bg-navy px-6 py-2.5 text-sm font-semibold text-ivory hover:bg-navy-light transition-all cursor-pointer active:scale-95 shadow-sm"
+            >
+              Browse All Sarees
+            </button>
           </div>
         ) : (
           <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">

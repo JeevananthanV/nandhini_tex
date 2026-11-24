@@ -12,6 +12,7 @@ import { openRazorpayCheckout } from "@/lib/razorpay-client";
 export function CartPage() {
   const goHome = useStore((s) => s.goHome);
   const goTrack = useStore((s) => s.goTrack);
+  const goAllProducts = useStore((s) => s.goAllProducts);
   const goCategory = useStore((s) => s.goCategory);
   const goProduct = useStore((s) => s.goProduct);
   const cart = useStore((s) => s.cart);
@@ -220,15 +221,45 @@ export function CartPage() {
         {/* Steps */}
         {checkoutStep !== "cart" && (
           <div className="mt-6 flex items-center gap-2 text-sm">
-            {["Address", "Payment"].map((step, i) => {
-              const stepKey = i === 0 ? "address" : "payment";
+            {[
+              { key: "cart", label: "Bag", num: 1 },
+              { key: "address", label: "Address", num: 2 },
+              { key: "payment", label: "Payment", num: 3 },
+            ].map((s, i) => {
+              const active = checkoutStep === s.key;
+              const isPast =
+                (checkoutStep === "payment" && s.key !== "payment") ||
+                (checkoutStep === "address" && s.key === "cart");
               return (
-                <div key={step} className="flex items-center gap-2">
-                  <span className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold ${checkoutStep === stepKey ? "bg-navy text-ivory" : "bg-muted text-muted-foreground"}`}>
-                    {i + 1}
-                  </span>
-                  <span className={checkoutStep === stepKey ? "font-medium text-navy" : "text-muted-foreground"}>{step}</span>
-                  {i === 0 && <ChevronRight className="h-4 w-4 text-muted-foreground" />}
+                <div key={s.key} className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (isPast) setCheckoutStep(s.key as "cart" | "address" | "payment");
+                    }}
+                    disabled={!isPast && !active}
+                    className={`flex items-center gap-2 rounded-full px-2 py-1 transition-colors ${
+                      active
+                        ? "font-semibold text-navy cursor-default"
+                        : isPast
+                        ? "text-foreground hover:bg-muted cursor-pointer"
+                        : "text-muted-foreground opacity-60 cursor-not-allowed"
+                    }`}
+                  >
+                    <span
+                      className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold ${
+                        active
+                          ? "bg-navy text-ivory"
+                          : isPast
+                          ? "bg-gold text-navy font-bold"
+                          : "bg-muted text-muted-foreground"
+                      }`}
+                    >
+                      {s.num}
+                    </span>
+                    <span>{s.label}</span>
+                  </button>
+                  {i < 2 && <ChevronRight className="h-4 w-4 text-muted-foreground" />}
                 </div>
               );
             })}
@@ -263,7 +294,7 @@ export function CartPage() {
                   </div>
                 ))}
                 <div className="flex justify-between">
-                  <Button variant="ghost" onClick={() => goCategory("soft-silk")} className="text-navy">Continue Shopping</Button>
+                  <Button variant="ghost" onClick={goAllProducts} className="text-navy cursor-pointer">Continue Shopping</Button>
                 </div>
               </div>
             )}
@@ -272,14 +303,14 @@ export function CartPage() {
               <div className="rounded-lg border border-border bg-card p-6">
                 <h2 className="font-serif text-lg font-semibold text-navy">Shipping Address</h2>
                 <div className="mt-4 grid gap-4 sm:grid-cols-2">
-                  <Field label="Full Name" value={address.name} onChange={(v) => setAddress({ ...address, name: v })} required />
-                  <Field label="Phone Number" value={address.phone} onChange={(v) => setAddress({ ...address, phone: v.replace(/\D/g, "").slice(0, 10) })} required />
+                  <Field label="Full Name" value={address.name} onChange={(v) => setAddress({ ...address, name: v })} autoComplete="name" required />
+                  <Field label="Phone Number" value={address.phone} onChange={(v) => setAddress({ ...address, phone: v.replace(/\D/g, "").slice(0, 10) })} type="tel" autoComplete="tel" required />
                   <div className="sm:col-span-2">
-                    <Field label="Address Line" value={address.line1} onChange={(v) => setAddress({ ...address, line1: v })} required />
+                    <Field label="Address Line" value={address.line1} onChange={(v) => setAddress({ ...address, line1: v })} autoComplete="street-address" required />
                   </div>
-                  <Field label="City" value={address.city} onChange={(v) => setAddress({ ...address, city: v })} required />
-                  <Field label="State" value={address.state} onChange={(v) => setAddress({ ...address, state: v })} required />
-                  <Field label="Pincode" value={address.pincode} onChange={(v) => setAddress({ ...address, pincode: v.replace(/\D/g, "").slice(0, 6) })} required />
+                  <Field label="City" value={address.city} onChange={(v) => setAddress({ ...address, city: v })} autoComplete="address-level2" required />
+                  <Field label="State" value={address.state} onChange={(v) => setAddress({ ...address, state: v })} autoComplete="address-level1" required />
+                  <Field label="Pincode" value={address.pincode} onChange={(v) => setAddress({ ...address, pincode: v.replace(/\D/g, "").slice(0, 6) })} type="tel" autoComplete="postal-code" required />
                 </div>
                 <div className="mt-6 flex justify-between">
                   <Button variant="ghost" onClick={() => setCheckoutStep("cart")} className="text-navy">Back to Bag</Button>
@@ -419,14 +450,30 @@ export function CartPage() {
   );
 }
 
-function Field({ label, value, onChange, required }: { label: string; value: string; onChange: (v: string) => void; required?: boolean }) {
+function Field({
+  label,
+  value,
+  onChange,
+  required,
+  type = "text",
+  autoComplete,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  required?: boolean;
+  type?: string;
+  autoComplete?: string;
+}) {
   return (
     <div>
       <label className="mb-1 block text-xs font-medium text-muted-foreground">{label}{required && <span className="text-destructive"> *</span>}</label>
       <input
+        type={type}
+        autoComplete={autoComplete}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="h-10 w-full rounded-sm border border-border px-3 text-sm outline-none focus:border-gold"
+        className="h-10 w-full rounded-sm border border-border px-3 text-sm outline-none focus:border-gold transition-colors"
       />
     </div>
   );

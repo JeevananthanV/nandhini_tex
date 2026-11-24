@@ -36,10 +36,22 @@ export function Footer({ categories }: { categories: { id: string; name: string;
               Curated handwoven silk & cotton sarees from Elampillai, Kanchipuram & Arani. Every weave carries the warmth of the loom.
             </p>
             <div className="mt-5 flex gap-3">
-              {[Instagram, Facebook, Youtube, MessageCircle].map((Icon, i) => (
-                <button key={i} className="flex h-9 w-9 items-center justify-center rounded-full bg-ivory/10 text-ivory/80 transition-colors hover:bg-gold hover:text-navy" aria-label="Social link">
+              {[
+                { name: "Instagram", Icon: Instagram, href: "https://instagram.com" },
+                { name: "Facebook", Icon: Facebook, href: "https://facebook.com" },
+                { name: "YouTube", Icon: Youtube, href: "https://youtube.com" },
+                { name: "WhatsApp", Icon: MessageCircle, href: "https://wa.me/917604811838" },
+              ].map(({ name, Icon, href }) => (
+                <a
+                  key={name}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex h-9 w-9 items-center justify-center rounded-full bg-ivory/10 text-ivory/80 transition-all hover:bg-gold hover:text-navy cursor-pointer active:scale-95"
+                  aria-label={name}
+                >
                   <Icon className="h-4 w-4" strokeWidth={1.5} />
-                </button>
+                </a>
               ))}
             </div>
           </div>
@@ -63,11 +75,11 @@ export function Footer({ categories }: { categories: { id: string; name: string;
           <div>
             <h4 className="font-serif text-sm font-semibold uppercase tracking-wider text-gold">Help</h4>
             <ul className="mt-4 space-y-2.5 text-sm">
-              {["FAQs", "Shipping Policy", "Returns & Exchange", "Saree Care Guide", "Size Guide", "Track Order"].map((l) => (
+              {["FAQs", "Shipping Policy", "Returns & Exchange", "Saree Care Guide", "Track Order"].map((l) => (
                 <li key={l}>
                   <button
-                    onClick={l === "Track Order" ? () => goTrack() : l === "FAQs" ? () => goFaq() : undefined}
-                    className={l === "FAQs" || l === "Track Order" ? "text-ivory/70 transition-colors hover:text-gold" : "cursor-default text-ivory/70"}
+                    onClick={l === "Track Order" ? () => goTrack() : () => goFaq()}
+                    className="text-ivory/70 transition-colors hover:text-gold cursor-pointer text-left"
                   >
                     {l}
                   </button>

@@ -253,7 +253,8 @@ export function CategoryPage({ categories }: { categories: Category[] }) {
                 <select
                   value={sort}
                   onChange={(e) => setSort(e.target.value)}
-                  className="rounded-sm border border-border bg-background px-3 py-2 text-sm outline-none focus:border-gold"
+                  aria-label="Sort sarees"
+                  className="rounded-sm border border-border bg-background px-3 py-2 text-sm outline-none focus:border-gold cursor-pointer"
                 >
                   {SORTS.map((s) => (
                     <option key={s.value} value={s.value}>Sort: {s.label}</option>
@@ -268,7 +269,7 @@ export function CategoryPage({ categories }: { categories: Category[] }) {
               <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-border py-20 text-center">
                 <p className="font-serif text-lg text-foreground">No sarees match your filters</p>
                 <p className="mt-1 text-sm text-muted-foreground">Try adjusting your selection.</p>
-                <Button variant="outline" onClick={() => { setPriceRange(null); setFabric(""); setOnlyNew(false); setOnlyBestseller(false); setOnlyOffers(false); }} className="mt-4">
+                <Button variant="outline" onClick={() => { setPriceRange(null); setFabric(""); setOnlyNew(false); setOnlyBestseller(false); setOnlyOffers(false); }} className="mt-4 cursor-pointer">
                   Clear Filters
                 </Button>
               </div>
@@ -288,7 +289,15 @@ export function CategoryPage({ categories }: { categories: Category[] }) {
 
 function CheckboxRow({ label, checked, onChange }: { label: string; checked: boolean; onChange: () => void }) {
   return (
-    <button onClick={onChange} className={`flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors ${checked ? "bg-navy/5 font-medium text-navy" : "text-foreground hover:bg-muted"}`}>
+    <button
+      type="button"
+      role="checkbox"
+      aria-checked={checked}
+      onClick={onChange}
+      className={`flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors cursor-pointer ${
+        checked ? "bg-navy/5 font-medium text-navy" : "text-foreground hover:bg-muted"
+      }`}
+    >
       <span className={`flex h-4 w-4 items-center justify-center rounded-sm border ${checked ? "border-navy bg-navy text-ivory" : "border-border"}`}>
         {checked && <span className="text-[10px]">✓</span>}
       </span>

@@ -457,6 +457,8 @@ export function GradientMesh({ className }: { className?: string }) {
 export function LiveChatWidget() {
   const [open, setOpen] = useState(false);
   const reduce = useReducedMotion();
+  const goCategory = useStore((s) => s.goCategory);
+  const goTrack = useStore((s) => s.goTrack);
   return (
     <>
       <motion.button
@@ -516,9 +518,18 @@ export function LiveChatWidget() {
                 <p className="mt-1 text-muted-foreground">How can we help you find the perfect saree today? Ask about our bridal collection, fabrics, or COD availability.</p>
               </div>
               <div className="flex flex-wrap gap-2">
-                {["Bridal sarees", "COD available?", "Track my order", "Custom blouse"].map((q) => (
-                  <button key={q} className="rounded-full border border-border px-3 py-1 text-xs text-navy hover:border-gold hover:bg-muted">
-                    {q}
+                {[
+                  { label: "Bridal sarees", action: () => { goCategory("bridal"); setOpen(false); } },
+                  { label: "Track my order", action: () => { goTrack(); setOpen(false); } },
+                  { label: "COD available?", action: () => window.open("https://wa.me/917604811838?text=Hi!%20Is%20Cash%20on%20Delivery%20(COD)%20available%20for%20my%20location?", "_blank") },
+                  { label: "Custom blouse", action: () => window.open("https://wa.me/917604811838?text=Hi!%20I%20would%20like%20to%20inquire%20about%20matching%20blouse%20piece%20customization.", "_blank") },
+                ].map((item) => (
+                  <button
+                    key={item.label}
+                    onClick={item.action}
+                    className="rounded-full border border-border px-3 py-1 text-xs text-navy hover:border-gold hover:bg-gold/10 transition-colors cursor-pointer active:scale-95"
+                  >
+                    {item.label}
                   </button>
                 ))}
               </div>
