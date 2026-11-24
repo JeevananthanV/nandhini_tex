@@ -459,6 +459,9 @@ export function LiveChatWidget() {
   const reduce = useReducedMotion();
   const goCategory = useStore((s) => s.goCategory);
   const goTrack = useStore((s) => s.goTrack);
+  const mobileMenuOpen = useStore((s) => s.mobileMenuOpen);
+
+  if (mobileMenuOpen) return null;
   return (
     <>
       <motion.button
@@ -468,7 +471,7 @@ export function LiveChatWidget() {
         whileHover={reduce ? undefined : { scale: 1.08 }}
         whileTap={reduce ? undefined : { scale: 0.95 }}
         onClick={() => setOpen((v) => !v)}
-        className="fixed bottom-20 left-6 z-[90] flex h-12 w-12 items-center justify-center rounded-full bg-navy-gradient text-gold shadow-navy ring-1 ring-gold/40 md:bottom-6"
+        className="fixed bottom-20 left-6 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-navy-gradient text-gold shadow-navy ring-1 ring-gold/40 md:bottom-6"
         aria-label="Open chat"
       >
         <motion.span
@@ -626,8 +629,10 @@ export function MobileBottomNav() {
   const wishlistCount = useStore((s) => s.wishlist.length);
   const storeView = useStore((s) => s.storeView);
 
-  // Hide on product detail view so the sticky Add to Bag / Buy Now bar is fully accessible
-  if (storeView === "product") return null;
+  const mobileMenuOpen = useStore((s) => s.mobileMenuOpen);
+
+  // Hide on product detail view and when mobile menu drawer is open
+  if (storeView === "product" || mobileMenuOpen) return null;
 
   const items = [
     { icon: Home, label: "Home", onClick: goHome, active: storeView === "home" },
