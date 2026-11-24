@@ -166,7 +166,7 @@ export function CategoryPage({ categories }: { categories: Category[] }) {
   );
 
   return (
-    <div className="min-h-screen pt-20">
+    <div className="min-h-screen pt-28 md:pt-32">
       {/* breadcrumb + banner */}
       <div className="border-b border-border bg-ivory">
         <div className="mx-auto max-w-7xl px-6 py-6 md:px-8">

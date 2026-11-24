@@ -122,7 +122,7 @@ export function ProductPage() {
   }));
 
   return (
-    <div className="min-h-screen pt-16 pb-24 md:pb-12">
+    <div className="min-h-screen pt-28 md:pt-32 pb-24 md:pb-12">
       <div className="mx-auto max-w-7xl px-4 py-6 md:px-8 md:py-10">
         {/* breadcrumb */}
         <nav className="mb-6 flex items-center gap-1.5 text-xs text-muted-foreground">

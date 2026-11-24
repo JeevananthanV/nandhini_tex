@@ -148,7 +148,7 @@ export function CartPage() {
     const isPendingPayment = placedOrder.paymentMethod === "pending";
 
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center px-6 pt-20">
+      <div className="flex min-h-screen flex-col items-center justify-center px-6 pt-28 md:pt-32 pb-16">
         <motion.div
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -196,7 +196,7 @@ export function CartPage() {
 
   if (cart.length === 0) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center px-6 pt-20">
+      <div className="flex min-h-screen flex-col items-center justify-center px-6 pt-28 md:pt-32 pb-16">
         <div className="flex h-24 w-24 items-center justify-center rounded-full bg-muted">
           <ShoppingBag className="h-10 w-10 text-muted-foreground" />
         </div>
@@ -208,7 +208,7 @@ export function CartPage() {
   }
 
   return (
-    <div className="min-h-screen pt-20">
+    <div className="min-h-screen pt-28 md:pt-32">
       <div className="mx-auto max-w-7xl px-6 py-10 md:px-8">
         <nav className="mb-6 flex items-center gap-1.5 text-xs text-muted-foreground">
           <button onClick={goHome} className="hover:text-navy">Home</button>

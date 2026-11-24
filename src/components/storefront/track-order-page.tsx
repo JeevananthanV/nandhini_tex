@@ -96,7 +96,7 @@ export function TrackOrderPage() {
   const active = orders && orders.length > 0 ? orders[Math.min(activeIdx, orders.length - 1)] : null;
 
   return (
-    <div className="min-h-screen pt-20">
+    <div className="min-h-screen pt-28 md:pt-32">
       {/* Hero */}
       <section className="relative overflow-hidden bg-navy-gradient">
         <div

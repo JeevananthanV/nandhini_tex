@@ -16,7 +16,7 @@ import { SearchPage } from "./search-page";
 import { TrackOrderPage } from "./track-order-page";
 import { HomeSkeleton } from "./skeletons";
 import {
-  ScrollProgress, BackToTop, PageLoader, LiveChatWidget, FestiveBanner, GradientMesh, MobileBottomNav,
+  ScrollProgress, BackToTop, PageLoader, LiveChatWidget, GradientMesh, MobileBottomNav,
 } from "./premium";
 import { QuickViewModal, WishlistDrawer } from "./premium-features";
 
@@ -41,7 +41,6 @@ export function Storefront({ categories }: { categories: Category[] }) {
     <div className="relative flex min-h-screen flex-col bg-background">
       <PageLoader />
       <ScrollProgress />
-      <FestiveBanner />
       <GradientMesh className="fixed inset-0 z-0" />
       <div className="relative z-10 flex flex-1 flex-col">
         <Header categories={categories} />

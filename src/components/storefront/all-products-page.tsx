@@ -211,7 +211,7 @@ export function AllProductsPage({ categories }: { categories: Category[] }) {
   };
 
   return (
-    <div className="min-h-screen pt-20">
+    <div className="min-h-screen pt-28 md:pt-32">
       {/* Hero banner */}
       <section className="relative overflow-hidden bg-navy-gradient">
         <div

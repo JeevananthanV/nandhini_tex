@@ -35,7 +35,7 @@ export function SearchPage() {
   };
 
   return (
-    <div className="min-h-screen pt-20">
+    <div className="min-h-screen pt-28 md:pt-32">
       <div className="mx-auto max-w-7xl px-6 py-10 md:px-8">
         <nav className="mb-6 flex items-center gap-1.5 text-xs text-muted-foreground">
           <button onClick={goHome} className="hover:text-navy">Home</button>

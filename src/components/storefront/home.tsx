@@ -191,6 +191,15 @@ const CATEGORY_TAGLINES: Record<string, string> = {
   "celebrity": "Celebrity-Inspired Handwoven Silks",
 };
 
+const HERITAGE_WEAVES = [
+  { name: "Pure Kanchipuram Silk", origin: "Temple Town Weaves", highlight: "24K Pure Gold Zari" },
+  { name: "Elampillai Traditional Butta", origin: "Salem Handloom Cluster", highlight: "Heritage Looms" },
+  { name: "Samudhrikha Bridal Pattu", origin: "Royal Wedding Silks", highlight: "100% Mulberry" },
+  { name: "Banarasi Mashru & Tanchoi", origin: "Intricate Jacquard", highlight: "Antique Weave" },
+  { name: "Handloom Sungudi & Khadi", origin: "Natural Dyed Cotton", highlight: "Artisan Crafted" },
+  { name: "Featherlight Soft Silk", origin: "Kubera Pattu", highlight: "All-Day Drape" },
+];
+
 export function HomePage({ categories }: { categories: Category[] }) {
   const goCategory = useStore((s) => s.goCategory);
   const goAllProducts = useStore((s) => s.goAllProducts);
@@ -284,7 +293,7 @@ export function HomePage({ categories }: { categories: Category[] }) {
         <FloatingElements className="z-[1] opacity-30" />
         <CursorSpotlight className="z-[2]" color="rgba(212, 175, 55, 0.06)" />
 
-        <div className="relative z-10 mx-auto flex h-full max-w-7xl flex-col justify-center px-6 md:px-8">
+        <div className="relative z-10 mx-auto flex h-full min-h-[580px] max-w-7xl flex-col justify-center px-6 pt-28 sm:pt-32 md:pt-36 pb-14 md:px-8">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
@@ -385,6 +394,51 @@ export function HomePage({ categories }: { categories: Category[] }) {
                     {t.sub}
                   </span>
                 </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== WEAVE & HERITAGE SILK RIBBON MARQUEE ===== */}
+      <section className="relative overflow-hidden bg-gradient-to-r from-[#061224] via-[#0B1A30] to-[#061224] py-3.5 sm:py-4 border-b border-[#D4AF37]/30 shadow-inner select-none" aria-label="Traditional Indian Silk Weaves">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(212,175,55,0.08),transparent_70%)]" />
+        <div className="group relative flex w-full overflow-hidden">
+          <div className="flex shrink-0 animate-marquee items-center gap-10 whitespace-nowrap pr-10 group-hover:[animation-play-state:paused]">
+            {HERITAGE_WEAVES.map((w, idx) => (
+              <div key={`hw-1-${idx}`} className="flex items-center gap-3">
+                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#D4AF37]/15 ring-1 ring-[#D4AF37]/40 text-[#D4AF37]">
+                  <Sparkles className="h-3.5 w-3.5" />
+                </span>
+                <span className="font-serif text-sm sm:text-base font-semibold tracking-wide text-[#FAF7F0]">
+                  {w.name}
+                </span>
+                <span className="text-xs text-[#ECC97D]/85 font-sans tracking-normal hidden sm:inline">
+                  — {w.origin}
+                </span>
+                <span className="rounded-full bg-[#D4AF37]/20 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#F5E6A8] border border-[#D4AF37]/30 hidden md:inline">
+                  {w.highlight}
+                </span>
+                <span className="ml-2 text-[#D4AF37]/40">✦</span>
+              </div>
+            ))}
+          </div>
+          <div className="flex shrink-0 animate-marquee items-center gap-10 whitespace-nowrap pr-10 group-hover:[animation-play-state:paused]" aria-hidden="true">
+            {HERITAGE_WEAVES.map((w, idx) => (
+              <div key={`hw-2-${idx}`} className="flex items-center gap-3">
+                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#D4AF37]/15 ring-1 ring-[#D4AF37]/40 text-[#D4AF37]">
+                  <Sparkles className="h-3.5 w-3.5" />
+                </span>
+                <span className="font-serif text-sm sm:text-base font-semibold tracking-wide text-[#FAF7F0]">
+                  {w.name}
+                </span>
+                <span className="text-xs text-[#ECC97D]/85 font-sans tracking-normal hidden sm:inline">
+                  — {w.origin}
+                </span>
+                <span className="rounded-full bg-[#D4AF37]/20 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#F5E6A8] border border-[#D4AF37]/30 hidden md:inline">
+                  {w.highlight}
+                </span>
+                <span className="ml-2 text-[#D4AF37]/40">✦</span>
               </div>
             ))}
           </div>
@@ -607,10 +661,17 @@ export function HomePage({ categories }: { categories: Category[] }) {
       )}
 
       {/* ===== BRIDAL BANNER ===== */}
-      <section className="relative overflow-hidden">
-        <div className="relative h-[420px] w-full md:h-[480px]">
-          <Image src="https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=1600&q=85" alt="Bridal silk saree collection" fill sizes="100vw" className="object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-r from-navy-dark/90 via-navy-dark/50 to-transparent" />
+      <section className="relative overflow-hidden border-y border-[#D4AF37]/30 bg-[#061224]" aria-label="Bridal Silk Sarees Collection">
+        <div className="relative h-[440px] w-full md:h-[500px]">
+          <Image
+            src="https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=1600&q=85"
+            alt="Royal Handwoven Bridal silk saree collection with pure gold zari"
+            fill
+            sizes="100vw"
+            className="object-cover object-center"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#050F1F]/95 via-[#081B3A]/80 to-transparent/40" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#050F1F]/70 via-transparent to-transparent" />
         </div>
         <div className="absolute inset-0 flex items-center">
           <div className="mx-auto w-full max-w-7xl px-6 md:px-8">
@@ -619,19 +680,34 @@ export function HomePage({ categories }: { categories: Category[] }) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: false, margin: "-8%" }}
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-              className="max-w-lg"
+              className="max-w-xl"
             >
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/50 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.15em] text-gold">
-                <Award className="h-3 w-3" /> The Bridal Edit
-              </span>
-              <h2 className="mt-4 font-serif text-3xl font-semibold text-ivory md:text-5xl">For Your Big Day</h2>
-              <p className="mt-4 text-ivory/80">Grand Kanchipuram bridal silks in rich reds, maroons and gold — woven over 7 days with pure zari. The heirloom your daughter will cherish.</p>
-              <button
-                onClick={() => goCategory("bridal")}
-                className="mt-6 rounded-sm bg-gold-gradient px-7 py-3 text-sm font-semibold text-navy shadow-gold transition-all hover:brightness-105 cursor-pointer active:scale-95"
-              >
-                Shop Bridal Collection
-              </button>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-[#D4AF37]/60 bg-[#081B3A]/70 px-3.5 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#ECC97D] backdrop-blur-sm">
+                  <Award className="h-3.5 w-3.5 text-[#D4AF37]" /> The Bridal Edit
+                </span>
+                <span className="hidden sm:inline-flex items-center rounded-full bg-[#D4AF37]/20 border border-[#D4AF37]/40 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#F5E6A8]">
+                  Handcrafted Over 7 Days
+                </span>
+              </div>
+              <h2 className="mt-4 font-serif text-3xl sm:text-4xl md:text-5xl font-bold leading-tight text-ivory">
+                Timeless Splendor For Your Big Day
+              </h2>
+              <p className="mt-4 text-sm sm:text-base text-ivory/85 leading-relaxed font-light">
+                Grand Kanchipuram bridal silks in rich kumkum reds, royal maroons, and pure 24K gold zari — woven by generational master artisans. An heirloom drape crafted to be treasured for lifetimes.
+              </p>
+              <div className="mt-7 flex flex-wrap items-center gap-4">
+                <button
+                  onClick={() => goCategory("bridal")}
+                  className="inline-flex items-center gap-2 rounded-sm bg-gold-gradient px-7 py-3.5 text-sm font-semibold uppercase tracking-wider text-[#081B3A] shadow-gold transition-all duration-300 hover:brightness-105 hover:scale-[1.02] active:scale-95 cursor-pointer"
+                >
+                  Explore Bridal Silks <ArrowRight className="h-4 w-4" />
+                </button>
+                <div className="flex items-center gap-2 text-xs text-ivory/75">
+                  <ShieldCheck className="h-4 w-4 text-[#D4AF37]" />
+                  <span>Silk Mark Certified Guarantee</span>
+                </div>
+              </div>
             </motion.div>
           </div>
         </div>
